@@ -115,6 +115,11 @@ var frostFlake = (function (ff, $) {
         },
 
         drawSprite:function(sprite) {
+            if(sprite.img === undefined || sprite.img === null) {
+                return;
+            }
+
+
             if(!sprite.textureCoordinates) {
                 sprite.updateDimensions();
             }

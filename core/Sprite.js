@@ -4,6 +4,7 @@ var frostFlake = (function (ff) {
         // create the sprite, loading the image URL
         init: function (url, layer, loadedCallback) {
             this._super();
+
             this.url = url;
             this.img = null;
             this.drawScale = {
@@ -14,7 +15,10 @@ var frostFlake = (function (ff) {
             this.textureCoordinates = null;
             this.animation = null;
             this.layer = (layer !== undefined && layer !== null) ? layer : this.layer;
-            this.loadImage(url, loadedCallback);
+
+            if(url !== undefined && url !== null) {
+                this.loadImage(url, loadedCallback);
+            }
         },
 
         update: function (deltaTime) {
@@ -76,7 +80,16 @@ var frostFlake = (function (ff) {
         // called to update the sprite's dimensions
         updateDimensions: function () {
             if (this.textureCoordinates === null) {
-                this.setTextureCoordinates(0, this.img.width, 0, this.img.height);
+                var texDimensions = {
+                    width : 0,
+                    height: 0
+                }
+                if(this.img !== undefined && this.img !== null) {
+                    texDimensions.width = this.img.width;
+                    texDimensions.height = this.img.height;
+                }
+
+                this.setTextureCoordinates(0, texDimensions.width, 0, texDimensions.height);
             }
 
             var width = this.textureCoordinates.right - this.textureCoordinates.left;
