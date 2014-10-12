@@ -1,4 +1,38 @@
+/* ===============================================================================================
+
+    UTIL.JS
+    Provides utility methods to make common game tasks easier, including a math
+    utility that performs a lot of common calculations
+
+================================================================================================*/
+
 var frostFlake = (function (ff) {
+
+    // Checks if provided variable is not undefined or null
+    ff.hasValue = function(variable) {
+        // NOTE: this is the defacto way to check for both undefined
+        // and null in one check. The use of "==" is not an accident!
+        if(variable == null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    // Returns a default values if provided variable has no value
+    ff.defaultIfNoValue = function(variable, defaultValue) {
+        if(ff.hasValue(variable)) {
+            return variable;
+        }
+        return defaultValue;
+    }
+
+    // Gets a randomized hex color as a string
+    ff.randomHexColor = function() {
+        return '#' + ff.math.randomInt(0, 16777215).toString(16);
+    }
+
+    // Provides a collection of common values and utilities for math operations in games
     ff.math = {
         e:Math.E,
         log10E: 0.4342945,
@@ -13,20 +47,6 @@ var frostFlake = (function (ff) {
             return 0 - value;
         },
 
-        max:function(value1, value2) {
-            if(value1 > value2) {
-                return value1;
-            }
-            return value2;
-        },
-
-        min:function(value1, value2) {
-            if(value1 < value2) {
-                return value1;
-            }
-            return value2;
-        },
-
         // clamps a value to the min or max possible value
         clamp: function (value, min, max) {
             if (value < min) return min;
@@ -39,14 +59,12 @@ var frostFlake = (function (ff) {
             return value1 + (value2 - value1) * amount;
         },
 
+        // returns the square of the provided value
         square: function(value) {
-            return value * value;
+            return Math.pow(value, 2);
         },
 
-        sqrt:function(value) {
-            return Math.sqrt(value);
-        },
-
+        // returns a random number within the provided range
         randomInRange:function(min, max) {
             var range = max - min;
             var rand = Math.random() * range;
@@ -54,17 +72,25 @@ var frostFlake = (function (ff) {
             return returnValue;
         },
 
+        // returns a random integer between min and max
+        randomIntInRange:function(min,max) {
+            return Math.round(this.random(min,max));
+        },
+
+        // finds the distance between two points
         distanceBetween:function(pt1, pt2) {
             var dX = pt1.x - pt2.x;
             var dY = pt1.y - pt2.y;
-            var dist = this.sqrt(this.square(dX) + this.square(dY));
+            var dist = Math.sqrt(this.square(dX) + this.square(dY));
             return dist;
         },
 
+        // finds the absolute distance between two points
         absoluteDistanceBetween:function(pt1, pt2) {
             return Math.abs(this.distanceBetween(pt1, pt2));
         },
 
+        // returns a velocity {x,y} given an angle and a speed
         velocityFromAngle:function(angle, speed) {
             var velocity = {
                 x:Math.sin(angle) * speed,
@@ -73,14 +99,11 @@ var frostFlake = (function (ff) {
             return velocity;
         },
 
+        // returns the angle between two points
         angleBetweenPoints:function(pt1, pt2) {
             var dX = pt2.x - pt1.x;
             var dY = pt2.y - pt1.y;
             return Math.atan2(dY, dX);
-        },
-
-        randomInt:function(min,max) {
-            return Math.round(this.random(min,max));
         },
 
         // converts radians to degrees
@@ -93,5 +116,6 @@ var frostFlake = (function (ff) {
             return (degrees * 0.017453292519943295769236907684886);
         }
     };
+
     return ff;
 }(frostFlake || {}));

@@ -62,8 +62,8 @@ var frostFlake = (function (ff) {
 
         // sets the percent the sprite will be scaled on each axis when drawn
         setDrawScale: function (xScale, yScale) {
-            xScale = ff.math.max(xScale, 0);
-            yScale = ff.math.max(yScale, 0);
+            xScale = Math.max(xScale, 0);
+            yScale = Math.max(yScale, 0);
             this.drawScale = {
                 x: xScale,
                 y: yScale

@@ -1,7 +1,17 @@
+/* ===============================================================================================
+
+    RENDERER.JS
+    Responsible for rendering a collection of sprites to a specified context (canvas)
+    using a camera to defined the projection.
+
+================================================================================================*/
+
 var frostFlake = (function (ff, $) {
+
+    // TODO: this should not be a Class. Move this into a JavaScript native object type
     ff.Renderer = Class.extend({
         init:function(canvas, camera, background) {
-            this.canvas = (canvas) ? canvas : this.createCanvas();
+            this.canvas = canvas;
             this.context = this.canvas.getContext("2d");
             this.camera = (camera) ? camera : new ff.Camera();
             this.background = (background) ? background : ff.constants.DEFAULT_BACKGROUND;

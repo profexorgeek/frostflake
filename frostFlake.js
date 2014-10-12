@@ -1,4 +1,13 @@
-var frostFlake = (function (ff, $) {
+/* ===============================================================================================
+
+    FROSTFLAKE.JS
+    Core FrostFlake library, initializes FrostFlake and provides Class object used for more
+    typical OOP functionality that JavaScript doesn't provide by default.
+
+================================================================================================*/
+
+var frostFlake = (function (ff) {
+    // application constants
     ff.constants = {
         CONTENT_DIRECTORY: "content",
         DEFAULT_WIDTH: 350,
@@ -7,43 +16,50 @@ var frostFlake = (function (ff, $) {
         DEFAULT_BACKGROUND: "rgba(0,0,0,1)"
     };
 
-    ff.paused = false;
-    ff.focused = false;
-    ff.canvas = null;
+    // the game interval timer
     ff.timer = null;
-    ff.camera = null;
-    ff.drawables = [];
-    ff.targetFps = 60;
+
+    // object that tracks time between update cycles
     ff.time = {
         start: new Date(),
         last: new Date(),
         delta: 0,
         deltaFromStart: 0
     };
+
+    // whether or not the game is paused
+    ff.paused = false;
+
+    // whether or not the game has focus
+    ff.focused = false;
+
+    // default renderer
     ff.renderer = null;
 
-    // sets up the game, all arguments are optional but if no canvas is passed the created canvas will need added to the DOM
-    ff.init = function(canvas, fps, background) {
-        if ($ === undefined || $ === null) {
-            throw "FrostFlake depends on jQuery, which was not found.";
-        }
+    // the default camera
+    ff.camera = null;
 
-        background = background ? background : ff.constants.DEFAULT_BACKGROUND;
-        ff.canvas = canvas ? canvas : ff.createCanvas();
-        ff.targetFps = fps ? fps : ff.constants.DEFAULT_FPS;
+    // default array of drawable objects
+    ff.drawables = [];
+
+    // current FPS target
+    ff.targetFps = 60;
+
+    // sets up the game, fps and background are optional
+    ff.init = function(canvas, fps, background) {
+
+        // validate args
+        if (canvas === undefined || canvas === null) {
+            throw "Unable to initialize FrostFlake: invalid drawing canvas";
+        }
+        background = ff.defaultIfNoValue(background, ff.constants.DEFAULT_BACKGROUND);
+        ff.targetFps = ff.defaultIfNoValue(fps, ff.constants.DEFAULT_FPS);
+
+        // init engine objects
         ff.camera = new ff.Camera(canvas.clientWidth, canvas.clientHeight);
-        ff.renderer = new ff.Renderer(ff.canvas, ff.camera, background);
+        ff.renderer = new ff.Renderer(canvas, ff.camera, background);
         ff.input.init();
         ff.timer = setInterval(ff.run, 1000 / ff.targetFps);
-    };
-
-    // creates a canvas object to draw on
-    ff.createCanvas = function(width, height) {
-        width = width ? width : ff.constants.DEFAULT_WIDTH;
-        height = height ? height : ff.constants.DEFAULT_HEIGHT;
-
-        var canvas = $('<canvas width="' + width + 'px" height="' + height + 'px"  />');
-        return canvas;
     };
 
     // called by the game loop to update and draw the game
@@ -62,7 +78,7 @@ var frostFlake = (function (ff, $) {
         ff.customUpdate(ff.time.delta);
     };
 
-    // method overridden by custom code
+    // this method can be overridden to call custom game logic
     ff.customUpdate = function (deltaTime) {
         // overridden by game
     }
@@ -121,81 +137,7 @@ var frostFlake = (function (ff, $) {
         ff.drawables = [];
     };
 
-    // loads an image from a URL
-    ff.loadImage = function (url, loadedCallback) {
-        var path = url;
-        var img;
-
-        if (url.indexOf("data:") < 0 && url.indexOf("http") < 0) {
-            path = ff.constants.CONTENT_DIRECTORY + "/" + url;
-            if (path.indexOf(".") < 0) {
-                path += ".png";
-            }
-        }
-
-        img = new Image();
-        img.loadEvents = [];
-        if (loadedCallback) {
-            img.loadEvents.push(loadedCallback);
-        }
-
-        // execute callbacks on load
-        img.onload = function () {
-            for (var i = 0; i < img.loadEvents.length; i += 1) {
-                img.loadEvents[i]();
-            }
-        };
-
-        img.src = path;
-
-        return img;
-    };
-
-    // loads json from a url
-    ff.loadJson = function (url, successCallback, failCallback, alwaysCallback) {
-        if (!successCallback) {
-            successCallback = function (json) {
-                console.log("Loaded json from: " + url);
-            }
-        }
-
-        if (!failCallback) {
-            failCallback = function (jqxhr, textStatus, error) {
-                console.log("Failed to load JSON: " + textStatus + ", " + error);
-            };
-        }
-        $.getJSON(url).done(successCallback).fail(failCallback).always(alwaysCallback);
-    };
-
-    // converts an object to a JSON string
-    ff.toJson = JSON.stringify || function (obj) {
-        var t = typeof (obj);
-        if (t != "object" || obj === null) {
-            if (t == "string") obj = '"' + obj + '"';
-            return String(obj);
-        }
-        else {
-            var n, v, json = [], arr = (obj && obj.constructor == Array);
-            for (n in obj) {
-                v = obj[n];
-                t = typeof(v);
-                if (t == "string") v = '"' + v + '"';
-                else if (t == "object" && v !== null) v = JSON.stringify(v);
-                json.push((arr ? "" : '"' + n + '":') + String(v));
-            }
-            return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
-        }
-    };
-
-    // parses a json string, WARNING: uses eval
-    ff.fromJson = JSON.parse || function (str) {
-        if (str === "") str = '""';
-        eval("var p=" + str + ";");
-        return p;
-    };
-
-
-    // TODO: migrate away from using this!
+    // TODO: migrate away from using this?
     /* Simple JavaScript Inheritance
      * By John Resig http://ejohn.org/
      * MIT Licensed.
@@ -266,4 +208,4 @@ var frostFlake = (function (ff, $) {
         })();
 
     return ff;
-}(frostFlake || {}, jQuery));
+}(frostFlake || {}));

@@ -1,3 +1,12 @@
+/* ===============================================================================================
+
+    INPUT.JS
+    Provides access to keyboard and mouse events commonly needed in games.
+
+    Requires jQuery for event detection
+
+================================================================================================*/
+
 var frostFlake = (function (ff, $) {
     ff.input = {
 
@@ -62,17 +71,18 @@ var frostFlake = (function (ff, $) {
         init: function () {
             var mouse = this.mouse;
             var keyboard = this.keyboard;
+            var canvas = ff.renderer.canvas;
 
             // handle mouse over canvas
-            $(ff.canvas).mouseenter(function () {
+            $(canvas).mouseenter(function () {
                 mouse.inFrame = true;
             });
-            $(ff.canvas).mouseleave(function () {
+            $(canvas).mouseleave(function () {
                 mouse.inFrame = false;
             });
 
             // handle updating mouse position
-            $(ff.canvas).mousemove(function (e) {
+            $(canvas).mousemove(function (e) {
                 mouse.lastX = mouse.x;
                 mouse.lastY = mouse.y;
                 mouse.x = e.offsetX - (ff.renderer.viewBounds.width / 2);
