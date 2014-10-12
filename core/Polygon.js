@@ -1,4 +1,29 @@
+/* ===============================================================================================
+
+    POLYGON.JS
+    Special drawable that describes a primative shape as a series of points
+
+================================================================================================*/
+
 var frostFlake = (function (ff) {
+
+    // todo: move this
+    ff.getRect = function() {
+        var halfWidth = width * 0.5;
+        var halfHeight = height * 0.5;
+        var pts = [
+            {x:-halfWidth, y:halfHeight},
+            {x:halfWidth, y:halfHeight},
+            {x:halfWidth, y:-halfHeight},
+            {x:-halfWidth, y:-halfHeight}
+        ];
+        var poly = new ff.Polygon(pts, true);
+        poly.lineColor = lineColor;
+        poly.fillColor = fillColor;
+        poly.isFilled = filled;
+        return poly;
+    }
+
     ff.Polygon = ff.Drawable.extend({
         init:function(points, isClosed) {
             this._super();

@@ -1,5 +1,14 @@
+/* ===============================================================================================
+
+    ANIMATION.JS
+    Animation Class used by Sprites to control animation chains.
+
+================================================================================================*/
+
 var frostFlake = (function (ff) {
+
     ff.Animation = Class.extend({
+
         init: function () {
             this.url = "";
             this.currentChain = "";
@@ -11,6 +20,7 @@ var frostFlake = (function (ff) {
             this.timeLeftInFrame = 0;
         },
 
+        // determines what frame in the chain the animation should be on
         update: function (deltaTime) {
             if (this.isAnimating) {
                 var chain = this.chains[this.currentChain];
@@ -32,14 +42,17 @@ var frostFlake = (function (ff) {
             }
         },
 
+        // starts the animation
         start:function() {
             this.isAnimating = true;
         },
 
+        // stops the animation
         stop:function() {
             this.isAnimating = false;
         },
 
+        // sets the chain that the animation is on
         setCurrentChain: function (name) {
             this.currentChain = name;
             this.currentFrame = 0;
@@ -50,6 +63,7 @@ var frostFlake = (function (ff) {
             this.timeLeftInFrame = chain.duration;
         },
 
+        // gets the texture coordinates for the sprite sheet for rendering
         getTextureCoordinates: function () {
             var chain = this.chains[this.currentChain];
             var frameData = chain.frames[this.currentFrame];
@@ -61,6 +75,10 @@ var frostFlake = (function (ff) {
             }
             return texCoords;
         },
+
+
+        // TODO: these should be moved into the IO part of FrostFlake. There needs to be a better pattern
+        // for loading items from JSON in general
 
         toModel:function() {
             var model = {
@@ -101,7 +119,7 @@ var frostFlake = (function (ff) {
                 this[property] = model[property];
             }
         }
-
     });
+
     return ff;
 }(frostFlake || {}));

@@ -1,5 +1,15 @@
+/* ===============================================================================================
+
+    DRAWABLE.JS
+
+    Base Class that describes basic functionality for positionable objects that can be
+    drawn to the screen.
+
+================================================================================================*/
+
 var frostFlake = (function (ff) {
     ff.Drawable = Class.extend({
+        
         init: function () {
             this.active = true;
             this.alpha = 1;
