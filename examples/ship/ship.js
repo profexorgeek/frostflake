@@ -50,6 +50,12 @@ var game = (function (g, ff, $) {
 			// frostflake will automatically look for "/content/ship.png"
 			this._super("ship");
 
+			// draw at double size
+			this.drawScale = {
+				x: 2,
+				y: 2
+			};
+
 			// create a custom speed setting for this ship
 			this.speed = 100;
 		},
