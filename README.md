@@ -1,5 +1,5 @@
 # README #
-Frostflake is a free, MIT-Licensed, JavaScript game engine for making games or other rich media in JavaScript. It attempts to make game development for the browser, similar to game development for the desktop. The game is rendered to a canvas object.
+Frostflake is a free, MIT-Licensed, JavaScript game engine for making games or other rich media in JavaScript. It attempts to make game development for the browser similar to game development for the desktop. The game is rendered to a canvas object and game objects are created as modular classes with inheritance.
 
 ### Existing Features ###
 So far, FrostFlake has these features:
