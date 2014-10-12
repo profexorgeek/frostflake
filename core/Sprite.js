@@ -1,3 +1,14 @@
+/* ===============================================================================================
+
+    SPRITE.JS
+    A Drawable referencing texture data. Can specify texture coordinates to only draw 
+    a portion of a texture or an animation that continually updates texture coordinates.
+
+    Images can be lazy-loaded from a URL provided when instantiated or loaded later via
+    the "loadImage" method.
+
+================================================================================================*/
+
 var frostFlake = (function (ff) {
     ff.Sprite = ff.Drawable.extend({
 
@@ -21,31 +32,13 @@ var frostFlake = (function (ff) {
             }
         },
 
+        // updates animation and texture coordinates
         update: function (deltaTime) {
             this._super(deltaTime);
             if (this.animation != null && this.animation instanceof ff.Animation) {
                 this.animation.update(deltaTime);
                 this.textureCoordinates = this.animation.getTextureCoordinates();
             }
-        },
-
-        // loads the image, can be called again if url changes
-        loadImage: function (url, loadedCallback) {
-            var wasActive = this.active;
-            this.active = false;
-            if (url !== null) {
-                this.url = url;
-            }
-            var me = this;
-            this.img = ff.loadImage(this.url, function () {
-                if (loadedCallback) {
-                    loadedCallback();
-                }
-                me.updateDimensions();
-                if (wasActive) {
-                    me.active = true;
-                }
-            });
         },
 
         // set texture coordinates to use a single frame of a larger texture
@@ -79,26 +72,45 @@ var frostFlake = (function (ff) {
 
         // called to update the sprite's dimensions
         updateDimensions: function () {
-            if (this.textureCoordinates === null) {
+            // if we are animating, the animation will set texture coordinates
+            if(!ff.hasValue(this.animation)) {
                 var texDimensions = {
                     width : 0,
                     height: 0
                 }
-                if(this.img !== undefined && this.img !== null) {
+                if(ff.hasValue(this.img)) {
                     texDimensions.width = this.img.width;
                     texDimensions.height = this.img.height;
                 }
 
-                this.setTextureCoordinates(0, texDimensions.width, 0, texDimensions.height);
+                // manually set texture coordinates, calling setTextureCoordinages = infinite loop
+                this.textureCoordinates = {top: 0, right: 0, bottom: texDimensions.height, left: texDimensions.width};
             }
 
-            var width = this.textureCoordinates.right - this.textureCoordinates.left;
-            var height = this.textureCoordinates.bottom - this.textureCoordinates.top;
-
-            this.width = width * this.drawScale.x;
-            this.height = height * this.drawScale.y;
+            // calculate width/height with drawscale
+            this.width = (this.textureCoordinates.right - this.textureCoordinates.left) * this.drawScale.x;
+            this.height = (this.textureCoordinates.bottom - this.textureCoordinates.top) * this.drawScale.y;
 
             this._super();
+        },
+
+        // loads the image, can be called again if url changes
+        loadImage: function (url, loadedCallback) {
+            var wasActive = this.active;
+            this.active = false;
+            if (url !== null) {
+                this.url = url;
+            }
+            var me = this;
+            this.img = ff.loadImage(this.url, function () {
+                if (loadedCallback) {
+                    loadedCallback();
+                }
+                me.updateDimensions();
+                if (wasActive) {
+                    me.active = true;
+                }
+            });
         },
 
         // loads an animation
@@ -114,32 +126,7 @@ var frostFlake = (function (ff) {
                 });
             });
         },
-
-        toModel: function () {
-            var model = {
-                type: "Sprite",
-                alpha: this.alpha,
-                position: this.position,
-                velocity: this.velocity,
-                acceleration: this.acceleration,
-                rotation: this.rotation,
-                rotationVelocity: this.rotationVelocity,
-                layer: this.layer,
-                url: this.url,
-                textureCoordinates: this.textureCoordinates
-            };
-            return model;
-        },
-
-        toJson: function () {
-            var model = this.toModel();
-            return ff.toJson(model);
-        },
-
-        fromJson: function (json) {
-            this._super(json);
-            this.loadImage();
-        }
     });
+
     return ff;
 }(frostFlake || {}));
