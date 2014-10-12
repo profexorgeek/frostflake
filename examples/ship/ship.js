@@ -51,10 +51,7 @@ var game = (function (g, ff, $) {
 			this._super("ship");
 
 			// draw at double size
-			this.drawScale = {
-				x: 2,
-				y: 2
-			};
+			this.setDrawScale(2, 2);
 
 			// create a custom speed setting for this ship
 			this.speed = 100;
@@ -109,21 +106,24 @@ var game = (function (g, ff, $) {
 			// call parent methods
 			this._super();
 
+			// get the camera's current view
+			var view = ff.camera.getViewPort();
+
 			// wrap star automatically
-			if(this.position.x < ff.camera.viewPort.left - this.wrapPadding) {
-				this.position.x = ff.camera.viewPort.right + this.wrapPadding;
+			if(this.position.x < view.left - this.wrapPadding) {
+				this.position.x = view.right + this.wrapPadding;
 				this.position.y = ff.camera.getRandomYInView();
 			}
-			else if(this.position.x > ff.camera.viewPort.right + this.wrapPadding) {
-				this.position.x = ff.camera.viewPort.left - this.wrapPadding;
+			else if(this.position.x > view.right + this.wrapPadding) {
+				this.position.x = view.left - this.wrapPadding;
 				this.position.y = ff.camera.getRandomYInView();
 			}
-			if(this.position.y < ff.camera.viewPort.bottom - this.wrapPadding) {
-				this.position.y = ff.camera.viewPort.top + this.wrapPadding;
+			if(this.position.y < view.bottom - this.wrapPadding) {
+				this.position.y = view.top + this.wrapPadding;
 				this.position.x = ff.camera.getRandomXInView();
 			}
-			else if(this.position.y > ff.camera.viewPort.top + this.wrapPadding) {
-				this.position.y = ff.camera.viewPort.bottom - this.wrapPadding;
+			else if(this.position.y > view.top + this.wrapPadding) {
+				this.position.y = view.bottom - this.wrapPadding;
 				this.position.x = ff.camera.getRandomXInView();
 			}
 
