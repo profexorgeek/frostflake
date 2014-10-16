@@ -44,7 +44,7 @@ var game = (function (g, ff, $) {
 			// set animation, passing a callback for when it is loaded
 			var me = this;
 			this.loadAnimation("content/nyan_animations.json", function() {
-				me.animation.setCurrentSequence("flying");
+				me.animation.currentSequence("flying");
 				me.animation.start();
 			});
 		}

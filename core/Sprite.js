@@ -70,9 +70,7 @@ var frostFlake = (function (ff) {
             var me = this;
             this.animation = anim;
 
-            var url = anim.getSpriteSheetUrl();
-
-            this.loadImage(anim.getSpriteSheetUrl(), function () {
+            this.loadImage(anim.spriteSheetUrl(), function () {
                 me.animation = anim;
                 me.textureCoordinates = anim.getTextureCoordinates();
                 me.updateDimensions();
@@ -132,7 +130,6 @@ var frostFlake = (function (ff) {
             var me = this;
             var animation = ff.Animation.getInstanceFromUrl(url, function () {
                 me.setAnimation(animation);
-
                 if(ff.hasValue(loadedCallback)) {
                     loadedCallback();
                 }

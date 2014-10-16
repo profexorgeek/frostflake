@@ -6,58 +6,12 @@
 
 ================================================================================================*/
 
-/* EXAMPLE ANIMATION JSON
-{
-    "spriteSheetUrl": "nyan",
-    "frameWidth": 100,
-    "frameHeight" : 70,
-    "sequences": {
-        "flying": {
-            "isLooping" : true,
-            "frames": [
-                {
-                    "top": 0,
-                    "left": 0,
-                    "duration": 0.1
-                },
-                {
-                    "top": 0,
-                    "left": 100,
-                    "duration": 0.1
-                },
-                {
-                    "top": 0,
-                    "left": 200,
-                    "duration": 0.1
-                },
-                {
-                    "top": 0,
-                    "left": 300,
-                    "duration": 0.1
-                },
-                {
-                    "top": 0,
-                    "left": 400,
-                    "duration": 0.1
-                },
-                {
-                    "top": 0,
-                    "left": 500,
-                    "duration": 0.1
-                }
-            ]
-        }
-    }
-}
-*/
-
 var frostFlake = (function (ff) {
 
     "use strict";
 
     ff.Animation = function () {
 
-        // private members
         var spriteSheetUrl = "",        // the url of the spritesheet for this animation 
             sequences = {},             // an object containing sequences with name as key
             currentSequence = {},       // the current animation sequence
@@ -66,6 +20,24 @@ var frostFlake = (function (ff) {
             frameHeight = 0,            // the height of the animation frames
             isAnimating = false,        // whether the animation is currently playing
             timeLeftInFrame = 0;        // amount of time before animation advances
+
+        // getter/setter for currentSequence
+        this.currentSequence = function (sequenceName) {
+            if (ff.hasValue(sequenceName)) {
+                if (sequences.hasOwnProperty(sequenceName)) {
+                    currentSequence = sequences[sequenceName];
+                    currentFrameIndex = 0;
+                    timeLeftInFrame = currentSequence.frames[currentFrameIndex].duration;
+                }
+            }
+
+            return currentSequence;
+        };
+
+        // getter with potential to be setter for spriteSheetUrl
+        this.spriteSheetUrl = function () {
+            return spriteSheetUrl;
+        };
 
         // update the flow of animation through frames
         this.update = function (deltaTime) {
@@ -103,20 +75,6 @@ var frostFlake = (function (ff) {
         // stops the animation
         this.stop = function () {
             isAnimating = false;
-        };
-
-        // gets the url for the spritesheet referenced by the animation
-        this.getSpriteSheetUrl = function () {
-            return spriteSheetUrl;
-        };
-
-        // sets the current sequence if the provided name is valid
-        this.setCurrentSequence = function (sequenceName) {
-            if (sequences.hasOwnProperty(sequenceName)) {
-                currentSequence = sequences[sequenceName];
-                currentFrameIndex = 0;
-                timeLeftInFrame = currentSequence.frames[currentFrameIndex].duration;
-            }
         };
 
         // gets the specific texture coordinates of the current frame for rendering
