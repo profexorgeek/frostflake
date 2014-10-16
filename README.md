@@ -24,10 +24,10 @@ Here are features I would like to add to FrostFlake:
 * Unit Tests coverage O_o
 * Parenting/Attachment: Ability to have one Drawable parent another and their rotation/velocity/etc stay in sync
 
-### Contribution guidelines ###
-* Writing tests: I don't/haven't but you should!
-* Code review: No process in place yet.
-* Other guidelines: See future features above for project direction.
+### Style Guidelines ###
+* See styleGuide.js
+* Code should be JSLint valid except for the frostFlake module pattern
+* Test cases need to be written! Code base at the time of this readme has zero test coverage :(
 
 ### Who do I talk to? ###
 BitBucket user profexorgeek, aka Justin Johnson. Send to my gmail: justin.d.johnson
