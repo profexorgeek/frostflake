@@ -8,14 +8,18 @@
 
 var frostFlake = (function (ff) {
 
+    // checks if a variable is null or undefined
+    ff.isNullOrUndefined = function(variable) {
+        if(variable === null || variable === undefined) {
+            return true;
+        }
+    }
+
     // Checks if provided variable is not undefined or null
     ff.hasValue = function(variable) {
-        // NOTE: this is the defacto way to check for both undefined
-        // and null in one check. The use of "==" is not an accident!
-        if(variable == null) {
+        if(ff.isNullOrUndefined(variable)) {
             return false;
         }
-
         return true;
     }
 
