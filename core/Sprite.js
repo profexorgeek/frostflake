@@ -35,7 +35,7 @@ var frostFlake = (function (ff) {
         // updates animation and texture coordinates
         update: function (deltaTime) {
             this._super(deltaTime);
-            if (this.animation != null && this.animation instanceof ff.Animation) {
+            if (ff.hasValue(this.animation) && this.animation instanceof ff.Animation) {
                 this.animation.update(deltaTime);
                 this.textureCoordinates = this.animation.getTextureCoordinates();
             }
@@ -63,6 +63,20 @@ var frostFlake = (function (ff) {
             };
 
             this.updateDimensions();
+        },
+
+        // loads the image associated with an animation and sets it
+        setAnimation: function(anim) {
+            var me = this;
+            this.animation = anim;
+
+            var url = anim.getSpriteSheetUrl();
+
+            this.loadImage(anim.getSpriteSheetUrl(), function () {
+                me.animation = anim;
+                me.textureCoordinates = anim.getTextureCoordinates();
+                me.updateDimensions();
+            });
         },
 
         // clears texture coordinates, whole img will be drawn
@@ -103,7 +117,7 @@ var frostFlake = (function (ff) {
             }
             var me = this;
             this.img = ff.loadImage(this.url, function () {
-                if (loadedCallback) {
+                if (ff.hasValue(loadedCallback)) {
                     loadedCallback();
                 }
                 me.updateDimensions();
@@ -114,17 +128,16 @@ var frostFlake = (function (ff) {
         },
 
         // loads an animation
-        loadAnimation: function (url) {
-            var anim = new ff.Animation();
+        loadAnimation: function (url, loadedCallback) {
             var me = this;
-            anim.fromUrl(url, function () {
-                me.loadImage(anim.url, function () {
-                    me.animation = anim;
-                    me.textureCoordinates = me.animation.getTextureCoordinates();
-                    me.updateDimensions();
-                    me.animation.start();
-                });
+            var animation = ff.Animation.getInstanceFromUrl(url, function () {
+                me.setAnimation(animation);
+
+                if(ff.hasValue(loadedCallback)) {
+                    loadedCallback();
+                }
             });
+            
         },
     });
 

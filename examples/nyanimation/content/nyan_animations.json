@@ -1,12 +1,10 @@
 {
-    "url": "nyan",
-    "currentChain":"flying",
-    "currentFrame":0,
+    "spriteSheetUrl": "nyan",
     "frameWidth": 100,
     "frameHeight" : 70,
-    "chains": {
+    "sequences": {
         "flying": {
-            "isLooped" : true,
+            "isLooping" : true,
             "frames": [
                 {
                     "top": 0,

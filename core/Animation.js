@@ -3,123 +3,178 @@
     ANIMATION.JS
     Animation Class used by Sprites to control animation chains.
 
+
 ================================================================================================*/
+
+/* EXAMPLE ANIMATION JSON
+{
+    "spriteSheetUrl": "nyan",
+    "frameWidth": 100,
+    "frameHeight" : 70,
+    "sequences": {
+        "flying": {
+            "isLooping" : true,
+            "frames": [
+                {
+                    "top": 0,
+                    "left": 0,
+                    "duration": 0.1
+                },
+                {
+                    "top": 0,
+                    "left": 100,
+                    "duration": 0.1
+                },
+                {
+                    "top": 0,
+                    "left": 200,
+                    "duration": 0.1
+                },
+                {
+                    "top": 0,
+                    "left": 300,
+                    "duration": 0.1
+                },
+                {
+                    "top": 0,
+                    "left": 400,
+                    "duration": 0.1
+                },
+                {
+                    "top": 0,
+                    "left": 500,
+                    "duration": 0.1
+                }
+            ]
+        }
+    }
+}
+*/
 
 var frostFlake = (function (ff) {
 
-    ff.Animation = Class.extend({
+    "use strict";
 
-        init: function () {
-            this.url = "";
-            this.currentChain = "";
-            this.currentFrame = 0;
-            this.frameWidth = 0;
-            this.frameHeight = 0;
-            this.chains = {};
-            this.isAnimating = false;
-            this.timeLeftInFrame = 0;
-        },
+    ff.Animation = function () {
 
-        // determines what frame in the chain the animation should be on
-        update: function (deltaTime) {
-            if (this.isAnimating) {
-                var chain = this.chains[this.currentChain];
-                this.timeLeftInFrame -= deltaTime;
-                if (this.timeLeftInFrame <= 0) {
-                    if (this.currentFrame < chain.frames.length - 2) {
-                        this.currentFrame += 1;
-                    }
-                    else {
-                        if (chain.isLooped) {
-                            this.currentFrame = 0;
+        // private members
+        var spriteSheetUrl = "",        // the url of the spritesheet for this animation 
+            sequences = {},             // an object containing sequences with name as key
+            currentSequence = {},       // the current animation sequence
+            currentFrameIndex = 0,      // the current frame index in the current sequence
+            frameWidth = 0,             // the width of the animation frames
+            frameHeight = 0,            // the height of the animation frames
+            isAnimating = false,        // whether the animation is currently playing
+            timeLeftInFrame = 0;        // amount of time before animation advances
+
+        // update the flow of animation through frames
+        this.update = function (deltaTime) {
+            if (isAnimating === true && ff.hasValue(currentSequence)) {
+                // reduce time left in frame by elapsed time
+                timeLeftInFrame = timeLeftInFrame - deltaTime;
+
+                if (timeLeftInFrame <= 0) {
+                    if (currentFrameIndex < currentSequence.frames.length - 2) {
+                        currentFrameIndex = currentFrameIndex + 1;
+                    } else {
+                        if (currentSequence.isLooping) {
+                            currentFrameIndex = 0;
                         }
                     }
-                    if (chain.frames[this.currentFrame].duration <= 0) {
-                        throw "Frame duration cannot be zero or less!";
-                    }
-                    this.timeLeftInFrame += chain.frames[this.currentFrame].duration;
-                }
-            }
-        },
 
-        // starts the animation
-        start:function() {
-            this.isAnimating = true;
-        },
+                    // NOTE: Render cycles do not exacly match frame durations!
+                    // So we need to increment timeLeftInFrame instead of setting it directly.
+                    // This makes overall animation duration more accurate.
+                    // Long hiccups in update speed will result in animations playing very quickly until
+                    // they catch up.
+                    timeLeftInFrame = timeLeftInFrame + currentSequence.frames[currentFrameIndex].duration;
+                }
+
+            }
+        };
+
+        // starts the animation if valid sequences are defined
+        this.start = function () {
+            if (ff.hasValue(currentSequence) && ff.hasValue(currentSequence.frames) && currentSequence.frames.length > 0) {
+                isAnimating = true;
+            }
+        };
 
         // stops the animation
-        stop:function() {
-            this.isAnimating = false;
-        },
+        this.stop = function () {
+            isAnimating = false;
+        };
 
-        // sets the chain that the animation is on
-        setCurrentChain: function (name) {
-            this.currentChain = name;
-            this.currentFrame = 0;
-            var chain = this.chains[this.currentChain];
-            if(chain.frames[this.currentFrame].duration <= 0) {
-                throw "Frame duration cannot be zero or less!";
+        // gets the url for the spritesheet referenced by the animation
+        this.getSpriteSheetUrl = function () {
+            return spriteSheetUrl;
+        };
+
+        // sets the current sequence if the provided name is valid
+        this.setCurrentSequence = function (sequenceName) {
+            if (sequences.hasOwnProperty(sequenceName)) {
+                currentSequence = sequences[sequenceName];
+                currentFrameIndex = 0;
+                timeLeftInFrame = currentSequence.frames[currentFrameIndex].duration;
             }
-            this.timeLeftInFrame = chain.duration;
-        },
+        };
 
-        // gets the texture coordinates for the sprite sheet for rendering
-        getTextureCoordinates: function () {
-            var chain = this.chains[this.currentChain];
-            var frameData = chain.frames[this.currentFrame];
-            var texCoords = {
-                top:frameData.top,
-                right:frameData.left + this.frameWidth,
-                bottom:frameData.top + this.frameHeight,
-                left:frameData.left
+        // gets the specific texture coordinates of the current frame for rendering
+        this.getTextureCoordinates = function () {
+            var coords = {top: 0, right: 0, bottom: 0, left: 0 },  // coordinates object expected by renderer
+                frameData;                                         // reference to the current frame
+
+            if (ff.hasValue(currentSequence.frames) && currentSequence.frames.length > 0) {
+                frameData = currentSequence.frames[currentFrameIndex];
+                coords = {
+                    top: frameData.top,
+                    right: frameData.left + frameWidth,
+                    bottom: frameData.top + frameHeight,
+                    left: frameData.left
+                };
             }
-            return texCoords;
-        },
 
+            return coords;
+        };
 
-        // TODO: these should be moved into the IO part of FrostFlake. There needs to be a better pattern
-        // for loading items from JSON in general
-
-        toModel:function() {
-            var model = {
-                isAnimating: this.isAnimating,
-                currentChain: this.currentChain,
-                currentFrame: this.currentFrame,
-                url: this.url,
-                chains: this.chains
+        // returns a JSON string representing this animation
+        this.toJson = function () {
+            return {
+                spriteSheetUrl: spriteSheetUrl,
+                frameWidth: frameWidth,
+                frameHeight: frameHeight,
+                sequences: sequences
             };
-            return model;
-        },
+        };
 
-        toJson: function () {
-            var model = this.toModel();
-            return ff.toJson(model);
-        },
+        // populates animation data from a json string and stops animating
+        this.fromJson = function (jsonObject) {
+            spriteSheetUrl = jsonObject.spriteSheetUrl;
+            frameWidth = jsonObject.frameWidth;
+            frameHeight = jsonObject.frameHeight;
+            sequences = jsonObject.sequences;
+            isAnimating = false;
+        };
+    };
 
-        fromUrl:function(url, loadFinishedCallback) {
-            var model;
-            var animation = this;
-            ff.loadJson(url, function(json) {
-               model = json;
-                animation.fromModel(model);
-                if(loadFinishedCallback) {
-                    loadFinishedCallback();
+    // static method allowing creation of an animation instance from a URL
+    ff.Animation.getInstanceFromUrl = function (url, loadedCallback) {
+
+        var animation = new ff.Animation();
+
+        // load from URL if one was provided
+        if (ff.hasValue(url)) {
+            ff.loadJson(url, function (json) {
+                animation.fromJson(json);
+
+                if (ff.hasValue(loadedCallback)) {
+                    loadedCallback();
                 }
             });
-        },
-
-        fromJson: function (json) {
-            var saveModel = ff.fromJson(json);
-            this.fromModel(saveModel);
-        },
-
-        fromModel:function(model) {
-            // TODO: sanity checks on data?
-            for (var property in model) {
-                this[property] = model[property];
-            }
         }
-    });
+
+        return animation;
+    };
 
     return ff;
 }(frostFlake || {}));

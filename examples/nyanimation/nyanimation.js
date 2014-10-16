@@ -41,12 +41,12 @@ var game = (function (g, ff, $) {
 			// will load an empty sprite
 			this._super();
 
-			// set animation
-			this.loadAnimation("content/nyan_animations.json");
-		},
-
-		customUpdate:function(deltaTime) {
-
+			// set animation, passing a callback for when it is loaded
+			var me = this;
+			this.loadAnimation("content/nyan_animations.json", function() {
+				me.animation.setCurrentSequence("flying");
+				me.animation.start();
+			});
 		}
 	});
 
