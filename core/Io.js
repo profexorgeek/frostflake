@@ -28,6 +28,7 @@ var frostFlake = (function (ff, $) {
 
     // converts an object to a JSON string
     ff.toJson = JSON.stringify || function (obj) {
+        console.log("Warning: JSON.stringify not found. Using fallback.");
         var t = typeof (obj);
         if (t != "object" || obj === null) {
             if (t == "string") obj = '"' + obj + '"';
@@ -46,8 +47,9 @@ var frostFlake = (function (ff, $) {
         }
     };
 
-    // parses a json string, WARNING: uses eval
+    // parses a json string, WARNING: uses eval if JSON object is not available
     ff.fromJson = JSON.parse || function (str) {
+        console.log("Warning: JSON.parse not found. Using fallback.");
         if (str === "") str = '""';
         eval("var p=" + str + ";");
         return p;

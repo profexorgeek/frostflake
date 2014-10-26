@@ -8,19 +8,13 @@
 
 var frostFlake = (function (ff) {
 
-    // checks if a variable is null or undefined
-    ff.isNullOrUndefined = function(variable) {
-        if(variable === null || variable === undefined) {
-            return true;
-        }
-    }
-
     // Checks if provided variable is not undefined or null
     ff.hasValue = function(variable) {
-        if(ff.isNullOrUndefined(variable)) {
-            return false;
+        if(variable !== undefined && variable !== null && variable != "") {
+            return true;
         }
-        return true;
+
+        return false;
     }
 
     // Returns a default values if provided variable has no value
