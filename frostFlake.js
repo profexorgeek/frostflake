@@ -98,44 +98,7 @@ var frostFlake = (function (ff) {
         throw "Not implemented.";
     };
 
-    // adds a drawable to render queue
-    ff.addDrawable = function(drawable) {
-        var placeToAdd = ff.drawables.length - 1;
-        for(var i = 0; i < ff.drawables.length; i++) {
-            if(drawable.layer < ff.drawables[i].layer) {
-                placeToAdd = i;
-                break;
-            }
-        }
-        ff.drawables.splice(placeToAdd, 0, drawable);
-    };
-
-    // adds collection of drawables to render queue
-    ff.addDrawableArray = function(drawableArray) {
-        for(var i = 0; i < drawableArray.length; i++) {
-            ff.addDrawable(drawableArray[i]);
-        }
-    };
-
-    // removes a drawable from render queue
-    ff.removeDrawable = function(drawable) {
-        var index = ff.drawables.indexOf(drawable);
-        if(index >= 0) {
-            ff.drawables.splice(index, 1);
-        }
-    };
-
-    // removes collection of drawables from render queue
-    ff.removeDrawableArray = function(drawableArray) {
-        for(var i = 0; i < drawableArray.length; i++) {
-            ff.removeDrawable(drawableArray[i]);
-        }
-    };
-
-    // removes all drawables from render queue
-    ff.clearDrawables = function() {
-        ff.drawables = [];
-    };
+    
 
     /* Simple JavaScript Inheritance
      * By John Resig http://ejohn.org/
