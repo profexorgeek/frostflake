@@ -137,7 +137,6 @@ var frostFlake = (function (ff) {
         ff.drawables = [];
     };
 
-    // TODO: migrate away from using this?
     /* Simple JavaScript Inheritance
      * By John Resig http://ejohn.org/
      * MIT Licensed.
