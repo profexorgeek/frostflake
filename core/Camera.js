@@ -7,22 +7,13 @@
 ================================================================================================*/
 
 var frostFlake = (function (ff) {
-    ff.Camera = function(width, height) {
+
+    "use strict";
+
+    ff.Camera = function (width, height) {
 
         // the positionable the camera is attached to
         var attachTarget;
-
-        // the camera's current position
-        var position = {
-            x:0,
-            y:0
-        }
-
-        // the camera's current velocity
-        var velocity = {
-            x:0,
-            y:0
-        }
 
         // describes the camera's current viewable area
         var viewPort = {
@@ -34,21 +25,21 @@ var frostFlake = (function (ff) {
             height:0
         }
 
+        this.velocity = {
+            x:0,
+            y:0
+        }
+
+        this.position = {
+            x:0,
+            y:0
+        }
+
         // sets the viewPort size
         setViewSize(width, height);
 
-        // updates position and viewport, calls custom update
-        function update(deltaTime) {
-            position.x += velocity.x * deltaTime;
-            position.y += velocity.y * deltaTime;
-            updateViewPort();
-            if(ff.hasValue(attachTarget)) {
-                position = attachTarget.position;
-            }
-        };
-
         // updates the viewport area based on height, width and position
-        function updateViewPort() {
+        function updateViewPort () {
             var halfWidth = viewPort.width / 2;
             var halfHeight = viewPort.height / 2;
             viewPort.left = position.x - halfWidth;
@@ -58,7 +49,7 @@ var frostFlake = (function (ff) {
         };
 
         // gets a copy of the viewport
-        function getViewPort() {
+        function getViewPort () {
             return {
                 left: viewPort.left,
                 right: viewPort.right,
@@ -69,9 +60,19 @@ var frostFlake = (function (ff) {
             };
         }
 
+        // updates position and viewport, calls custom update
+        this.update = function(deltaTime) {
+            position.x += velocity.x * deltaTime;
+            position.y += velocity.y * deltaTime;
+            updateViewPort();
+            if(ff.hasValue(attachTarget)) {
+                position = attachTarget.position;
+            }
+        };
+
         // attaches the camera to an object as long as that object has a position
         // TODO: implement ability to offset positioning
-        function attachTo(positionable) {
+        this.attachTo = function(positionable) {
             if(ff.hasValue(positionable.position)) {
                 attachTarget = positionable;
                 return true;
@@ -80,12 +81,12 @@ var frostFlake = (function (ff) {
         };
 
         // detaches the camera from a positionable object
-        function detach() {
+        function detach () {
             attachTarget = null;
         };
 
         // used by the renderer to translate camera position for rendering
-        function start(context) {
+        function start (context) {
             var translateX = ff.math.invert(position.x) + (context.canvas.width / 2);
             var translateY = position.y + (context.canvas.height / 2);
             context.save();
@@ -97,12 +98,12 @@ var frostFlake = (function (ff) {
         };
 
         // used by the renderer to end translation after a render cycle
-        function end(context) {
+        function end (context) {
             context.restore();
         };
 
         // gets a random point within the camera's view
-        function getRandomPointInView() {
+        function getRandomPointInView () {
             return {
                 x : getRandomXInView(),
                 y : getRandomYInView()
@@ -110,17 +111,17 @@ var frostFlake = (function (ff) {
         };
 
         // gets a random x within the camera's view
-        function getRandomXInView() {
+        function getRandomXInView () {
             return ff.math.randomInRange(viewPort.left, viewPort.right);
         };
 
         // gets a random y within the camera's view
-        function getRandomYInView() {
+        function getRandomYInView () {
             return ff.math.randomInRange(viewPort.bottom, viewPort.top);
         };
 
         // updates the width/height of the viewable area
-        function setViewSize(width, height) {
+        function setViewSize (width, height) {
 
             // use constants for defaults if width/height are not valid
             width = ff.defaultIfNoValue(width, ff.constants.DEFAULT_WIDTH);
@@ -130,22 +131,6 @@ var frostFlake = (function (ff) {
             viewPort.height = height;
 
             updateViewPort();
-        };
-
-        // expose public methods and members
-        return {
-            position:                   position,
-            velocity:                   velocity,
-            update:                     update,
-            attachTo:                   attachTo,
-            detach:                     detach,
-            start:                      start,
-            end:                        end,
-            getRandomPointInView:       getRandomPointInView,
-            getRandomXInView:           getRandomXInView,
-            getRandomYInView:           getRandomYInView,
-            setViewSize:                setViewSize,
-            getViewPort:             getViewPort,
         };
     };
 

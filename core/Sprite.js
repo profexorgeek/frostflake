@@ -10,92 +10,110 @@
 ================================================================================================*/
 
 var frostFlake = (function (ff) {
-    ff.Sprite = ff.Drawable.extend({
+    "use strict";
 
-        // create the sprite, loading the image URL
-        init: function (url, layer, loadedCallback) {
-            this._super();
+    ff.Sprite = ff.Class.extend({
+        // constructor: create the sprite and load the image URL
+        init: function (imageUrl, loadedCallback) {
+            this.active = true;                 // whether update and draw should apply to this object
+            this.children = [];                 // child sprites
+            this.alpha = 1;                     // sprite alpha as a 0-1 float
+            this.drawScale = {x: 1, y: 1};      // the x and y drawing scale as a percentage
+            this.parent = null;                 // sprite parent
+            this.width = 0;                     // sprite width
+            this.height = 0;                    // sprite total height
+            this.position = {x: 0, y: 0};       // sprite position, relative to parent if parented
+            this.velocity = {x: 0, y: 0};       // sprite velocity, applied each update
+            this.rotation = 0;                  // sprite rotation in radians, relative to parent if parented
+            this.rotationVelocity = 0;          // sprite rotation velocity, applied each update
+            this.collisionRadius = 0;           // sprite collideable radius
+            this.textureUrl = "";               // url of the texture to load and display
+            this.texture = null;                // the actual image data used by this sprite
+            this.animation = null;              // the animation governing this sprite
 
-            this.url = url;
-            this.img = null;
-            this.drawScale = {
-                x: 1,
-                y: 1
-            }
-            this.radiusVisible = false;
-            this.textureCoordinates = null;
-            this.animation = null;
-            this.layer = (layer !== undefined && layer !== null) ? layer : this.layer;
-
-            if(url !== undefined && url !== null) {
-                this.loadImage(url, loadedCallback);
+            // load the texture if URL was provided
+            // Sprites with null textures will be updated but not drawn
+            if (ff.hasValue(imageUrl)) {
+                this.textureUrl = imageUrl;
+                this.loadImage(imageUrl, loadedCallback);
             }
         },
 
-        // updates animation and texture coordinates
+        // updates the position, rotation and children
         update: function (deltaTime) {
-            this._super(deltaTime);
-            if (ff.hasValue(this.animation) && this.animation instanceof ff.Animation) {
-                this.animation.update(deltaTime);
-                this.textureCoordinates = this.animation.getTextureCoordinates();
+            if (!ff.hasValue(deltaTime)) {
+                throw "Bad delta provided to update cycle!";
+            }
+
+            // inactive Sprites are not updated or drawn
+            if (this.active === true) {
+                var deltaSquaredDividedByTwo = deltaTime * deltaTime / 2,   // calc once for performance
+                    i;                                                      // JSLint likes this here.
+
+                // update values based on time elapsed
+                this.position.x += (this.velocity.x * deltaTime) + (this.acceleration.x * deltaSquaredDividedByTwo);
+                this.position.y += (this.velocity.y * deltaTime) + (this.acceleration.y * deltaSquaredDividedByTwo);
+                this.velocity.x += (this.acceleration.x * deltaTime);
+                this.velocity.y += (this.acceleration.y * deltaTime);
+                this.rotation += this.rotationVelocity * deltaTime;
+
+                // update children
+                for (i = 0; i < this.children.length; i += 1) {
+                    this.children[i].update();
+                }
+
+                // clamp values
+                this.clamp();
+
+                // calculate animation
+                if (ff.hasValue(this.animation) && this.animation instanceof ff.Animation) {
+                    this.animation.update(deltaTime);
+                    this.textureCoordinates = this.animation.getTextureCoordinates();
+                }
             }
         },
 
-        // set texture coordinates to use a single frame of a larger texture
-        setTextureCoordinates: function (left, right, top, bottom) {
-            this.textureCoordinates = {top: top, right: right, bottom: bottom, left: left};
-            this.updateDimensions();
+        // clamps values to valid ranges
+        clamp: function () {
+            this.alpha = Math.max(this.alpha, 0);
+            this.alpha = Math.min(this.alpha, 1);
+            if (this.rotation >= ff.math.twoPi) {
+                this.rotation -= ff.math.twoPi;
+            }
+            if (this.rotation < 0) {
+                this.rotation += ff.math.twoPi;
+            }
         },
 
-        // sets the sprites position
-        setPosition:function(x, y) {
-            this.position.x = x;
-            this.position.y = y;
+        // checks if this sprite's collision radius overlaps the provided sprite
+        isRadiusColliding: function (sprite) {
+            var overlapDistance,        // the combined radii 
+                distanceBetween;        // the absolute distance between Sprites
+
+            if (!(sprite instanceof ff.Sprite)) {
+                throw "Cannot check radius collision against a non-Sprite object.";
+            }
+
+            overlapDistance = (this.radius) + (sprite.radius);
+            distanceBetween = ff.math.absoluteDistanceBetween(this.position, sprite.position);
+            return (overlapDistance < distanceBetween);
         },
 
-        // sets the percent the sprite will be scaled on each axis when drawn
-        setDrawScale: function (xScale, yScale) {
-            xScale = Math.max(xScale, 0);
-            yScale = Math.max(yScale, 0);
-            this.drawScale = {
-                x: xScale,
-                y: yScale
-            };
-
-            this.updateDimensions();
-        },
-
-        // loads the image associated with an animation and sets it
-        setAnimation: function(anim) {
-            var me = this;
-            this.animation = anim;
-
-            this.loadImage(anim.spriteSheetUrl(), function () {
-                me.animation = anim;
-                me.textureCoordinates = anim.getTextureCoordinates();
-                me.updateDimensions();
-            });
-        },
-
-        // clears texture coordinates, whole img will be drawn
-        clearTextureCoordinates: function () {
-            this.textureCoordinates = null;
-        },
-
-        // called to update the sprite's dimensions
+        // recalculate the height/width based on texture coordinates, then recalculate radius
         updateDimensions: function () {
             // if we are animating, the animation will set texture coordinates
-            if(!ff.hasValue(this.animation)) {
+            if (!ff.hasValue(this.animation)) {
                 var texDimensions = {
                     width : 0,
                     height: 0
-                }
-                if(ff.hasValue(this.img)) {
+                };
+                if (ff.hasValue(this.img)) {
                     texDimensions.width = this.img.width;
                     texDimensions.height = this.img.height;
                 }
 
-                // manually set texture coordinates, calling setTextureCoordinages = infinite loop
+                // manually set texture coordinates
+                // NOTE: do not call setTextureCoordinates here: infinite loop!
                 this.textureCoordinates = {top: 0, right: 0, bottom: texDimensions.height, left: texDimensions.width};
             }
 
@@ -103,39 +121,95 @@ var frostFlake = (function (ff) {
             this.width = (this.textureCoordinates.right - this.textureCoordinates.left) * this.drawScale.x;
             this.height = (this.textureCoordinates.bottom - this.textureCoordinates.top) * this.drawScale.y;
 
-            this._super();
+            // update the radius to match the new dimensions
+            this.updateRadius();
         },
 
-        // loads the image, can be called again if url changes
-        loadImage: function (url, loadedCallback) {
-            var wasActive = this.active;
-            this.active = false;
-            if (url !== null) {
-                this.url = url;
+        // calculates and sets the radius. This should be called whenever dimensions change
+        updateRadius: function () {
+            if (this.width === 0 && this.height === 0) {
+                this.radius = 0;
+            } else {
+                this.radius = ff.math.absoluteDistanceBetween({x: 0, y: 0}, {x: this.width * 0.5, y: this.height * 0.5});
             }
+        },
+
+        // set new texture coordinates, called automatically by animation sequence
+        setTextureCoordinates: function (left, right, top, bottom) {
+            this.textureCoordinates = {top: top, right: right, bottom: bottom, left: left};
+            this.updateDimensions();
+        },
+
+        // resets texture coordinates to null
+        clearTextureCoordinates: function () {
+            this.textureCoordinates = null;
+        },
+
+        // sets the position
+        setPosition: function (x, y) {
+            this.position.x = x;
+            this.position.y = y;
+        },
+
+        // returns the absolute position of this object, taking parent positions and rotations into account
+        // TODO: implement!
+        getAbsolutePosition: function () {
+            throw "Not implemented yet!";
+        },
+
+        // sets the drawscale, ensuring it's not < 0 and then updates dimensions
+        setDrawScale: function (xScale, yScale) {
+            xScale = Math.max(xScale, 0);
+            yScale = Math.max(yScale, 0);
+            this.drawScale = {
+                x: xScale,
+                y: yScale
+            };
+            this.updateDimensions();
+        },
+
+        // loads and sets animation json from provided URL, calls loadedCallback on success
+        loadAnimation: function (url, loadedCallback) {
+            var me = this,
+                animation = ff.Animation.getInstanceFromUrl(url, function () {
+                    me.setAnimation(animation);
+                    if (ff.hasValue(loadedCallback)) {
+                        loadedCallback();
+                    }
+                });
+        },
+
+        // sets the animation and loads the animation's spritesheet URL
+        setAnimation: function (anim) {
             var me = this;
-            this.img = ff.loadImage(this.url, function () {
+            this.loadImage(anim.spriteSheetUrl(), function () {
+                me.animation = anim;
+                me.textureCoordinates = anim.getTextureCoordinates();
+                me.updateDimensions();
+            });
+        },
+
+        // loads an image texture from the provided URL, calls loadedCallback when complete
+        loadImage: function (url, loadedCallback) {
+            var me = this;
+            this.textureUrl = url;
+            this.texture = ff.loadImage(this.textureUrl, function () {
                 if (ff.hasValue(loadedCallback)) {
                     loadedCallback();
                 }
                 me.updateDimensions();
-                if (wasActive) {
-                    me.active = true;
-                }
             });
         },
 
-        // loads an animation
-        loadAnimation: function (url, loadedCallback) {
-            var me = this;
-            var animation = ff.Animation.getInstanceFromUrl(url, function () {
-                me.setAnimation(animation);
-                if(ff.hasValue(loadedCallback)) {
-                    loadedCallback();
-                }
-            });
-            
+        // TODO: implement this
+        toJson: function () {
+            throw "Not implemented";
         },
+
+        // TODO: implement this
+        fromJson: function () {
+            throw "Not implemented";
+        }
     });
 
     return ff;
