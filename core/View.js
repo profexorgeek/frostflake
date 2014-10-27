@@ -6,56 +6,65 @@
 
 ================================================================================================*/
 
+/* global window */
 var frostFlake = (function (ff) {
-	"use strict";
+    "use strict";
 
-    ff.View = Class.extend({
-        
-        init:function() {
+    ff.View = ff.Class.extend({
+        // constructor
+        init: function () {
             this.sprites = [];
         },
 
-        // adds a sprite to render queue
-	    addsprite = function (sprite) {
-	        var placeToAdd = ff.sprites.length - 1,
-	        i;
-	        for(i = 0; i < ff.sprites.length; i++) {
-	            if(sprite.layer < ff.sprites[i].layer) {
-	                placeToAdd = i;
-	                break;
-	            }
-	        }
-	        ff.sprites.splice(placeToAdd, 0, sprite);
-	    },
-	    
-	    // adds collection of sprites to render queue
-	    addSpriteArray = function (spriteArray) {
-	    	var i;
-	        for (i = 0; i < spriteArray.length; i++) {
-	            ff.addSprite(spriteArray[i]);
-	        }
-	    },
+        // updates all Sprites (Sprites automatically update their children)
+        update: function () {
+            var i;
+            for (i = 0; i < ff.sprites.length; i += 1) {
+                ff.sprites[i].update(ff.time.delta);
+            }
+        },
 
-	    // removes a sprite from render queue
-	    removeSprite = function (sprite) {
-	        var index = ff.sprites.indexOf(sprite);
-	        if (index >= 0) {
-	            ff.sprites.splice(sprite, 1);
-	        }
-	    },
+        // adds a sprite to the draw/update queue
+        addsprite: function (sprite) {
+            var placeToAdd = ff.sprites.length - 1,
+                i;
+            for (i = 0; i < ff.sprites.length; i += 1) {
+                if (sprite.layer < ff.sprites[i].layer) {
+                    placeToAdd = i;
+                    break;
+                }
+            }
+            ff.sprites.splice(placeToAdd, 0, sprite);
+        },
 
-	    // removes collection of sprites from render queue
-	    removeSpriteArray = function (spriteArray) {
-	    	var i;
-	        for (i = 0; i < spriteArray.length; i++) {
-	            ff.removeSprite(spriteArray[i]);
-	        }
-	    },
+        // adds array of sprites to the draw/update queue
+        addSpriteArray: function (spriteArray) {
+            var i;
+            for (i = 0; i < spriteArray.length; i += 1) {
+                ff.addSprite(spriteArray[i]);
+            }
+        },
 
-	    // removes all sprites from render queue
-	    clearSprites = function () {
-	        ff.sprites = [];
-	    }
+        // removes a sprite from the draw/update queue
+        removeSprite: function (sprite) {
+            var index = ff.sprites.indexOf(sprite);
+            if (index >= 0) {
+                ff.sprites.splice(sprite, 1);
+            }
+        },
+
+        // removes array of sprites from the draw/update queue
+        removeSpriteArray: function (spriteArray) {
+            var i;
+            for (i = 0; i < spriteArray.length; i += 1) {
+                ff.removeSprite(spriteArray[i]);
+            }
+        },
+
+        // removes all sprites from render queue
+        clearSprites: function () {
+            ff.sprites = [];
+        }
     });
 
     return ff;
