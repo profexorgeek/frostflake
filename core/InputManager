@@ -5,12 +5,12 @@
 
 ================================================================================================*/
 
-/*global document */
-var frostFlake = (function (ff) {
+/*global document, jQuery */
+var frostFlake = (function (ff, $) {
     "use strict";
 
     ff.InputManager = ff.Class.extend({
-        init: function ($, canvas) {
+        init: function (canvas) {
             var mouse = ff.mouse,               // local reference to the mouse object
                 keyboard = ff.keyboard;         // local reference to the keyboard object
 
@@ -69,6 +69,6 @@ var frostFlake = (function (ff) {
             });
         }
     });
-    
+
     return ff;
-}(frostFlake || {}));
+}(frostFlake || {}, jQuery));
