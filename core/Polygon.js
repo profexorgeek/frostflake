@@ -3,6 +3,8 @@
     POLYGON.JS
     Special drawable that describes a primative shape as a series of points
 
+    CURRENTLY UNSUPPORTED
+
 ================================================================================================*/
 
 var frostFlake = (function (ff) {
