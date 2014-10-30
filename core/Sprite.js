@@ -27,6 +27,7 @@ var frostFlake = (function (ff) {
             this.rotation = 0;                  // sprite rotation in radians, relative to parent if parented
             this.rotationVelocity = 0;          // sprite rotation velocity, applied each update
             this.collisionRadius = 0;           // sprite collideable radius
+            this.showRadius = false;            // whether or not to draw the sprite's collision radius
             this.textureUrl = "";               // url of the texture to load and display
             this.texture = null;                // the actual image data used by this sprite
             this.animation = null;              // the animation governing this sprite
