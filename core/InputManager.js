@@ -9,7 +9,7 @@
 var frostFlake = (function (ff, $) {
     "use strict";
 
-    ff.InputManager = ff.Class.extend({
+    ff.InputManager = Class.extend({
         init: function (canvas) {
             var mouse = ff.mouse,               // local reference to the mouse object
                 keyboard = ff.keyboard;         // local reference to the keyboard object

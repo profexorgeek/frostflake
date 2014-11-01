@@ -12,7 +12,7 @@
 var frostFlake = (function (ff) {
     "use strict";
 
-    ff.Sprite = ff.Class.extend({
+    ff.Sprite = Class.extend({
         // constructor: create the sprite and load the image URL
         init: function (imageUrl, loadedCallback) {
             this.active = true;                 // whether update and draw should apply to this object
@@ -24,6 +24,7 @@ var frostFlake = (function (ff) {
             this.height = 0;                    // sprite total height
             this.position = {x: 0, y: 0};       // sprite position, relative to parent if parented
             this.velocity = {x: 0, y: 0};       // sprite velocity, applied each update
+            this.acceleration = {x: 0, y: 0};   // sprite acceleration, applied to velocity and position each frame
             this.rotation = 0;                  // sprite rotation in radians, relative to parent if parented
             this.rotationVelocity = 0;          // sprite rotation velocity, applied each update
             this.collisionRadius = 0;           // sprite collideable radius
@@ -31,6 +32,12 @@ var frostFlake = (function (ff) {
             this.textureUrl = "";               // url of the texture to load and display
             this.texture = null;                // the actual image data used by this sprite
             this.animation = null;              // the animation governing this sprite
+            this.textureCoordinates = {         // object representing the texture dimensions once loaded
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0
+            }
 
             // load the texture if URL was provided
             // Sprites with null textures will be updated but not drawn
@@ -60,7 +67,7 @@ var frostFlake = (function (ff) {
 
                 // update children
                 for (i = 0; i < this.children.length; i += 1) {
-                    this.children[i].update();
+                    this.children[i].update(deltaTime);
                 }
 
                 // clamp values
@@ -102,20 +109,23 @@ var frostFlake = (function (ff) {
 
         // recalculate the height/width based on texture coordinates, then recalculate radius
         updateDimensions: function () {
-            // if we are animating, the animation will set texture coordinates
-            if (!ff.hasValue(this.animation)) {
+            // if we have an animation, get texture coordinates from the animation
+            if (ff.hasValue(this.animation)) {
+                this.textureCoordinates = this.animation.getTextureCoordinates();
+
+            // otherwise set based on texture size
+            } else {
                 var texDimensions = {
                     width : 0,
                     height: 0
                 };
-                if (ff.hasValue(this.img)) {
-                    texDimensions.width = this.img.width;
-                    texDimensions.height = this.img.height;
+                if (ff.hasValue(this.texture)) {
+                    texDimensions.width = this.texture.width;
+                    texDimensions.height = this.texture.height;
                 }
-
                 // manually set texture coordinates
                 // NOTE: do not call setTextureCoordinates here: infinite loop!
-                this.textureCoordinates = {top: 0, right: 0, bottom: texDimensions.height, left: texDimensions.width};
+                this.textureCoordinates = {top: 0, right: texDimensions.width, bottom: texDimensions.height, left: 0};
             }
 
             // calculate width/height with drawscale
@@ -143,7 +153,12 @@ var frostFlake = (function (ff) {
 
         // resets texture coordinates to null
         clearTextureCoordinates: function () {
-            this.textureCoordinates = null;
+            this.textureCoordinates = {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0
+            }
         },
 
         // sets the position
@@ -185,7 +200,6 @@ var frostFlake = (function (ff) {
             var me = this;
             this.loadImage(anim.spriteSheetUrl(), function () {
                 me.animation = anim;
-                me.textureCoordinates = anim.getTextureCoordinates();
                 me.updateDimensions();
             });
         },

@@ -6,133 +6,101 @@
 
 ================================================================================================*/
 
+/*global Class */
 var frostFlake = (function (ff) {
-
     "use strict";
 
-    ff.Camera = function (width, height) {
+    ff.Camera = Class.extend({
+        init: function (viewWidth, viewHeight) {
+            // positionable object the camera is attached to
+            this.attachTarget = null;
 
-        // the positionable the camera is attached to
-        var attachTarget;
-
-        // describes the camera's current viewable area
-        var viewPort = {
-            left:0,
-            right:0,
-            top:0,
-            bottom:0,
-            width:0,
-            height:0
-        }
-
-        this.velocity = {
-            x:0,
-            y:0
-        }
-
-        this.position = {
-            x:0,
-            y:0
-        }
-
-        // sets the viewPort size
-        setViewSize(width, height);
-
-        // updates the viewport area based on height, width and position
-        function updateViewPort () {
-            var halfWidth = viewPort.width / 2;
-            var halfHeight = viewPort.height / 2;
-            viewPort.left = position.x - halfWidth;
-            viewPort.right = position.x + halfWidth;
-            viewPort.top = position.y + halfHeight;
-            viewPort.bottom = position.y - halfHeight;
-        };
-
-        // gets a copy of the viewport
-        function getViewPort () {
-            return {
-                left: viewPort.left,
-                right: viewPort.right,
-                top: viewPort.top,
-                bottom: viewPort.bottom,
-                width: viewPort.width,
-                height: viewPort.height
+            // describes the camera's current viewable area
+            this.viewPort = {
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                width: viewWidth,
+                height: viewHeight
             };
-        }
 
-        // updates position and viewport, calls custom update
-        this.update = function(deltaTime) {
-            position.x += velocity.x * deltaTime;
-            position.y += velocity.y * deltaTime;
-            updateViewPort();
-            if(ff.hasValue(attachTarget)) {
-                position = attachTarget.position;
+            // the camera's rate of movement
+            this.velocity = {
+                x: 0,
+                y: 0
+            };
+
+            // the camera position
+            this.position = {
+                x: 0,
+                y: 0
+            };
+        },
+
+        // updates position and viewport
+        update: function (deltaTime) {
+            if (ff.hasValue(this.attachTarget)) {
+                this.position = this.attachTarget.position;
+            } else {
+                this.position.x = this.position.x + (this.velocity.x * deltaTime);
+                this.position.y = this.position.y + (this.velocity.y * deltaTime);
             }
-        };
+            this.updateViewPort();
+        },
 
-        // attaches the camera to an object as long as that object has a position
-        // TODO: implement ability to offset positioning
-        this.attachTo = function(positionable) {
-            if(ff.hasValue(positionable.position)) {
-                attachTarget = positionable;
+        // updates the viewport based on position and dimensions
+        updateViewPort: function () {
+            var halfWidth = this.viewPort.width / 2,
+                halfHeight = this.viewPort.height / 2;
+
+            this.viewPort.left = this.position.x - halfWidth;
+            this.viewPort.right = this.position.x + halfWidth;
+            this.viewPort.top = this.position.y + halfHeight;
+            this.viewPort.bottom = this.position.y - halfHeight;
+        },
+
+        // checks for position property and attaches camera if valid target
+        attachTo: function (positionable) {
+            if (ff.hasValue(positionable.position)) {
+                this.attachTarget = positionable;
+                this.position = this.attachTarget;
+                this.updateViewPort();
                 return true;
             }
             return false;
-        };
+        },
 
-        // detaches the camera from a positionable object
-        function detach () {
-            attachTarget = null;
-        };
+        // detaches the camera from positionable object
+        detach: function () {
+            this.attachTarget = null;
+        },
 
-        // used by the renderer to translate camera position for rendering
-        function start (context) {
-            var translateX = ff.math.invert(position.x) + (context.canvas.width / 2);
-            var translateY = position.y + (context.canvas.height / 2);
-            context.save();
-            context.translate(translateX, translateY);
-
-            // update viewport size based on context
-            viewPort.width = context.canvas.width;
-            viewPort.height = context.canvas.height;
-        };
-
-        // used by the renderer to end translation after a render cycle
-        function end (context) {
-            context.restore();
-        };
-
-        // gets a random point within the camera's view
-        function getRandomPointInView () {
+        // gets a random point within the view of the camera
+        getRandomPointInView: function () {
             return {
-                x : getRandomXInView(),
-                y : getRandomYInView()
-            }
-        };
+                x: this.getRandomXInView(),
+                y: this.getRandomYInView()
+            };
+        },
 
-        // gets a random x within the camera's view
-        function getRandomXInView () {
-            return ff.math.randomInRange(viewPort.left, viewPort.right);
-        };
+        // gets a random point along the x axis within the viewport
+        getRandomXInView: function () {
+            return ff.math.randomInRange(this.viewPort.left, this.viewPort.right);
+        },
 
-        // gets a random y within the camera's view
-        function getRandomYInView () {
-            return ff.math.randomInRange(viewPort.bottom, viewPort.top);
-        };
+        // gets a random point along the y axis within the viewport
+        getRandomYInView: function () {
+            return ff.math.randomInRange(this.viewPort.bottom, this.viewPort.top);
+        },
 
-        // updates the width/height of the viewable area
-        function setViewSize (width, height) {
-
-            // use constants for defaults if width/height are not valid
-            width = ff.defaultIfNoValue(width, ff.constants.DEFAULT_WIDTH);
-            height = ff.defaultIfNoValue(height, ff.constants.DEFAULT_HEIGHT);
-
-            viewPort.width = width;
-            viewPort.height = height;
-
-            updateViewPort();
-        };
-    };
+        // updates the height and width of the camera, call if the canvas size changes
+        updateDimensions: function (viewWidth, viewHeight) {
+            this.viewPort.width = viewWidth;
+            this.viewPort.height = viewHeight;
+            this.updateViewPort();
+        }
+    });
 
     return ff;
 }(frostFlake || {}));

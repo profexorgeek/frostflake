@@ -13,17 +13,17 @@
 var frostFlake = (function (ff) {
     "use strict";
 
-    ff.Renderer = ff.Class.extend({
+    ff.Renderer = Class.extend({
         // no constructor, renderer is stateless
 
         // draws a list of sprites to a context using the provided camera's projection
         // passing arguments allows renderer to be used for multiple different cameras and surfaces
-        draw: function (spriteList, camera, context, backgroundColor) {
-            var canvas = context.canvas,                                                        // canvas to draw to
-                cameraTranslationX = ff.math.invert(camera.position.x) + (canvas.width / 2),    // camera projection offset
-                cameraTranslationY = camera.position.y + (canvas.height / 2),                   // camera projection offset
-                fillColor = ff.defaultIfNoValue(backgroundColor, "rgb(0, 0, 0, 0)"),            // background or transparent
-                i;                                                                              // iterator, JSLint prefers here
+        draw: function (spriteList, camera, canvas, backgroundColor) {
+            var context = canvas.getContext("2d"),                                                       // canvas to draw to
+                cameraTranslationX = ff.math.invert(camera.position.x) + (context.canvas.width / 2),    // camera projection offset
+                cameraTranslationY = camera.position.y + (context.canvas.height / 2),                   // camera projection offset
+                fillColor = ff.defaultIfNoValue(backgroundColor, "rgb(0, 0, 0, 0)"),                    // background or transparent
+                i;                                                                                      // iterator, JSLint prefers here
 
             // fill canvas
             context.fillStyle = fillColor;
@@ -48,9 +48,14 @@ var frostFlake = (function (ff) {
                 spriteTranslationY = ff.math.invert(sprite.position.y),
                 spriteRotation = sprite.rotation,
                 spriteAlpha = sprite.alpha,
-                srcWidth = sprite.textureCoordinates.right - sprite.textureCoordinates.left,
-                srcHeight = sprite.textureCoordinates.top - sprite.textureCoordinates.bottom,
+                srcWidth = 0,
+                srcHeight = 0,
                 i;
+
+            if(ff.hasValue(sprite.textureCoordinates)) {
+                srcWidth = sprite.textureCoordinates.right - sprite.textureCoordinates.left;
+                srcHeight = sprite.textureCoordinates.bottom - sprite.textureCoordinates.top;
+            }
 
             // apply transformation
             context.save();
@@ -61,7 +66,7 @@ var frostFlake = (function (ff) {
             context.globalAlpha = spriteAlpha;
 
             // draw sprite if texture is valid
-            if (ff.hasValue(sprite.texture)) {
+            if (ff.hasValue(sprite.texture) && srcWidth > 0 && srcHeight > 0) {
                 context.drawImage(
                     sprite.texture,
                     sprite.textureCoordinates.left,

@@ -10,46 +10,46 @@
 var frostFlake = (function (ff) {
     "use strict";
 
-    ff.View = ff.Class.extend({
+    ff.View = Class.extend({
         // constructor
         init: function () {
             this.sprites = [];
         },
 
         // updates all Sprites (Sprites automatically update their children)
-        update: function () {
+        update: function (deltaTime) {
             var i;
-            for (i = 0; i < ff.sprites.length; i += 1) {
-                ff.sprites[i].update(ff.time.delta);
+            for (i = 0; i < this.sprites.length; i += 1) {
+                this.sprites[i].update(deltaTime);
             }
         },
 
         // adds a sprite to the draw/update queue
-        addsprite: function (sprite) {
-            var placeToAdd = ff.sprites.length - 1,
+        addSprite: function (sprite) {
+            var placeToAdd = this.sprites.length - 1,
                 i;
-            for (i = 0; i < ff.sprites.length; i += 1) {
-                if (sprite.layer < ff.sprites[i].layer) {
+            for (i = 0; i < this.sprites.length; i += 1) {
+                if (sprite.layer < this.sprites[i].layer) {
                     placeToAdd = i;
                     break;
                 }
             }
-            ff.sprites.splice(placeToAdd, 0, sprite);
+            this.sprites.splice(placeToAdd, 0, sprite);
         },
 
         // adds array of sprites to the draw/update queue
         addSpriteArray: function (spriteArray) {
             var i;
             for (i = 0; i < spriteArray.length; i += 1) {
-                ff.addSprite(spriteArray[i]);
+                this.addSprite(spriteArray[i]);
             }
         },
 
         // removes a sprite from the draw/update queue
         removeSprite: function (sprite) {
-            var index = ff.sprites.indexOf(sprite);
+            var index = this.sprites.indexOf(sprite);
             if (index >= 0) {
-                ff.sprites.splice(sprite, 1);
+                this.sprites.splice(sprite, 1);
             }
         },
 
@@ -57,13 +57,13 @@ var frostFlake = (function (ff) {
         removeSpriteArray: function (spriteArray) {
             var i;
             for (i = 0; i < spriteArray.length; i += 1) {
-                ff.removeSprite(spriteArray[i]);
+                this.removeSprite(spriteArray[i]);
             }
         },
 
         // removes all sprites from render queue
         clearSprites: function () {
-            ff.sprites = [];
+            this.sprites = [];
         }
     });
 
