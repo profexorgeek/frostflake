@@ -36,11 +36,14 @@ var frostFlake = (function (ff) {
                 x: 0,
                 y: 0
             };
+
+            this.updateViewPort();
         },
 
         // updates position and viewport
         update: function (deltaTime) {
             if (ff.hasValue(this.attachTarget)) {
+                this.velocity = this.attachTarget.velocity;
                 this.position = this.attachTarget.position;
             } else {
                 this.position.x = this.position.x + (this.velocity.x * deltaTime);
