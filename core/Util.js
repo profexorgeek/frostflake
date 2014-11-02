@@ -79,8 +79,13 @@ var frostFlake = (function (ff) {
         distanceBetween:function(pt1, pt2) {
             var dX = pt1.x - pt2.x;
             var dY = pt1.y - pt2.y;
-            var dist = Math.sqrt(this.square(dX) + this.square(dY));
+            var dist = this.hypotenuseLength(dX, dY);
             return dist;
+        },
+
+        // gets hypoteneus length
+        hypotenuseLength: function (a, b) {
+            return Math.sqrt(this.square(a) + this.square(b));
         },
 
         // finds the absolute distance between two points
@@ -90,28 +95,47 @@ var frostFlake = (function (ff) {
 
         // returns a velocity {x,y} given an angle and a speed
         velocityFromAngle:function(angle, speed) {
-            var velocity = {
-                x:Math.sin(angle) * speed,
-                y:Math.cos(angle) * speed
-            };
+            var velocity = {x: 0, y: 0};
+            angle = this.regulateAngle(angle);
+            if (ff.hasValue(angle) && !isNaN(angle)) {
+                velocity = {
+                    x: Math.cos(angle) * speed,
+                    y: Math.sin(angle) * speed
+                };
+            }
             return velocity;
         },
 
         // returns the angle between two points
         angleBetweenPoints:function(pt1, pt2) {
-            var dX = pt2.x - pt1.x;
-            var dY = pt2.y - pt1.y;
-            return Math.atan2(dY, dX);
+            var dX = pt2.x - pt1.x,
+                dY = pt2.y - pt1.y,
+                angle = this.regulateAngle(Math.atan2(dY, dX));
+            return isNaN(angle) ? 0 : angle;
         },
 
         // converts radians to degrees
         toDegrees: function(radians) {
+            radians = this.regulateAngle();
             return (radians * 57.295779513082320876798154814105);
         },
 
         // converts degrees to radians
         toRadians: function(degrees) {
-            return (degrees * 0.017453292519943295769236907684886);
+            return this.regulateAngle((degrees * 0.017453292519943295769236907684886));
+        },
+
+        // converts an angle to a value between 0 and Math.PI * 2
+        regulateAngle: function(angle) {
+            while(angle > this.twoPi) {
+                angle -= this.twoPi;
+            }
+
+            while(angle < 0) {
+                angle += this.twoPi;
+            }
+
+            return angle;
         }
     };
 
