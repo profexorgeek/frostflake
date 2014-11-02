@@ -40,13 +40,6 @@ var frostFlake = (function (ff, $) {
         var path = url,
             img;
 
-        if (url.indexOf("data:") < 0 && url.indexOf("http") < 0) {
-            path = ff.constants.CONTENT_DIRECTORY + "/" + url;
-            if (path.indexOf(".") < 0) {
-                path += ".png";
-            }
-        }
-
         img = new Image();
         img.loadEvents = [];
         if (loadedCallback) {
