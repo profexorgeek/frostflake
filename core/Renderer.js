@@ -60,7 +60,9 @@ var frostFlake = (function (ff) {
             // apply transformation
             context.save();
             context.translate(spriteTranslationX, spriteTranslationY);
-            context.rotate(spriteRotation);
+
+            // apply rotation, note that rotation is 0 at right
+            context.rotate(-spriteRotation);
 
             // set alpha
             context.globalAlpha = spriteAlpha;
