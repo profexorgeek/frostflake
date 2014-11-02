@@ -1,0 +1,43 @@
+<!DOCTYPE html >
+<html>
+    <head>
+        <title>FrostFlake Tests</title>
+        <!-- stylesheet -->
+        <link rel="stylesheet" href="styles/screen.css" />
+
+        <!-- dependencies -->
+        <script type="text/javascript" src="../dependencies/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="../dependencies/Class.js"></script>
+
+        <!-- frostFlake -->
+        <script type="text/javascript" src="../core/Animation.js"></script>
+        <script type="text/javascript" src="../core/Camera.js"></script>
+        <script type="text/javascript" src="../core/Input.js"></script>
+        <script type="text/javascript" src="../core/InputManager.js"></script>
+        <script type="text/javascript" src="../core/Io.js"></script>
+        <script type="text/javascript" src="../core/Renderer.js"></script>
+        <script type="text/javascript" src="../core/Sprite.js"></script>
+        <script type="text/javascript" src="../core/Util.js"></script>
+        <script type="text/javascript" src="../core/View.js"></script>
+        <script type="text/javascript" src="../frostFlake.js"></script>
+
+        <!-- game files -->
+        <script type="text/javascript" src="scripts/game.js"></script>
+        <script type="text/javascript" src="scripts/views/Space.js"></script>
+        <script type="text/javascript" src="scripts/entities/Star.js"></script>
+        <script type="text/javascript" src="scripts/entities/Ship.js"></script>
+        <script type="text/javascript" src="scripts/entities/Cursor.js"></script>
+
+        <!-- use jQuery to start game when DOM is ready -->
+        <script>
+            $(function() {
+                console.log("DOM ready: starting game...");
+                var canvas = $("canvas#gameWindow")[0];
+                var gameInstance = new game.Game(canvas);
+            });
+        </script>
+    </head>
+    <body>
+        <canvas id="gameWindow" width="640px" height="480px" oncontextmenu="return false;"></canvas>
+    </body>
+</html>

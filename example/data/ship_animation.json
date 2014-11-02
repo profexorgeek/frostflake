@@ -1,0 +1,37 @@
+{
+    "spriteSheetUrl": "/example/textures/spaceSpriteSheet.png",
+    "frameWidth": 32,
+    "frameHeight" : 32,
+    "sequences": {
+        "resting" : {
+            "isLooping" : true,
+            "frames" : [
+                {
+                    "top": 0,
+                    "left": 0,
+                    "duration": 1
+                }
+            ]
+        },
+        "thrusting" : {
+            "isLooping" : true,
+            "frames": [
+                {
+                    "top": 0,
+                    "left": 32,
+                    "duration": 0.1
+                },
+                {
+                    "top": 0,
+                    "left": 64,
+                    "duration": 0.1
+                },
+                {
+                    "top": 0,
+                    "left": 96,
+                    "duration": 0.1
+                }
+            ]
+        }
+    }
+}
