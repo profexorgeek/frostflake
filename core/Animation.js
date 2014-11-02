@@ -15,6 +15,7 @@ var frostFlake = (function (ff) {
         var spriteSheetUrl = "",        // the url of the spritesheet for this animation 
             sequences = {},             // an object containing sequences with name as key
             currentSequence = {},       // the current animation sequence
+            currentSequenceName = "",   // the name of the sequence playing
             currentFrameIndex = 0,      // the current frame index in the current sequence
             frameWidth = 0,             // the width of the animation frames
             frameHeight = 0,            // the height of the animation frames
@@ -23,8 +24,9 @@ var frostFlake = (function (ff) {
 
         // getter/setter for currentSequence
         this.currentSequence = function (sequenceName) {
-            if (ff.hasValue(sequenceName)) {
+            if (ff.hasValue(sequenceName) && sequenceName !== currentSequenceName) {
                 if (sequences.hasOwnProperty(sequenceName)) {
+                    currentSequenceName = sequenceName;
                     currentSequence = sequences[sequenceName];
                     currentFrameIndex = 0;
                     timeLeftInFrame = currentSequence.frames[currentFrameIndex].duration;
