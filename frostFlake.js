@@ -9,13 +9,19 @@ var frostFlake = (function (ff) {
     "use strict";
 
     // The Game class that all games should extend
-    ff.Game = ff.Class.extend({
+    ff.Game = Class.extend({
         // constructor
         init: function (canvas, fps, background) {
             // canvas is a required argument
             if (!ff.hasValue(canvas)) {
                 throw "Unable to initialize game without a valid canvas!";
             }
+
+            // provide a reference to the game object that can be accessed anywhere
+            ff.game = this;
+
+            // keep a refeence to the game canvas
+            this.canvas = canvas;
 
             // set the starting view to a default view
             this.currentView = new ff.View();
@@ -24,10 +30,13 @@ var frostFlake = (function (ff) {
             this.camera = new ff.Camera(canvas.clientWidth, canvas.clientHeight);
 
             // initialize the game's main renderer
-            this.renderer = new ff.Renderer(canvas, ff.camera, ff.defaultIfNoValue(background, "rgb(0,0,0)"));
+            this.renderer = new ff.Renderer();
 
             // init FPS to 60 if not defined
             this.targetFps = ff.defaultIfNoValue(fps, 60);
+
+            // init input manager
+            this.inputManager = new ff.InputManager(canvas);
 
             // object used to track elapsed time each update
             this.time = {
@@ -44,15 +53,9 @@ var frostFlake = (function (ff) {
             this.focused = false;
 
             // start the game timer
-            this.timer = window.setInterval(ff.update, 1000 / ff.targetFps);
-        },
-
-        // the core update loop of the game, called by the interval timer
-        update: function () {
-            this.updateTime();
-            this.camera.update(this.time.delta);
-            this.currentView.update(this.time.delta);
-            this.renderer.draw(this.currentView.sprites);
+            this.timer = window.setInterval( function () {
+                ff.game.update();
+            }, 1000 / this.targetFps);
         },
 
         // updates the elapsed time each update cycle
@@ -64,6 +67,15 @@ var frostFlake = (function (ff) {
             this.time.last = nowMilli;
             this.time.delta = (nowMilli - lastMilli) / 1000;
             this.time.deltaFromStart = (nowMilli - startMilli) / 1000;
+        },
+
+        // the core update loop of the game, called by the interval timer
+        update: function () {
+            this.updateTime();
+            this.inputManager.update(this.time.delta);
+            this.camera.update(this.time.delta);
+            this.currentView.update(this.time.delta);
+            this.renderer.draw(this.currentView.sprites, this.camera, this.canvas);
         }
     });
 
