@@ -11,8 +11,9 @@ var frostFlake = (function (ff, $) {
 
     ff.InputManager = Class.extend({
         init: function (canvas) {
-            var mouse = ff.mouse,               // local reference to the mouse object
-                keyboard = ff.keyboard;         // local reference to the keyboard object
+            var mouse = ff.input.mouse,               // local reference to the mouse object
+                keyboard = ff.input.keyboard,         // local reference to the keyboard object
+                camera = ff.game.camera;              // local reference to the game camera
 
             if (!ff.hasValue(canvas)) {
                 throw "InputManager needs a valid canvas to listen for input.";
@@ -30,36 +31,36 @@ var frostFlake = (function (ff, $) {
             $(canvas).mousemove(function (e) {
                 mouse.lastX = mouse.x;
                 mouse.lastY = mouse.y;
-                mouse.x = e.offsetX - (ff.renderer.viewBounds.width / 2);
-                mouse.y = ff.math.invert(e.offsetY) + (ff.renderer.viewBounds.height / 2);
+                mouse.x = e.offsetX - (camera.viewPort.width / 2);
+                mouse.y = ff.math.invert(e.offsetY) + (camera.viewPort.height / 2);
                 mouse.changeX = mouse.x - mouse.lastX;
                 mouse.changeY = mouse.y - mouse.lastY;
-                mouse.worldX = ff.camera.position.x + mouse.x;
-                mouse.worldY = ff.camera.position.y + mouse.y;
+                mouse.worldX = camera.position.x + mouse.x;
+                mouse.worldY = camera.position.y + mouse.y;
             });
 
             // handle mouse button pressed
             $(document).mousedown(function (e) {
                 var buttonName = mouse.buttonCodes[e.which];
-                mouse.pressed[buttonName] = true;
+                mouse.buttonsDown[buttonName] = true;
             });
 
             // handle mouse button released
             $(document).mouseup(function (e) {
                 var buttonName = mouse.buttonCodes[e.which];
-                mouse.pressed[buttonName] = false;
+                mouse.buttonsDown[buttonName] = false;
             });
 
             // handle keyboard button press
             $(document).keydown(function (e) {
                 var keyName = keyboard.chars[e.which];
-                keyboard.pressed[keyName] = true;
+                keyboard.keysDown[keyName] = true;
             });
 
             // handle keyboard button release
             $(document).keyup(function (e) {
                 var keyName = keyboard.chars[e.which];
-                keyboard.pressed[keyName] = false;
+                keyboard.keysDown[keyName] = false;
 
                 // prevent the keyboard from scrolling browser
                 // TODO: also handle page up/down etc?
@@ -67,6 +68,14 @@ var frostFlake = (function (ff, $) {
                     e.preventDefault();
                 }
             });
+        },
+
+        // update mouse world coordinates from camera
+        update: function (deltaTime) {
+            var m = ff.input.mouse,
+                c = ff.game.camera;
+            m.worldX = c.position.x + m.x;
+            m.worldY = c.position.y + m.y;
         }
     });
 
