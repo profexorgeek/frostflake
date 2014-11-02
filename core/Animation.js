@@ -34,6 +34,13 @@ var frostFlake = (function (ff) {
             return currentSequence;
         };
 
+        this.currentFrame = function (index) {
+            if(ff.hasValue(index)) {
+                currentFrameIndex = index;
+            }
+            return currentFrameIndex;
+        };
+
         // getter with potential to be setter for spriteSheetUrl
         this.spriteSheetUrl = function () {
             return spriteSheetUrl;
