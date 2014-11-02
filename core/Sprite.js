@@ -25,6 +25,7 @@ var frostFlake = (function (ff) {
             this.position = {x: 0, y: 0};       // sprite position, relative to parent if parented
             this.velocity = {x: 0, y: 0};       // sprite velocity, applied each update
             this.acceleration = {x: 0, y: 0};   // sprite acceleration, applied to velocity and position each frame
+            this.friction = 0;                  // the amout of friction applied to acceleration and velocity
             this.rotation = 0;                  // sprite rotation in radians, relative to parent if parented
             this.rotationVelocity = 0;          // sprite rotation velocity, applied each update
             this.collisionRadius = 0;           // sprite collideable radius
@@ -32,12 +33,10 @@ var frostFlake = (function (ff) {
             this.textureUrl = "";               // url of the texture to load and display
             this.texture = null;                // the actual image data used by this sprite
             this.animation = null;              // the animation governing this sprite
-            this.textureCoordinates = {         // object representing the texture dimensions once loaded
-                top: 0,
-                right: 0,
-                bottom: 0,
-                left: 0
-            }
+            this.textureCoordinates = null;     // object representing the texture dimensions once loaded
+
+            this.parallaxCamera = null;         // the camera to use for parallax
+            this.parallaxPercent = 0;           // the amount of camera velocity to apply
 
             // load the texture if URL was provided
             // Sprites with null textures will be updated but not drawn
@@ -61,9 +60,14 @@ var frostFlake = (function (ff) {
                 // update values based on time elapsed
                 this.position.x += (this.velocity.x * deltaTime) + (this.acceleration.x * deltaSquaredDividedByTwo);
                 this.position.y += (this.velocity.y * deltaTime) + (this.acceleration.y * deltaSquaredDividedByTwo);
-                this.velocity.x += (this.acceleration.x * deltaTime);
-                this.velocity.y += (this.acceleration.y * deltaTime);
+                this.velocity.x += (this.acceleration.x * deltaTime) - (this.friction * this.velocity.x * deltaTime);
+                this.velocity.y += (this.acceleration.y * deltaTime) - (this.friction * this.velocity.y * deltaTime);
                 this.rotation += this.rotationVelocity * deltaTime;
+
+                if(ff.hasValue(this.parallaxCamera)) {
+                    this.position.x += (this.parallaxCamera.velocity.x * this.parallaxPercent * deltaTime);
+                    this.position.y += (this.parallaxCamera.velocity.y * this.parallaxPercent * deltaTime);
+                }
 
                 // update children
                 for (i = 0; i < this.children.length; i += 1) {
@@ -79,6 +83,16 @@ var frostFlake = (function (ff) {
                     this.textureCoordinates = this.animation.getTextureCoordinates();
                 }
             }
+        },
+
+        applyParallax: function(camera, percent) {
+            this.parallaxCamera = camera;
+            this.parallaxPercent = percent;
+        },
+
+        clearParallax: function() {
+            this.parallaxCamera = null;
+            this.parallaxPercent = 0;
         },
 
         // clamps values to valid ranges
@@ -115,18 +129,21 @@ var frostFlake = (function (ff) {
 
             // otherwise set based on texture size
             } else {
-                var texDimensions = {
-                    width : 0,
-                    height: 0
-                };
-                if (ff.hasValue(this.texture)) {
-                    texDimensions.width = this.texture.width;
-                    texDimensions.height = this.texture.height;
+                // if the coordinates haven't been set, use the texture size
+                if(!ff.hasValue(this.textureCoordinates)) {
+                    var texDimensions = {
+                        width : 0,
+                        height: 0
+                    };
+                    if (ff.hasValue(this.texture)) {
+                        texDimensions.width = this.texture.width;
+                        texDimensions.height = this.texture.height;
+                    }
+                    // manually set texture coordinates
+                    // NOTE: do not call setTextureCoordinates here: infinite loop!
+                    this.textureCoordinates = {top: 0, right: texDimensions.width, bottom: texDimensions.height, left: 0};
                 }
-                // manually set texture coordinates
-                // NOTE: do not call setTextureCoordinates here: infinite loop!
-                this.textureCoordinates = {top: 0, right: texDimensions.width, bottom: texDimensions.height, left: 0};
-            }
+        }
 
             // calculate width/height with drawscale
             this.width = (this.textureCoordinates.right - this.textureCoordinates.left) * this.drawScale.x;
@@ -153,12 +170,7 @@ var frostFlake = (function (ff) {
 
         // resets texture coordinates to null
         clearTextureCoordinates: function () {
-            this.textureCoordinates = {
-                top: 0,
-                right: 0,
-                bottom: 0,
-                left: 0
-            }
+            this.textureCoordinates = null;
         },
 
         // sets the position
@@ -187,20 +199,20 @@ var frostFlake = (function (ff) {
         // loads and sets animation json from provided URL, calls loadedCallback on success
         loadAnimation: function (url, loadedCallback) {
             var me = this,
-                animation = ff.Animation.getInstanceFromUrl(url, function () {
-                    me.setAnimation(animation);
-                    if (ff.hasValue(loadedCallback)) {
-                        loadedCallback();
-                    }
-                });
+            animation = ff.Animation.getInstanceFromUrl(url, function() {
+                me.setAnimation(animation, loadedCallback);
+            });
         },
 
         // sets the animation and loads the animation's spritesheet URL
-        setAnimation: function (anim) {
+        setAnimation: function (anim, loadedCallback) {
             var me = this;
             this.loadImage(anim.spriteSheetUrl(), function () {
                 me.animation = anim;
                 me.updateDimensions();
+                if(ff.hasValue(loadedCallback)) {
+                    loadedCallback();
+                }
             });
         },
 
