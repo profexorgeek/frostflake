@@ -36,10 +36,18 @@ var game = (function (g, ff) {
             // if thrusting, apply new velocities
             if(this.isThrusting) {
                 this.acceleration = ff.math.velocityFromAngle(this.rotation, this.thrustPower);
+
+                if(ff.hasValue(this.animation)) {
+                    this.animation.currentSequence("thrusting");
+                }
             
             // if not thrusting, automatically brake
             } else {
                 this.acceleration = {x: 0, y: 0};
+
+                if(ff.hasValue(this.animation)) {
+                    this.animation.currentSequence("resting");
+                }
             }
         }
     });
