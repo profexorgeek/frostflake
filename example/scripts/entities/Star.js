@@ -9,21 +9,35 @@ var game = (function (g, ff) {
     // create a custom Star object
     g.entities.Star = ff.Sprite.extend({
         init: function () {
-            var me = this,                                  // self reference to use in callback
-                scale = ff.math.randomInRange(0.2, 1);       // size to use for this star
+            var me = this,                                                              // self reference to use in callback
+                scale = ff.math.randomInRange(0.2, 1),                                  // size to use for this star
+                textureVariants = [                                                     // texture coordinates for star variants
+                    {top: 32, bottom: 48, left: 0, right: 16},
+                    {top: 48, bottom: 64, left: 0, right: 16},
+                    {top: 32, bottom: 48, left: 16, right: 32},
+                    {top: 48, bottom: 64, left: 16, right: 32}
+                ],
+                coordIndex = ff.math.randomIntInRange(0, textureVariants.length);      // randomly selected texture set
 
             // pixels to wait outside of bounds before wrapping star
             this.wrapPadding = 10;
 
             // call the parent, pass a callback to set the texture coordinates
             this._super("/example/textures/spaceSpriteSheet.png");
-            this.setTextureCoordinates(0, 32, 32, 64);
+
+            // set random texture
+            this.setTextureCoordinates(
+                textureVariants[coordIndex].left,
+                textureVariants[coordIndex].right,
+                textureVariants[coordIndex].top,
+                textureVariants[coordIndex].bottom
+            );
 
             // randomize position on screen
             this.position = ff.game.camera.getRandomPointInView();
 
             // randomize brightness
-            this.alpha = ff.math.randomInRange(0.1, 0.75);
+            this.alpha = ff.math.randomInRange(0.2, 1.0);
 
             // apply parallax effect
             this.applyParallax(ff.game.camera, ff.math.randomInRange(0, 0.5));

@@ -14,7 +14,7 @@ var game = (function (g, ff) {
             console.log("Instantiated Space view.");
 
             // create starfield
-            for(i = 0; i < 200; i++) {
+            for(i = 0; i < 50; i++) {
                 this.addSprite(new g.entities.Star());
             }
 

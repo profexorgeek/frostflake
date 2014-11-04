@@ -32,12 +32,14 @@
         <script>
             $(function() {
                 console.log("DOM ready: starting game...");
-                var canvas = $("canvas#gameWindow")[0];
-                var gameInstance = new game.Game(canvas);
+                var canvas = $("canvas#gameWindow")[0],
+                    fpsDiv = $("div#fps")[0],
+                    gameInstance = new game.Game(canvas, fpsDiv);
             });
         </script>
     </head>
     <body>
         <canvas id="gameWindow" width="640px" height="480px" oncontextmenu="return false;"></canvas>
+        <div id="fps">0</div>
     </body>
 </html>

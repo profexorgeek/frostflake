@@ -3,6 +3,16 @@ body {
 }
 
 canvas {
-	background:#000;
     cursor: none;
+}
+
+div#fps {
+    position:absolute;
+    top:15px;
+    left:15px;
+    color:red;
+    font-weight: bold;
+    background:#000;
+    border:1px solid white;
+    border-radius: 5px;
 }
