@@ -38,7 +38,43 @@ var game = (function (g, ff) {
             }
             return Math.floor(fpsAverage);
         }
-    })
+    });
 
 return g;
 }(game || {}, frostFlake));
+
+// Load the game
+$(function() {
+    console.log("DOM ready: starting game...");
+    var canvas = $("canvas#gameWindow")[0],
+        fpsDiv = $("div#fps")[0],
+        gameInstance;
+
+        // ask for the game to be fullscreen
+        // $("button#fullScreen").on('click', function () {
+        //     if (canvas.requestFullscreen) {
+        //     console.log("Calling requestFullScreen");
+        //     canvas.requestFullscreen();
+        //     }
+        //     else if (canvas.msRequestFullscreen) {
+        //         console.log("Calling msRequestFullscreen");
+        //         canvas.msRequestFullscreen();
+        //     }
+        //     else if (canvas.mozRequestFullScreen) {
+        //         console.log("Calling mozRequestFullScreen");
+        //         canvas.mozRequestFullScreen();
+        //     }
+        //     else if (canvas.webkitRequestFullscreen) {
+        //         console.log("Calling webkitRequestFullscreen");
+        //         canvas.webkitRequestFullscreen();
+        //     }
+        //     else {
+        //         console.log("Fullscreen not available.");
+        //     }
+
+        //     $("canvas#gameWindow").attr('width', $(document).width());
+        //     $("canvas#gameWindow").attr('height', $(document).height());
+        // });
+
+        gameInstance = new game.Game(canvas, fpsDiv);
+});

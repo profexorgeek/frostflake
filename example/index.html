@@ -27,19 +27,10 @@
         <script type="text/javascript" src="scripts/entities/Star.js"></script>
         <script type="text/javascript" src="scripts/entities/Ship.js"></script>
         <script type="text/javascript" src="scripts/entities/Cursor.js"></script>
-
-        <!-- use jQuery to start game when DOM is ready -->
-        <script>
-            $(function() {
-                console.log("DOM ready: starting game...");
-                var canvas = $("canvas#gameWindow")[0],
-                    fpsDiv = $("div#fps")[0],
-                    gameInstance = new game.Game(canvas, fpsDiv);
-            });
-        </script>
     </head>
     <body>
         <canvas id="gameWindow" width="640px" height="480px" oncontextmenu="return false;"></canvas>
         <div id="fps">0</div>
+        <!-- <button id="fullScreen">Fullscreen</button> -->
     </body>
 </html>
