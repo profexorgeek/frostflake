@@ -70,9 +70,9 @@ var frostFlake = (function (ff) {
             return returnValue;
         },
 
-        // returns a random integer between min and max
+        // returns a random integer between min and max, exclusive of max
         randomIntInRange:function(min,max) {
-            return Math.round(this.random(min,max));
+            return Math.floor(this.randomInRange(min,max));
         },
 
         // finds the distance between two points
