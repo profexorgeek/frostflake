@@ -20,8 +20,11 @@ var frostFlake = (function (ff) {
             // provide a reference to the game object that can be accessed anywhere
             ff.game = this;
 
-            // keep a refeence to the game canvas
+            // keep a reference to the game canvas
             this.canvas = canvas;
+
+            // keep a reference to the background color
+            this.background = ff.defaultIfNoValue(background, "rgba(0, 0, 0, 0)");
 
             // set the starting view to a default view
             this.currentView = new ff.View();
@@ -75,7 +78,7 @@ var frostFlake = (function (ff) {
             this.inputManager.update(this.time.delta);
             this.camera.update(this.time.delta);
             this.currentView.update(this.time.delta);
-            this.renderer.draw(this.currentView.sprites, this.camera, this.canvas);
+            this.renderer.draw(this.currentView.sprites, this.camera, this.canvas, this.background);
         }
     });
 

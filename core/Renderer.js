@@ -22,7 +22,7 @@ var frostFlake = (function (ff) {
             var context = canvas.getContext("2d"),                                                       // canvas to draw to
                 cameraTranslationX = ff.math.invert(camera.position.x) + (context.canvas.width / 2),    // camera projection offset
                 cameraTranslationY = camera.position.y + (context.canvas.height / 2),                   // camera projection offset
-                fillColor = ff.defaultIfNoValue(backgroundColor, "rgb(0, 0, 0, 0)"),                    // background or transparent
+                fillColor = ff.defaultIfNoValue(backgroundColor, "rgba(0, 0, 0, 0)"),                    // background or transparent
                 i;                                                                                      // iterator, JSLint prefers here
 
             // fill canvas
