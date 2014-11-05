@@ -1,25 +1,33 @@
+/* ===============================================================================================
+
+    CURSOR.JS
+    Example game object extends Sprite and uses the frostFlake.input object to
+    track the mouse.
+
+================================================================================================*/
+
 /* global frostFlake */
 var game = (function (g, ff) {
     "use strict";
 
-    // create the views namespace if it doesn't exist
+    // create the entities namespace if it doesn't exist
     if(!ff.hasValue(g.entities)) {
         g.entities = {};
     }
 
+    // add Cursor class to the entities namespace
     g.entities.Cursor = ff.Sprite.extend({
+        // constructor: implement sprite with custom image and texture coordinates
         init: function () {
             this._super("/example/textures/spaceSpriteSheet.png");
             this.setTextureCoordinates(64, 96, 32, 64);
-            this.alpha = 0.5;
         },
 
+        // custom update, follow mouse
         update: function (deltaTime) {
             this._super(deltaTime);
             this.position.x = ff.input.mouse.worldX;
             this.position.y = ff.input.mouse.worldY;
-
-            //console.log("x: " + ff.input.mouse.worldX + ", y: " + ff.input.mouse.worldY);
         }
     });
 

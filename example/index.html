@@ -22,15 +22,19 @@
         <script type="text/javascript" src="../frostFlake.js"></script>
 
         <!-- game files -->
-        <script type="text/javascript" src="scripts/game.js"></script>
+        <script type="text/javascript" src="scripts/Game.js"></script>
         <script type="text/javascript" src="scripts/views/Space.js"></script>
         <script type="text/javascript" src="scripts/entities/Star.js"></script>
         <script type="text/javascript" src="scripts/entities/Ship.js"></script>
         <script type="text/javascript" src="scripts/entities/Cursor.js"></script>
+
+        <!-- game startup -->
+        <script type="text/javascript" src="scripts/Startup.js"></script>
+
     </head>
     <body>
         <canvas id="gameWindow" width="640px" height="480px" oncontextmenu="return false;"></canvas>
-        <div id="fps">0</div>
-        <!-- <button id="fullScreen">Fullscreen</button> -->
+        <div class="small" id="fps">0</div>
+        <div class="small" id="fullScreen">^</div>
     </body>
 </html>
