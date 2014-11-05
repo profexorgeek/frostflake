@@ -1,33 +1,32 @@
 # README #
-Frostflake is a free, MIT-Licensed, JavaScript game engine for making games or other rich media in JavaScript. It attempts to make game development for the browser similar to game development for the desktop. The game is rendered to a canvas object and game objects are created as modular classes with inheritance.
+Frostflake is a JavaScript game engine for making games or other rich media that run in a browser. It attempts to make cross-platform, 2D game development as simple as possible by eliminating boilerplate and freeing the developer to focus on game logic.
 
-### Existing Features ###
-So far, FrostFlake has these features:
+###License###
+MIT License, see license.txt
 
+NOTE: I wanted the license to be as permissive as possible but I would love to know if you are using frostFlake in your project. A credit line in your game would be awesome too. Knowing that people use it helps me stay motivated to keep working on it!
+
+### Current Features ###
 * Allows modular, scalable development of game entities with basic inheritance system.
 * Drawable objects with position, velocity, rotation and alpha
 * Sprite object supporting custom draw scale, animation and sprite sheet texture coordinates
-* Polygons supporting colorized stroke and fill
-* Input handling from mouse or keyboard (requires jQuery)
-* A Camera entity supporting position, velocity and attachment to a Drawable target
-* Supports rendering directly to the canvas or rendering to a render target and using resulting render as a Sprite.
-* Utilities with methods making input and common game math easy
+* Sprite parenting: sprites can be attached to a parent or have children
+* Input handling from mouse or keyboard (Existing InputManager requires jQuery)
+* A Camera entity supporting position, velocity and attachment to a Sprite target
+* Rendering to primary game canvas or hidden render target (buffering, tilemap rendering, etc)
+* Tree-based, recursive rendering
+* Utility methods making common 2D game math easy
+* Views: Levels or screens that centralize an area of the game
 
-###Future Features###
-Here are features I would like to add to FrostFlake:
+### Planned Features###
+# Build system with versioned, minified and concatenated releases (Grunt + Node)
+# Unit Tests coverage
+# Particle effects
+# Improved collision detection
+# More robust demos
+# Tiled plugin: support Tiled files
+# Audio support
+# Object pooling/factories
 
-* Audio support
-* Concept of "Views", "Levels" or "Screens" that load a segment of the game and unload when finished. Eventually the storage of drawables and management of rendering might move into the View
-* Plugin: be able to load files from common game design tools such as Tiled
-* Plugin: physics? (low priority)
-* Polygon-based collision
-* Unit Tests coverage O_o
-* Parenting/Attachment: Ability to have one Drawable parent another and their rotation/velocity/etc stay in sync
-
-### Style Guidelines ###
-* See styleGuide.js
-* Code should be JSLint valid except for the frostFlake module pattern
-* Test cases need to be written! Code base at the time of this readme has zero test coverage :(
-
-### Who do I talk to? ###
-BitBucket user profexorgeek, aka Justin Johnson. Send to my gmail: justin.d.johnson
+###Questions?###
+Contact BitBucket user profexorgeek, aka Justin Johnson. Gmail: justin.d.johnson
