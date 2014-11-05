@@ -88,6 +88,62 @@ var frostFlake = (function (ff) {
             }
         },
 
+        // adds a child sprite to this object
+        addChild: function (sprite) {
+            sprite.parent = this;
+            this.children.push(sprite);
+        },
+
+        // removes a child sprite from this object
+        removeChild: function (sprite) {
+            var index = this.sprites.indexOf(sprite);
+            if (index >= 0) {
+                this.children.splice(index, 1);
+            }
+            sprite.parent = null;
+            return sprite;
+        },
+
+        // attaches this to another sprite as a child
+        attachTo: function (parent) {
+            parent.addChild(this);
+        },
+
+        // returns the absolute position of this object, taking parent positions and rotations into account
+        getAbsoluteProperties: function () {
+            var parentAbsolute, absoluteProperties, offsetX, offsetY;
+
+            // if we have a parent, recurse upwards to combine properties
+            if (ff.hasValue(this.parent)) {
+                parentAbsolute = this.parent.getAbsoluteProperties();
+
+                // calculate parent rotation's effect on position
+                offsetX = Math.cos(parentAbsolute.rotation) * this.position.x;
+                offsetY = Math.sin(parentAbsolute.rotation) * this.position.y;
+
+                // create our absolute properties from parent and new calculations
+                absoluteProperties = {
+                    position: {
+                        // add parent position, local position and rotation offset
+                        x: offsetX + parentAbsolute.position.x,
+                        y: offsetY + parentAbsolute.position.y
+                    },
+                    // combine rotations
+                    rotation: this.rotation + parentAbsolute.rotation
+                };
+            }
+
+            // if no parent, our properties are already absolute
+            else {
+                absoluteProperties = {
+                    position: this.position,
+                    rotation: this.rotation
+                };
+            }
+
+            return absoluteProperties;
+        },
+
         applyParallax: function(camera, percent) {
             this.parallaxCamera = camera;
             this.parallaxPercent = percent;
