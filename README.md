@@ -19,14 +19,14 @@ NOTE: I wanted the license to be as permissive as possible but I would love to k
 * Views: Levels or screens that centralize an area of the game
 
 ### Planned Features###
-# Build system with versioned, minified and concatenated releases (Grunt + Node)
-# Unit Tests coverage
-# Particle effects
-# Improved collision detection
-# More robust demos
-# Tiled plugin: support Tiled files
-# Audio support
-# Object pooling/factories
+* Build system with versioned, minified and concatenated releases (Grunt + Node)
+* Unit Tests coverage
+* Particle effects
+* Improved collision detection
+* More robust demos
+* Tiled plugin: support Tiled files
+* Audio support
+* Object pooling/factories
 
 ###Questions?###
 Contact BitBucket user profexorgeek, aka Justin Johnson. Gmail: justin.d.johnson
