@@ -6,8 +6,9 @@
 
 ================================================================================================*/
 
-/* global window */
+/* global Class */
 var frostFlake = (function (ff) {
+    
     "use strict";
 
     ff.View = Class.extend({
@@ -49,7 +50,7 @@ var frostFlake = (function (ff) {
         removeSprite: function (sprite) {
             var index = this.sprites.indexOf(sprite);
             if (index >= 0) {
-                this.sprites.splice(sprite, 1);
+                this.sprites.splice(index, 1);
             }
         },
 

@@ -5,7 +5,9 @@
 
 ================================================================================================*/
 
+/* global Class */
 var frostFlake = (function (ff) {
+
     "use strict";
 
     // The Game class that all games should extend

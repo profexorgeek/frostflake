@@ -10,7 +10,9 @@
 
 ================================================================================================*/
 
+/* global Class */
 var frostFlake = (function (ff) {
+    
     "use strict";
 
     ff.Renderer = Class.extend({

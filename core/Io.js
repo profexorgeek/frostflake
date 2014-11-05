@@ -3,14 +3,11 @@
     IO.JS
     Provides methods for loading objects from JSON or converting them to JSON
 
-    TODOS:
-    - JSON.Stringify and Parse fallbacks?
-    - Figure out how this fits in to the grander scheme of loading and saving entire levels
-
 ================================================================================================*/
 
 /*global console, Image, jQuery*/
 var frostFlake = (function (ff, $) {
+
     "use strict";
 
     // loads json from a url

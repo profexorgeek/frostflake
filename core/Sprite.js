@@ -9,11 +9,14 @@
 
 ================================================================================================*/
 
+/* global Class */
 var frostFlake = (function (ff) {
+
     "use strict";
 
     ff.Sprite = Class.extend({
-        // constructor: create the sprite and load the image URL
+
+        // constructor: set properties and load image
         init: function (imageUrl, loadedCallback) {
             this.active = true;                 // whether update and draw should apply to this object
             this.children = [];                 // child sprites
@@ -177,12 +180,6 @@ var frostFlake = (function (ff) {
         setPosition: function (x, y) {
             this.position.x = x;
             this.position.y = y;
-        },
-
-        // returns the absolute position of this object, taking parent positions and rotations into account
-        // TODO: implement!
-        getAbsolutePosition: function () {
-            throw "Not implemented yet!";
         },
 
         // sets the drawscale, ensuring it's not < 0 and then updates dimensions

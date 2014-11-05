@@ -8,14 +8,16 @@
 
 var frostFlake = (function (ff) {
 
+    "use strict";
+
     // Checks if provided variable is not undefined or null
     ff.hasValue = function(variable) {
-        if(variable !== undefined && variable !== null && variable != "") {
+        if(variable !== undefined && variable !== null && variable !== "") {
             return true;
         }
 
         return false;
-    }
+    };
 
     // Returns a default values if provided variable has no value
     ff.defaultIfNoValue = function(variable, defaultValue) {
@@ -23,12 +25,12 @@ var frostFlake = (function (ff) {
             return variable;
         }
         return defaultValue;
-    }
+    };
 
     // Gets a randomized hex color as a string
     ff.randomHexColor = function() {
-        return '#' + ff.math.randomInt(0, 16777215).toString(16);
-    }
+        return "#" + ff.math.randomInt(0, 16777215).toString(16);
+    };
 
     // Provides a collection of common values and utilities for math operations in games
     ff.math = {
@@ -47,9 +49,15 @@ var frostFlake = (function (ff) {
 
         // clamps a value to the min or max possible value
         clamp: function (value, min, max) {
-            if (value < min) return min;
-            else if (value > max) return max;
-            else return value;
+            if (value < min) {
+                return min;
+            }
+            else if (value > max) {
+                return max;
+            }
+            else {
+                return value;
+            }
         },
 
         // linear interpolation between two values

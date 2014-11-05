@@ -7,11 +7,10 @@
 ================================================================================================*/
 
 var frostFlake = (function (ff) {
-
+    
     "use strict";
-
+    
     ff.Animation = function () {
-
         var spriteSheetUrl = "",        // the url of the spritesheet for this animation 
             sequences = {},             // an object containing sequences with name as key
             currentSequence = {},       // the current animation sequence
@@ -36,6 +35,7 @@ var frostFlake = (function (ff) {
             return currentSequence;
         };
 
+        // getter/setter for currentFrameIndex
         this.currentFrame = function (index) {
             if(ff.hasValue(index)) {
                 currentFrameIndex = index;

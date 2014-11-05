@@ -1,19 +1,25 @@
 /* ===============================================================================================
 
     INPUTMANAGER.JS
-    Uses jQuery to listen for state changes and update the input objects.
+    Updates the frostFlake input objects by implementing listeners on the canvas. Simulates
+    left clicks for touches on touch-enabled devices.
+
+    Requires updating to keep mouse coordinates in sync with a moving camera if mousemove
+    event has not fired.
 
 ================================================================================================*/
 
-/*global document, jQuery */
+/*global document, jQuery, Class */
 var frostFlake = (function (ff, $) {
+
     "use strict";
 
     ff.InputManager = Class.extend({
+
+        // constructor: sets up all event listeners using jQuery
         init: function (canvas) {
             var mouse = ff.input.mouse,               // local reference to the mouse object
                 keyboard = ff.input.keyboard,         // local reference to the keyboard object
-                camera = ff.game.camera,              // local reference to the game camera
                 me = this;                            // self reference for events
 
             if (!ff.hasValue(canvas)) {
@@ -24,7 +30,7 @@ var frostFlake = (function (ff, $) {
             // TOUCH EVENTS
             //============================================
             // simulate mouse movement on touch
-            $(canvas).on('touchmove', function (e) {
+            $(canvas).on("touchmove", function (e) {
                 var touch = e.originalEvent.touches[0];
                 if(ff.hasValue(touch)) {
                     me.updateMouseLocation(touch.clientX, touch.clientY);
@@ -36,12 +42,12 @@ var frostFlake = (function (ff, $) {
             });
 
             // simulate mousedown on touch
-            $(document).on('touchstart', function (e) {
+            $(document).on("touchstart", function (e) {
                 var touch = e.originalEvent.touches[0];
                 if(ff.hasValue(touch)) {
                     me.updateMouseLocation(touch.clientX, touch.clientY);
                 }
-                mouse.buttonsDown["Left"] = true;
+                mouse.buttonsDown.Left = true;
 
                 if(mouse.inFrame === true) {
                     e.preventDefault();
@@ -49,12 +55,12 @@ var frostFlake = (function (ff, $) {
             });
 
             // simulate mouseup on touch
-            $(document).on('touchend', function (e) {
+            $(document).on("touchend", function (e) {
                 var touch = e.originalEvent.touches[0];
                 if(ff.hasValue(touch)) {
                     me.updateMouseLocation(touch.clientX, touch.clientY);
                 }
-                mouse.buttonsDown["Left"] = false;
+                mouse.buttonsDown.Left = false;
 
                 if(mouse.inFrame === true) {
                     e.preventDefault();
@@ -73,7 +79,7 @@ var frostFlake = (function (ff, $) {
             });
             
             // handle mouse movement
-            $(canvas).on('mousemove', function (e) {
+            $(canvas).on("mousemove", function (e) {
                 me.updateMouseLocation(e.offsetX, e.offsetY);
 
                 if(mouse.inFrame === true) {
@@ -82,7 +88,7 @@ var frostFlake = (function (ff, $) {
             });
 
             // handle mouse button pressed, simulate presses on touch
-            $(document).on('mousedown', function (e) {
+            $(document).on("mousedown", function (e) {
                 var buttonName = mouse.buttonCodes[e.which];
                 mouse.buttonsDown[buttonName] = true;
 
@@ -92,7 +98,7 @@ var frostFlake = (function (ff, $) {
             });
 
             // handle mouse button released
-            $(document).on('mouseup', function (e) {
+            $(document).on("mouseup", function (e) {
                 var buttonName = mouse.buttonCodes[e.which];
                 mouse.buttonsDown[buttonName] = false;
 

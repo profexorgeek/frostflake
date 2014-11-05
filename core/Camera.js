@@ -8,9 +8,12 @@
 
 /*global Class */
 var frostFlake = (function (ff) {
+    
     "use strict";
 
     ff.Camera = Class.extend({
+
+        // set up initial properties and update viewport
         init: function (viewWidth, viewHeight) {
             // positionable object the camera is attached to
             this.attachTarget = null;

@@ -1,3 +1,4 @@
+/* global frostFlake */
 var game = (function (g, ff) {
     "use strict";
 
@@ -8,8 +9,6 @@ var game = (function (g, ff) {
 
     g.entities.Cursor = ff.Sprite.extend({
         init: function () {
-            var me = this;
-
             this._super("/example/textures/spaceSpriteSheet.png");
             this.setTextureCoordinates(64, 96, 32, 64);
             this.alpha = 0.5;

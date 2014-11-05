@@ -1,16 +1,27 @@
 /* ===============================================================================================
 
     INPUT.JS
-    Provides access to keyboard and mouse objects for easy event listening
-    Note that these objects need to be updated by an InputManager to maintain 
-    accurate state.
+    Exposes two input objects that provide information about user input. These objects
+    must be updated by an input manager that implements platform-specific event handlers
+    for input.
+
+    Mouse:
+    Provides properties tracking actual and world-adjusted coordinates and methods for 
+    detecting if buttons are pressed. Exposes button lists by button code and button name.
+
+    Keyboard:
+    Provides methods for detecting key press and release. Exposes key lists by keycode and
+    by key name.
 
 ================================================================================================*/
 
 var frostFlake = (function (ff) {
+    
     "use strict";
 
     ff.input = {
+
+        // exposes properties and methods for tracking mouse input
         mouse: {
             lastX: 0,               // the mouse last X position
             lastY: 0,               // the mouse last Y position
@@ -60,7 +71,7 @@ var frostFlake = (function (ff) {
             }
         },
 
-        // keyboard object: provides methods to check for pressed keys
+        // exposes properties and methods for tracking keyboard input
         keyboard: {
 
             // collection to store currently pressed keys
