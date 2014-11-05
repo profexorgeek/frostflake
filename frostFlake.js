@@ -81,6 +81,11 @@ var frostFlake = (function (ff) {
             this.camera.update(this.time.delta);
             this.currentView.update(this.time.delta);
             this.renderer.draw(this.currentView.sprites, this.camera, this.canvas, this.background);
+        },
+
+        // notify the game that the rendering surface size has changed
+        notifyCanvasSizeChanged: function () {
+            this.camera.updateDimensions(this.canvas.clientWidth, this.canvas.clientHeight);
         }
     });
 
