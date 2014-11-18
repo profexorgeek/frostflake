@@ -22,6 +22,9 @@ module.exports = function(grunt) {
                 dest: "dist/<%= pkg.name %>_<%= pkg.version %>_concat.js"
             }
         },
+        qunit: {
+            files: ["tests/index.html"]
+        },
         uglify: {
             options: {
                 banner: "/*! <%= pkg.name %> Version: <%= pkg.version %> */\n"
@@ -36,7 +39,9 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.loadNpmTasks("grunt-contrib-qunit");
 
     grunt.registerTask("combine", ["concat"]);
-    grunt.registerTask("package", ["concat", "uglify"]);
+    grunt.registerTask("test", ["qunit"]);
+    grunt.registerTask("package", ["qunit", "concat", "uglify"]);
 }
