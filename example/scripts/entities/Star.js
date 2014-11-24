@@ -33,10 +33,10 @@ var game = (function (g, ff) {
         randomize: function () {
             var scale = ff.math.randomInRange(0.2, 1),                                  // size to use for this star
                 textureVariants = [                                                     // texture coordinates for star variants
-                    {top: 32, bottom: 48, left: 0, right: 16},
-                    {top: 48, bottom: 64, left: 0, right: 16},
-                    {top: 32, bottom: 48, left: 16, right: 32},
-                    {top: 48, bottom: 64, left: 16, right: 32}
+                    g.textures.starRed,
+                    g.textures.starYellow,
+                    g.textures.starBlue,
+                    g.textures.starWhite
                 ],
                 coordIndex = ff.math.randomIntInRange(0, textureVariants.length);      // randomly selected texture set
 

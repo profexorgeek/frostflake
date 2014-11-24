@@ -1,0 +1,170 @@
+{
+    "green": {
+        "spriteSheetUrl": "/example/textures/spaceSpriteSheet.png",
+        "frameWidth": 16,
+        "frameHeight" : 16,
+        "sequences": {
+            "resting" : {
+                "isLooping" : true,
+                "frames" : [
+                    {
+                        "top": 32,
+                        "left": 352,
+                        "duration": 1
+                    }
+                ]
+            },
+            "thrusting" : {
+                "isLooping" : true,
+                "frames": [
+                    {
+                        "top": 32,
+                        "left": 368,
+                        "duration": 0.1
+                    },
+                    {
+                        "top": 48,
+                        "left": 352,
+                        "duration": 0.1
+                    },
+                    {
+                        "top": 48,
+                        "left": 368,
+                        "duration": 0.1
+                    },
+                    {
+                        "top": 48,
+                        "left": 352,
+                        "duration": 0.1
+                    }
+                ]
+            }
+        }
+    },
+    "blue": {
+        "spriteSheetUrl": "/example/textures/spaceSpriteSheet.png",
+        "frameWidth": 16,
+        "frameHeight" : 16,
+        "sequences": {
+            "resting" : {
+                "isLooping" : true,
+                "frames" : [
+                    {
+                        "top": 32,
+                        "left": 352,
+                        "duration": 1
+                    }
+                ]
+            },
+            "thrusting" : {
+                "isLooping" : true,
+                "frames": [
+                    {
+                        "top": 32,
+                        "left": 368,
+                        "duration": 0.1
+                    },
+                    {
+                        "top": 48,
+                        "left": 352,
+                        "duration": 0.1
+                    },
+                    {
+                        "top": 48,
+                        "left": 368,
+                        "duration": 0.1
+                    },
+                    {
+                        "top": 48,
+                        "left": 352,
+                        "duration": 0.1
+                    }
+                ]
+            }
+        }
+    },
+    "orange": {
+        "spriteSheetUrl": "/example/textures/spaceSpriteSheet.png",
+        "frameWidth": 16,
+        "frameHeight" : 16,
+        "sequences": {
+            "resting" : {
+                "isLooping" : true,
+                "frames" : [
+                    {
+                        "top": 32,
+                        "left": 352,
+                        "duration": 1
+                    }
+                ]
+            },
+            "thrusting" : {
+                "isLooping" : true,
+                "frames": [
+                    {
+                        "top": 32,
+                        "left": 368,
+                        "duration": 0.1
+                    },
+                    {
+                        "top": 48,
+                        "left": 352,
+                        "duration": 0.1
+                    },
+                    {
+                        "top": 48,
+                        "left": 368,
+                        "duration": 0.1
+                    },
+                    {
+                        "top": 48,
+                        "left": 352,
+                        "duration": 0.1
+                    }
+                ]
+            }
+        }
+    },
+    "pink": {
+        "spriteSheetUrl": "/example/textures/spaceSpriteSheet.png",
+        "frameWidth": 16,
+        "frameHeight" : 16,
+        "sequences": {
+            "resting" : {
+                "isLooping" : true,
+                "frames" : [
+                    {
+                        "top": 32,
+                        "left": 352,
+                        "duration": 1
+                    }
+                ]
+            },
+            "thrusting" : {
+                "isLooping" : true,
+                "frames": [
+                    {
+                        "top": 32,
+                        "left": 368,
+                        "duration": 0.1
+                    },
+                    {
+                        "top": 48,
+                        "left": 352,
+                        "duration": 0.1
+                    },
+                    {
+                        "top": 48,
+                        "left": 368,
+                        "duration": 0.1
+                    },
+                    {
+                        "top": 48,
+                        "left": 352,
+                        "duration": 0.1
+                    }
+                ]
+            }
+        }
+    }
+}

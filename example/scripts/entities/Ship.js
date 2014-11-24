@@ -17,22 +17,31 @@ var game = (function (g, ff) {
     // add Ship class to entities namespace
     g.entities.Ship = ff.Sprite.extend({
 
-        // constructor: sets unique properties and loads an animation
+        // constructor: sets unique properties and loads images
         init: function () {
-            var me = this;                  // self reference for load callback
-            this.isThrusting = false;       // whether the ship is actively thrusting
-            this.thrustPower = 200;         // the strength of the thrust
-            this._super();                  // call to parent constructor
-            this.friction = 0.5;            // set a property that belongs to Sprite
+            var me = this;                // self reference for load callback
+            me._super();                  // call to parent constructor
+            me.friction = 0.5;            // set a property that belongs to Sprite
+            me.isThrusting = false;       // whether the ship is actively thrusting
+            me.thrustPower = 200;         // the strength of the thrust
 
-            // load the ship animation
-            this.loadAnimation("/example/data/ship_animation.json", function () {
-                // set the animation sequence in a callback
-                me.animation.currentSequence("resting");
 
-                // start animating
-                me.animation.start();
+            this.loadImage(g.spriteSheetPath, function () {
+                // set this sprite texture
+                me.setTextureFromNamedCoordinates("shipScout");
             });
+
+            // create the left thruster child object
+            me.thrustLeft = new g.entities.Thruster("green");
+            me.thrustLeft.position.x = -7;
+            me.thrustLeft.position.y = 8;
+            me.addChild(me.thrustLeft);
+
+            // create the right thruster child object
+            me.thrustRight = new g.entities.Thruster("blue");
+            me.thrustRight.position.x = -7;
+            me.thrustRight.position.y = -8;
+            me.addChild(me.thrustRight);
         },
 
         // override update to call custom methods
@@ -41,24 +50,30 @@ var game = (function (g, ff) {
             this.updateSpeed(deltaTime);
         },
 
+        // leverages texture_coordinates.json to set coordinates by texture name
+        setTextureFromNamedCoordinates: function (name) {
+            var coord = g.textures[name];
+            if(ff.hasValue(coord)) {
+                this.setTextureCoordinates(coord.left, coord.right, coord.top, coord.bottom);
+            }
+        },
+
         // custom method updates animation and acceleration based on thrust state
         updateSpeed: function(deltaTime) {
             if(this.isThrusting) {
                 // apply rotation and thrust power to acceleration
                 this.acceleration = ff.math.velocityFromAngle(this.rotation, this.thrustPower);
 
-                // if the animation is loaded, choose sequence
-                if(ff.hasValue(this.animation)) {
-                    this.animation.currentSequence("thrusting");
-                }
+                // turn on thrusters
+                this.thrustLeft.thrust();
+                this.thrustRight.thrust();
             } else {
                 // turn off acceleration, friction will slow us down automatically
                 this.acceleration = {x: 0, y: 0};
 
-                // if the animation is loaded, choose sequence
-                if(ff.hasValue(this.animation)) {
-                    this.animation.currentSequence("resting");
-                }
+                // turn on thrusters
+                this.thrustLeft.rest();
+                this.thrustRight.rest();
             }
         }
     });

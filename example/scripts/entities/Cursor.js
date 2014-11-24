@@ -19,8 +19,9 @@ var game = (function (g, ff) {
     g.entities.Cursor = ff.Sprite.extend({
         // constructor: implement sprite with custom image and texture coordinates
         init: function () {
+            var tex = g.textures.cursorMove;
             this._super("/example/textures/spaceSpriteSheet.png");
-            this.setTextureCoordinates(64, 96, 32, 64);
+            this.setTextureCoordinates(tex.left, tex.right, tex.top, tex.bottom);
         },
 
         // custom update, follow mouse

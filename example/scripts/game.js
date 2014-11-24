@@ -15,21 +15,30 @@ var game = (function (g, ff) {
 
         // constructor gets a canvas and a div to write FPS
         init: function (canvas, fpsDiv) {
+            var me = this;
 
             // reference to a div 
-            this.fpsDiv = fpsDiv;
+            me.fpsDiv = fpsDiv;
 
             // container to keep track of FPS over time
-            this.fps = [];
+            me.fps = [];
 
             // number of FPS samples to average
-            this.fpsSamples = 60;
+            me.fpsSamples = 60;
 
             // call parent with custom background color
-            this._super(canvas, 60, "rgba(10, 10, 15, 1)");
+            me._super(canvas, 60, "rgba(10, 10, 15, 1)");
 
-            // set our custom view as the current view
-            this.currentView = new g.views.Space();
+            g.spriteSheetPath = "/example/textures/spaceSpriteSheet.png";
+
+            // load our texture JSON: makes it easier to set textures
+            ff.loadJson("/example/data/texture_coordinates.json", function (json) {
+                // set texture object
+                g.textures = json;
+
+                // now that textures are loaded, set 
+                me.currentView = new g.views.Space();
+            });
         },
 
         // override the frostFlake.update method to add FPS calc
