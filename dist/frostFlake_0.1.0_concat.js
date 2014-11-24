@@ -1281,7 +1281,7 @@ var frostFlake = (function (ff) {
 
     // Gets a randomized hex color as a string
     ff.randomHexColor = function() {
-        return "#" + ff.math.randomInt(0, 16777215).toString(16);
+        return "#" + ff.math.randomIntInRange(0, 16777215).toString(16);
     };
 
     // Provides a collection of common values and utilities for math operations in games
