@@ -11,7 +11,7 @@ var frostFlake = (function (ff) {
     "use strict";
     
     ff.Animation = function () {
-        var spriteSheetUrl = "",        // the url of the spritesheet for this animation 
+        var texturePath = "",        // the url of the spritesheet for this animation 
             sequences = {},             // an object containing sequences with name as key
             currentSequence = {},       // the current animation sequence
             currentSequenceName = "",   // the name of the sequence playing
@@ -44,8 +44,11 @@ var frostFlake = (function (ff) {
         };
 
         // getter with potential to be setter for spriteSheetUrl
-        this.spriteSheetUrl = function () {
-            return spriteSheetUrl;
+        this.spriteSheetUrl = function (path) {
+            if(ff.hasValue(path)) {
+                texturePath = path;
+            }
+            return texturePath;
         };
 
         // update the flow of animation through frames
@@ -107,7 +110,7 @@ var frostFlake = (function (ff) {
         // returns a JSON string representing this animation
         this.toJson = function () {
             return {
-                spriteSheetUrl: spriteSheetUrl,
+                spriteSheetUrl: this.spriteSheetUrl(),
                 frameWidth: frameWidth,
                 frameHeight: frameHeight,
                 sequences: sequences
@@ -116,7 +119,7 @@ var frostFlake = (function (ff) {
 
         // populates animation data from a json string and stops animating
         this.fromJson = function (jsonObject) {
-            spriteSheetUrl = jsonObject.spriteSheetUrl;
+            this.spriteSheetUrl(jsonObject.spriteSheetUrl);
             frameWidth = jsonObject.frameWidth;
             frameHeight = jsonObject.frameHeight;
             sequences = jsonObject.sequences;
