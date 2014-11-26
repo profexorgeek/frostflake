@@ -20,7 +20,7 @@ var game = (function (g, ff) {
         // constructor: implement sprite with custom image and texture coordinates
         init: function () {
             var tex = g.textures.cursorMove;
-            this._super("/example/textures/spaceSpriteSheet.png");
+            this._super(g.spriteSheetPath);
             this.setTextureCoordinates(tex.left, tex.right, tex.top, tex.bottom);
         },
 

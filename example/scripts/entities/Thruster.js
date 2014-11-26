@@ -23,7 +23,7 @@ var game = (function (g, ff) {
             me.isThrusting = false;         // whether the thrust animation is playing
 
             // load the JSON containing multiple animations
-            ff.loadJson("/example/data/thrust_animations.json", function (json) {
+            ff.loadJson("/data/thrust_animations.json", function (json) {
                 me.animations = json;
                 me.animation = new ff.Animation();
 

@@ -11,6 +11,7 @@ canvas {
     cursor: none;
     padding: 0;
     margin: 0;
+    image-rendering: crisp-edges;
 }
 
 div.small {

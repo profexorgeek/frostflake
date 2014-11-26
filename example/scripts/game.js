@@ -29,10 +29,10 @@ var game = (function (g, ff) {
             // call parent with custom background color
             me._super(canvas, 60, "rgba(10, 10, 15, 1)");
 
-            g.spriteSheetPath = "/example/textures/spaceSpriteSheet.png";
+            g.spriteSheetPath = "/textures/spaceSpriteSheet.png";
 
             // load our texture JSON: makes it easier to set textures
-            ff.loadJson("/example/data/texture_coordinates.json", function (json) {
+            ff.loadJson("/data/texture_coordinates.json", function (json) {
                 // set texture object
                 g.textures = json;
 

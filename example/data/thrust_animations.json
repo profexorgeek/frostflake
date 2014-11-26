@@ -1,6 +1,6 @@
 {
     "green": {
-        "spriteSheetUrl": "/example/textures/spaceSpriteSheet.png",
+        "spriteSheetUrl": "/textures/spaceSpriteSheet.png",
         "frameWidth": 16,
         "frameHeight" : 16,
         "sequences": {
@@ -42,7 +42,7 @@
         }
     },
     "blue": {
-        "spriteSheetUrl": "/example/textures/spaceSpriteSheet.png",
+        "spriteSheetUrl": "/textures/spaceSpriteSheet.png",
         "frameWidth": 16,
         "frameHeight" : 16,
         "sequences": {
@@ -84,7 +84,7 @@
         }
     },
     "orange": {
-        "spriteSheetUrl": "/example/textures/spaceSpriteSheet.png",
+        "spriteSheetUrl": "/textures/spaceSpriteSheet.png",
         "frameWidth": 16,
         "frameHeight" : 16,
         "sequences": {
@@ -126,7 +126,7 @@
         }
     },
     "pink": {
-        "spriteSheetUrl": "/example/textures/spaceSpriteSheet.png",
+        "spriteSheetUrl": "/textures/spaceSpriteSheet.png",
         "frameWidth": 16,
         "frameHeight" : 16,
         "sequences": {

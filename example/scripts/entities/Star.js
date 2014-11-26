@@ -23,7 +23,7 @@ var game = (function (g, ff) {
             this.wrapPadding = 10;
 
             // call the parent, pass a callback to set the texture coordinates
-            this._super("/example/textures/spaceSpriteSheet.png");
+            this._super(g.spriteSheetPath);
 
             // randomize our appearance
             this.randomize();
