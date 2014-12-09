@@ -58,7 +58,7 @@ var frostFlake = (function (ff) {
                 timeLeftInFrame = timeLeftInFrame - deltaTime;
 
                 if (timeLeftInFrame <= 0) {
-                    if (currentFrameIndex < currentSequence.frames.length - 2) {
+                    if (currentFrameIndex < currentSequence.frames.length - 1) {
                         currentFrameIndex = currentFrameIndex + 1;
                     } else {
                         if (currentSequence.isLooping) {
