@@ -1,0 +1,80 @@
+<!DOCTYPE html >
+<html>
+    <head>
+        <title>FrostFlake Examples</title>
+
+        <!-- stylesheet -->
+        <link rel="stylesheet" href="screen.css" />
+
+        <!-- dependencies -->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+        <!-- frostFlake -->
+        <script type="text/javascript" src="frostFlake_0.1.0_min.js"></script>
+
+        <!-- examplesFile -->
+        <script type="text/javascript" src="spriteDemo.js"></script>
+        <script type="text/javascript" src="animationDemo.js"></script>
+
+        <script>
+            var d1, d2;
+
+            // start all examples when page is fully loaded.
+            /* global frostFlake, $ */
+            $(function() {
+                "use strict";
+
+                // initiate the demos
+                d2 = new animationDemo.Game($("canvas#animationDemo")[0]);
+                d1 = new spriteDemo.Game($("canvas#spriteDemo")[0]);
+                
+
+            });
+        </script>
+    </head>
+    <body>
+        <!-- SPRITE DEMO -->
+        <section class="demo">
+            <h1>Sprite Demo</h1>
+            <canvas id="spriteDemo"></canvas>
+            <p>
+                Sprites are the basic type that all game objects derive from. 
+                Sprites don't have to have a texture. A sprite may not have a 
+                texture of its own but can have textured child sprites that
+                render. This allows the developer to create complex objects
+                from modular, child objects.
+            </p>
+            <p>
+                This example demonstrates a custom parent sprite with no texture.
+                It contains two custom child sprites that are positioned relatively
+                to the parent. As the parent rotates, the children are rendered
+                relative to the parent rotation.
+            </p>
+        </section>
+
+        <!-- ANIMATION DEMO -->
+        <section class="demo">
+            <h1>Animation Demo</h1>
+            <canvas id="animationDemo"></canvas>
+            <p>
+                Animations exist as a property on a sprite object. An animation
+                keeps track of sequences, frames, frame durations and the current
+                frame that should render. Animations can be defined in code but
+                it is recommended that developers define and load animations from
+                JSON.
+            </p>
+            <p>
+                This example demonstrates a spritesheet and a JSON-defined animation.
+                Animating sprites behave just like non-animated sprites and can be
+                attached to a parent sprite or have child sprites of their own.
+            </p>
+            <p>
+                Note that loading JSON performs an AJAX call. Browsers do not allow
+                this on pages that are loaded from a file. To load JSON you will need 
+                to host this page using a server technology. We recommend Node.js with
+                the "http-server" module for quick-easy testing!
+            </p>
+        </section>
+
+    </body>
+</html>

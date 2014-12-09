@@ -1,0 +1,32 @@
+{
+    "spriteSheetUrl": "frostFlakeAnimation.png",
+    "frameWidth": 32,
+    "frameHeight" : 32,
+    "sequences": {
+        "loading" : {
+            "isLooping" : true,
+            "frames" : [
+                {
+                    "top": 0,
+                    "left": 0,
+                    "duration": 0.25
+                },
+                {
+                    "top": 0,
+                    "left": 32,
+                    "duration": 0.25
+                },
+                {
+                    "top": 0,
+                    "left": 64,
+                    "duration": 0.25
+                },
+                {
+                    "top": 0,
+                    "left": 96,
+                    "duration": 0.25
+                }
+            ]
+        }
+    }
+}
