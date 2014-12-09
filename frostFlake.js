@@ -14,37 +14,41 @@ var frostFlake = (function (ff) {
     ff.Game = Class.extend({
         // constructor
         init: function (canvas, fps, background) {
+
+            // self reference for callbacks
+            var me = this;
+
             // canvas is a required argument
             if (!ff.hasValue(canvas)) {
                 throw "Unable to initialize game without a valid canvas!";
             }
 
             // provide a reference to the game object that can be accessed anywhere
-            ff.game = this;
+            me.game = me;
 
             // keep a reference to the game canvas
-            this.canvas = canvas;
+            me.canvas = canvas;
 
             // keep a reference to the background color
-            this.background = ff.defaultIfNoValue(background, "rgba(0, 0, 0, 0)");
+            me.background = ff.defaultIfNoValue(background, "rgba(0, 0, 0, 0)");
 
             // set the starting view to a default view
-            this.currentView = new ff.View();
+            me.currentView = new ff.View();
 
             // initialize the games main camera
-            this.camera = new ff.Camera(canvas.clientWidth, canvas.clientHeight);
+            me.camera = new ff.Camera(canvas.clientWidth, canvas.clientHeight);
 
             // initialize the game's main renderer
-            this.renderer = new ff.Renderer();
+            me.renderer = new ff.Renderer();
 
             // init FPS to 60 if not defined
-            this.targetFps = ff.defaultIfNoValue(fps, 60);
+            me.targetFps = ff.defaultIfNoValue(fps, 60);
 
             // init input manager
-            this.inputManager = new ff.InputManager(canvas);
+            me.inputManager = new ff.InputManager(canvas);
 
             // object used to track elapsed time each update
-            this.time = {
+            me.time = {
                 start: new Date(),      // the time the game started
                 last: new Date(),       // the last update cycle time
                 delta: 0,               // milliseconds since last update
@@ -52,14 +56,14 @@ var frostFlake = (function (ff) {
             };
 
             // whether or not the game should update
-            this.paused = false;
+            me.paused = false;
 
             // whether or not the game has focus
-            this.focused = false;
+            me.focused = false;
 
             // start the game timer
-            this.timer = window.setInterval( function () {
-                ff.game.update();
+            me.timer = window.setInterval( function () {
+                me.game.update();
             }, 1000 / this.targetFps);
         },
 
