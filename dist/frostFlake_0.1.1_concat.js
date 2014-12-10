@@ -781,11 +781,10 @@ var frostFlake = (function (ff, $) {
         },
 
         // update mouse world coordinates from camera
-        update: function (deltaTime) {
-            var m = ff.input.mouse,
-                c = ff.game.camera;
-            m.worldX = c.position.x + m.x;
-            m.worldY = c.position.y + m.y;
+        update: function (deltaTime, camera) {
+            var m = ff.input.mouse;
+            m.worldX = camera.position.x + m.x;
+            m.worldY = camera.position.y + m.y;
         }
     });
 
@@ -1503,9 +1502,6 @@ var frostFlake = (function (ff) {
                 throw "Unable to initialize game without a valid canvas!";
             }
 
-            // provide a reference to the game object that can be accessed anywhere
-            me.game = me;
-
             // keep a reference to the game canvas
             me.canvas = canvas;
 
@@ -1543,7 +1539,7 @@ var frostFlake = (function (ff) {
 
             // start the game timer
             me.timer = window.setInterval( function () {
-                me.game.update();
+                me.update();
             }, 1000 / this.targetFps);
         },
 
@@ -1561,8 +1557,8 @@ var frostFlake = (function (ff) {
         // the core update loop of the game, called by the interval timer
         update: function () {
             this.updateTime();
-            this.inputManager.update(this.time.delta);
             this.camera.update(this.time.delta);
+            this.inputManager.update(this.time.delta, this.camera);
             this.currentView.update(this.time.delta);
             this.renderer.draw(this.currentView.sprites, this.camera, this.canvas, this.background);
         },
