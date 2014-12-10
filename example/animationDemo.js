@@ -56,11 +56,6 @@ var animationDemo = (function (ff) {
 
             // use our custom view
             this.currentView = new demo.CustomView();
-        },
-
-        update: function(deltaTime) {
-            console.log("updating animation demo");
-            this._super(deltaTime);
         }
     });
 

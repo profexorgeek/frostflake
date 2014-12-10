@@ -52,19 +52,22 @@ table {
 /* CUSTOM STYLES */
 html {
     padding-top: 25px;
-    background:#CCC;
+    background:#b5e6ff;
 }
 
 body {
     font-family: Arial, Helvetica, sans-serif;
     width:800px;
     margin:0 auto;
-    text-align: center;;
+    text-align: center;
+    font-size:10pt;
 }
 
 canvas {
     border:1px solid black;
     border-radius: 5px;
+    margin-bottom:10px;
+    cursor:none;
 }
 
 h1, h2, h3, h4, h5 {

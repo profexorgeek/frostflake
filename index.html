@@ -25,9 +25,10 @@
         <!-- examplesFile -->
         <script type="text/javascript" src="/example/spriteDemo.js"></script>
         <script type="text/javascript" src="/example/animationDemo.js"></script>
+        <script type="text/javascript" src="/example/inputDemo.js"></script>
 
         <script>
-            var d1, d2;
+            var d1, d2, d3;
 
             // start all examples when page is fully loaded.
             /* global frostFlake, $ */
@@ -35,9 +36,9 @@
                 "use strict";
 
                 // initiate the demos
-                d2 = new animationDemo.Game($("canvas#animationDemo")[0]);
                 d1 = new spriteDemo.Game($("canvas#spriteDemo")[0]);
-                
+                d2 = new animationDemo.Game($("canvas#animationDemo")[0]);
+                d3 = new inputDemo.Game($("canvas#inputDemo")[0]);
 
             });
         </script>
@@ -72,6 +73,21 @@
                 frame that should render. Animations can be defined in code but
                 it is recommended that developers define and load animations from
                 JSON.
+            </p>
+            <p>
+                The frost flake in the example above will track the mouse. Press
+                "R" on the keyboard to rotate the sprite. Click the mouse to fade
+                the frost flake to 50% alpha.
+            </p>
+        </section>
+
+        <!-- MOUSE DEMO -->
+        <section class="demo">
+            <h1>Input Demo</h1>
+            <canvas id="inputDemo"></canvas>
+            <p>
+                FrostFlake provides a reference to keyboard and mouse input. Touchscreen
+                input is supported but may require extra effort to implement.
             </p>
             <p>
                 This example demonstrates a spritesheet and a JSON-defined animation.
