@@ -42,7 +42,7 @@ var frostFlake = (function (ff) {
             me.targetFps = ff.defaultIfNoValue(fps, 60);
 
             // init input manager
-            me.inputManager = new ff.InputManager(canvas, me.camera);
+            me.input = new ff.Input(me);
 
             // object used to track elapsed time each update
             me.time = {
@@ -79,7 +79,7 @@ var frostFlake = (function (ff) {
         update: function () {
             this.updateTime();
             this.camera.update(this.time.delta);
-            this.inputManager.update(this.time.delta);
+            this.input.update(this.time.delta);
             this.currentView.update(this.time.delta);
             this.renderer.draw(this.currentView.sprites, this.camera, this.canvas, this.background);
         },
