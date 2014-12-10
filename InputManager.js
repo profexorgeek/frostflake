@@ -17,10 +17,11 @@ var frostFlake = (function (ff, $) {
     ff.InputManager = Class.extend({
 
         // constructor: sets up all event listeners using jQuery
-        init: function (canvas) {
-            var mouse = ff.input.mouse,               // local reference to the mouse object
-                keyboard = ff.input.keyboard,         // local reference to the keyboard object
-                me = this;                            // self reference for events
+        init: function (canvas, camera) {
+                var me = this,
+                    mouse = ff.input.mouse,         // local reference for mouse
+                    keyboard = ff.input.keyboard;   // local reference for keyboard
+                this.camera = camera;               // local reference for camera
 
             if (!ff.hasValue(canvas)) {
                 throw "InputManager needs a valid canvas to listen for input.";
@@ -30,7 +31,7 @@ var frostFlake = (function (ff, $) {
             // TOUCH EVENTS
             //============================================
             // simulate mouse movement on touch
-            $(canvas).on("touchmove", function (e) {
+            $(document).on("touchmove", function (e) {
                 var touch = e.originalEvent.touches[0];
                 if(ff.hasValue(touch)) {
                     me.updateMouseLocation(touch.clientX, touch.clientY);
@@ -132,7 +133,7 @@ var frostFlake = (function (ff, $) {
         // updates the mouse object based on the position where an event occurred
         updateMouseLocation: function (locationX, locationY) {
             var mouse = ff.input.mouse,
-                camera = ff.game.camera;
+                camera = this.camera;
 
             mouse.lastX = mouse.x;
             mouse.lastY = mouse.y;
@@ -145,10 +146,10 @@ var frostFlake = (function (ff, $) {
         },
 
         // update mouse world coordinates from camera
-        update: function (deltaTime, camera) {
+        update: function (deltaTime) {
             var m = ff.input.mouse;
-            m.worldX = camera.position.x + m.x;
-            m.worldY = camera.position.y + m.y;
+            m.worldX = this.camera.position.x + m.x;
+            m.worldY = this.camera.position.y + m.y;
         }
     });
 
