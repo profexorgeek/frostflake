@@ -1,5 +1,5 @@
 {
-    "spriteSheetUrl": "frostFlakeAnimation.png",
+    "spriteSheetUrl": "/example/frostFlakeAnimation.png",
     "frameWidth": 32,
     "frameHeight" : 32,
     "sequences": {

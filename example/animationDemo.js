@@ -19,7 +19,7 @@ var animationDemo = (function (ff) {
 
             // load our animation with a custom success callback
             // callback will fire after the animation and animation texture have loaded
-            me.loadAnimation("animation.json", function () {
+            me.loadAnimation("/example/animation.json", function () {
                 console.log("Animation loaded successfully.");
 
                 // choose the sequence to play

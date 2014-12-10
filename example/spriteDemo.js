@@ -10,7 +10,7 @@ var spriteDemo = (function(ff) {
         // custom construct specifies texture URL
         init: function () {
             // call base constructor with sprite URL and a custom load callback
-            this._super("frostFlake.png", function () {
+            this._super("/example/frostFlake.png", function () {
                 console.log("Example entity has loaded texture.");
             });
 
