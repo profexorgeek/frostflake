@@ -6,6 +6,10 @@ var inputDemo = (function (ff) {
     var demo = {};
 
     demo.GameCursor = ff.Sprite.extend({
+
+        // reference to the game instance
+        instance: null,
+
         // custom constructor loads sprite
         init: function () {
             this._super("/example/frostFlake.png");
@@ -20,19 +24,19 @@ var inputDemo = (function (ff) {
 
         // custom method to track mouse
         trackMouse: function () {
-            this.position.x = ff.input.mouse.worldX;
-            this.position.y = ff.input.mouse.worldY;
+            this.position.x = demo.instance.input.mouse.worldX;
+            this.position.y = demo.instance.input.mouse.worldY;
         },
 
         handleInput: function () {
-            if(ff.input.keyboard.keyDown(ff.input.keyboard.keys.R)) {
+            if(demo.instance.input.keyboard.keyDown(ff.keyboard.keys.R)) {
                 this.rotationVelocity = 1.5;
             }
             else {
                 this.rotationVelocity = 0;
             }
 
-            if(ff.input.mouse.buttonDown(ff.input.mouse.buttons.Left)) {
+            if(demo.instance.input.mouse.buttonDown(ff.mouse.buttons.Left)) {
                 this.alpha = 0.5;
             }
             else {
@@ -59,6 +63,7 @@ var inputDemo = (function (ff) {
         init: function(canvas) {
             this._super(canvas, 60, "rgba(150, 150, 150, 1)");
             this.currentView = new demo.CustomView();
+            demo.instance = this;
         }
     });
 
