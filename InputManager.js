@@ -145,11 +145,10 @@ var frostFlake = (function (ff, $) {
         },
 
         // update mouse world coordinates from camera
-        update: function (deltaTime) {
-            var m = ff.input.mouse,
-                c = ff.game.camera;
-            m.worldX = c.position.x + m.x;
-            m.worldY = c.position.y + m.y;
+        update: function (deltaTime, camera) {
+            var m = ff.input.mouse;
+            m.worldX = camera.position.x + m.x;
+            m.worldY = camera.position.y + m.y;
         }
     });
 
