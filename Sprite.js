@@ -241,7 +241,15 @@ var frostFlake = (function (ff) {
         // sets the drawscale, ensuring it's not < 0 and then updates dimensions
         setDrawScale: function (xScale, yScale) {
             xScale = Math.max(xScale, 0);
-            yScale = Math.max(yScale, 0);
+
+            // if Y is not provided, match X scale
+            if(ff.hasValue(yScale)) {
+                yScale = Math.max(yScale, 0);
+            }
+            else {
+                yScale = xScale;
+            }
+
             this.drawScale = {
                 x: xScale,
                 y: yScale
