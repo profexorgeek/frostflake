@@ -62,8 +62,8 @@ var inputDemo = (function (ff) {
     demo.Game = ff.Game.extend({
         init: function(canvas) {
             this._super(canvas, 60, "rgba(150, 150, 150, 1)");
-            this.currentView = new demo.CustomView();
             demo.instance = this;
+            this.currentView = new demo.CustomView();
         }
     });
 
