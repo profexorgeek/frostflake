@@ -28,12 +28,13 @@
         <script type="text/javascript" src="/example/animationDemo.js"></script>
         <script type="text/javascript" src="/example/inputDemo.js"></script>
         <script type="text/javascript" src="/example/cameraDemo.js"></script>
+        <script type="text/javascript" src="/example/rendererDemo.js"></script>
 
         <script>
-            var d1, d2, d3, d4;
+            var d1, d2, d3, d4, d5;
 
             // start all examples when page is fully loaded.
-            /* global spriteDemo, animationDemo, inputDemo, cameraDemo, $ */
+            /* global spriteDemo, animationDemo, inputDemo, cameraDemo, rendererDemo, $ */
             $(function() {
                 "use strict";
 
@@ -42,6 +43,7 @@
                 d2 = new animationDemo.Game($("canvas#animationDemo")[0]);
                 d3 = new inputDemo.Game($("canvas#inputDemo")[0]);
                 d4 = new cameraDemo.Game($("canvas#cameraDemo")[0]);
+                d5 = new rendererDemo.Game($("canvas#rendererDemo")[0]);
 
             });
         </script>
@@ -115,7 +117,7 @@
 
         <!-- CAMERA DEMO -->
         <section class="demo">
-            <h1>Camera Demo (WASD to move)</h1>
+            <h1>Camera Demo (WASD moves camera)</h1>
             <canvas id="cameraDemo"></canvas>
             <p>
                 FrostFlake creates a default camera object on the game instance.
@@ -137,7 +139,35 @@
             </p>
         </section>
 
-        <!-- COLLISION DEMO -->
+        <!-- RENDER TARGETS -->
+        <section class="demo">
+            <h1>Render Targets (WASD moves camera)</h1>
+            <canvas id="rendererDemo"></canvas>
+            <p>
+                The FrostFlake renderer takes a camera, a target canvas and a collection of sprites
+                for each draw call. In most cases, this happens behind the scenes. When you add sprites 
+                using the currentView's addSprite() method, they are automatically rendered to the default
+                canvas using the default camera. But large collections of sprites that are unchanging may 
+                be inefficient to render individually 60 times per second. In these cases it's possible
+                to render the collection of sprites to a unique canvas and use the canvas' dataUrl as 
+                the source for a single sprite. This is extremely useful for things like tilemaps 
+                where a large number of sprites have a static relationship to one another.
+            </p>
+
+            <p>
+                The above example renders 10,000 frost flake sprites with random rotation to a 
+                canvas once and then uses the canvas' dataUrl as the source for a single, 
+                large sprite that's rendered every frame on the main canvas. Rendering 10,000
+                sprites continuously at 60fps would unlrealistic for performance but
+                rendering a single, large sprite is possible. The first render may take several seconds
+                depending on your machine but once the first pass work is done, performance 
+                should be fairly smooth.
+            </p>
+
+            <p>
+                <a href="/example/rendererDemo.js" target="_blank" title="Renderer Demo Source">View Source</a>
+            </p>
+        </section>        
         
 
     </body>

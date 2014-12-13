@@ -6,7 +6,7 @@ var spriteDemo = (function(ff) {
     var demo = {};
 
     // basic custom entity with texture and rotation
-    demo.ExampleEntity = ff.Sprite.extend({
+    demo.Flake = ff.Sprite.extend({
         // custom construct specifies texture URL
         init: function () {
             // call base constructor with sprite URL and a custom load callback
@@ -26,8 +26,8 @@ var spriteDemo = (function(ff) {
             this._super();
 
             // create two instances of our example entity
-            flake1 = new demo.ExampleEntity();
-            flake2 = new demo.ExampleEntity();
+            flake1 = new demo.Flake();
+            flake2 = new demo.Flake();
 
             // give each instance a position relative to this position
             flake1.position.x = 50;
