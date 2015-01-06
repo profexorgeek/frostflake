@@ -10,6 +10,9 @@ var frostFlake = (function (ff) {
 
     "use strict";
 
+    // If this many milliseconds elapses between updates, frame is discarded
+    var updateTimeThreshold = 500;
+
     // The Game class that all games should extend
     ff.Game = Class.extend({
         // constructor
@@ -48,8 +51,8 @@ var frostFlake = (function (ff) {
             me.time = {
                 start: new Date(),      // the time the game started
                 last: new Date(),       // the last update cycle time
-                delta: 0,               // milliseconds since last update
-                deltaFromStart: 0       // milliseconds since game started
+                frameSeconds: 0,        // milliseconds since last update
+                gameTimeSeconds: 0      // milliseconds since game started
             };
 
             // whether or not the game should update
@@ -66,21 +69,32 @@ var frostFlake = (function (ff) {
 
         // updates the elapsed time each update cycle
         updateTime: function () {
-            var startMilli = this.time.start.getTime(),         // the time the game started
-                lastMilli = this.time.last.getTime(),           // the time the last update was performed
-                nowMilli = new Date();                          // this update cycle time
+            var lastMilli = this.time.last.getTime(),   // the time the last update was performed
+                nowMilli = new Date(),                  // this update cycle time
+                deltaMilli = nowMilli - lastMilli;      // frame delta in miliseconds
 
+            // calculate the delta between frames
+            if(deltaMilli < updateTimeThreshold) {
+                
+                this.time.frameSeconds = deltaMilli / 1000;
+            }
+
+            // too long has elapsed, reset delta
+            else {
+                this.time.frameSeconds = 0;
+                console.log("Time between frames (" + deltaMilli + ") exceeded " + updateTimeThreshold + ", delta reset.");
+            }
+
+            this.time.gameTimeSeconds += this.time.frameSeconds;
             this.time.last = nowMilli;
-            this.time.delta = (nowMilli - lastMilli) / 1000;
-            this.time.deltaFromStart = (nowMilli - startMilli) / 1000;
         },
 
         // the core update loop of the game, called by the interval timer
         update: function () {
             this.updateTime();
-            this.camera.update(this.time.delta);
-            this.input.update(this.time.delta);
-            this.currentView.update(this.time.delta);
+            this.camera.update(this.time.frameSeconds);
+            this.input.update(this.time.frameSeconds);
+            this.currentView.update(this.time.frameSeconds);
             this.renderer.draw(this.currentView.sprites, this.camera, this.canvas, this.background);
         },
 
