@@ -21,7 +21,7 @@ var rendererDemo = (function (ff, $) {
     demo.CustomView = ff.View.extend({
     	init: function () {
     		this._super();
-    		this.gridSize = 100;										// the size of sprite grid to render
+    		this.gridSize = 10;										// the size of sprite grid to render
     		this.spriteSize = 32;										// the size of each sprite
     		this.spritesLoaded = 0;										// the number of sprites that have finished loading
     		this.flakeContainer = [];									// a container to hold our sprites while they load
