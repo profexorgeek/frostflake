@@ -53,11 +53,15 @@ var frostFlake = (function (ff) {
 
         // update the flow of animation through frames
         this.update = function (deltaTime) {
+            var frameDuration;
             if (isAnimating === true && ff.hasValue(currentSequence)) {
                 // reduce time left in frame by elapsed time
                 timeLeftInFrame = timeLeftInFrame - deltaTime;
 
-                if (timeLeftInFrame <= 0) {
+                // process frames, skipping frames until we are at a positive timeLeft
+                while(timeLeftInFrame <= 0) {
+
+                    // increment/wrap frames
                     if (currentFrameIndex < currentSequence.frames.length - 1) {
                         currentFrameIndex = currentFrameIndex + 1;
                     } else {
@@ -66,14 +70,16 @@ var frostFlake = (function (ff) {
                         }
                     }
 
-                    // NOTE: Render cycles do not exacly match frame durations!
-                    // So we need to increment timeLeftInFrame instead of setting it directly.
-                    // This makes overall animation duration more accurate.
-                    // Long hiccups in update speed will result in animations playing very quickly until
-                    // they catch up.
-                    timeLeftInFrame = timeLeftInFrame + currentSequence.frames[currentFrameIndex].duration;
-                }
+                    // add current frame duration to timeLeft
+                    frameDuration = currentSequence.frames[currentFrameIndex].duration;
+                    timeLeftInFrame += frameDuration;
 
+                    // if we have negative timeLeft but frame duration is zero
+                    // loop will never exit, override
+                    if(frameDuration === 0) {
+                        break;
+                    }
+                }
             }
         };
 
