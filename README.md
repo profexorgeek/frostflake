@@ -1,6 +1,8 @@
 # README #
 Frostflake is a JavaScript game engine for making games or other rich media that run in a browser. It attempts to make cross-platform, 2D game development as simple as possible by eliminating boilerplate and freeing the developer to focus on game logic.
 
+DEMO: http://frostflake.syndicatex.com/
+
 ###License###
 MIT License, see license.txt
 
