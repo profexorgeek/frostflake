@@ -4,12 +4,199 @@
         <title>FrostFlake Examples</title>
 
         <!-- stylesheet -->
-        <link rel="stylesheet" href="/example/screen.css" />
+        <link rel="stylesheet" href="/example/styles/bootstrap.min.css" />
+        <style>
+            body {
+                padding-top:70px;
+            }
+
+            .navbar-brand {
+                padding-top:13px;
+            }
+
+        </style>
+    </head>
+    <body>
+
+    <nav class='navbar navbar-default navbar-fixed-top'>
+        <a class='navbar-brand' href='/'><img src='/example/textures/frostFlake.png' alt='brand image'/></a>
+        <ul class='nav navbar-nav'>
+            <li><a href='/#sprites'>Sprites</a></li>
+            <li><a href='/#animations'>Animations</a></li>
+            <li><a href='/#input'>Input</a></li>
+            <li><a href='/#cameras'>Cameras</a></li>
+            <li><a href='/#renderers'>Renderers</a></li>
+        </ul>
+
+        <p class='navbar-text'>
+            <a href='https://bitbucket.org/profexorgeek/frostflake-js-game-engine' title='frostFlake Bitbucket'>
+                Get frostFlake!
+            </a>
+        </p>
+    </nav>
+
+    <div class='container-fluid'>
+        <h1>frostFlake Quick Demos</h1>
+
+        <!-- Sprite Demo -->
+        <div class="panel panel-default">
+            <div class="panel-heading"><a name='sprites'>Sprites</a></div>
+            <div class="panel-body">
+                <canvas id="spriteDemo"></canvas>
+                <p>
+                    Sprites are the basic object type that all game objects
+                    derive from. Sprites are not required to have a texture.
+                    Sprites can have child sprites that render in relation to
+                    the parent, taking rotation, velocity, acceleration and
+                    position from their parent sprite. This allows developers
+                    to create complex relationships from modular objects.
+                </p>
+                <p>
+                    The example above demonstrates a parent object that subclasses
+                    the frostFlake Sprite. The parent object has no texture but
+                    contains two child objects that extend Sprite and are given
+                    positions relative to the parent. As the parent rotates, the
+                    children are rendered relative to the parent rotation with
+                    their own additional rotation applied.
+                </p>
+                <p>
+                    <a href="/example/spriteDemo.js" target="_blank" title="Sprite demo source">View Source</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Spritesheet Demo -->
+        <div class="panel panel-default">
+            <div class="panel-heading"><a name='animations'>Animations</a></div>
+            <div class="panel-body">
+                <canvas id="animationDemo"></canvas>
+                <p>
+                    Animations exist as a property on a sprite object. An animation
+                    keeps track of sequences, frames, frame durations and the current
+                    frame that should render. Animations can be defined in code but
+                    it is recommended that developers define and load animations from
+                    JSON.
+                </p>
+                <p>
+                    This example demonstrates a spritesheet and a JSON-defined animation.
+                    Animating sprites behave just like non-animated sprites and can be
+                    attached to a parent sprite or have child sprites of their own.
+                </p>
+                <p>
+                    Note that animations set specific sprite texture coordinates. Setting
+                    texture coordinates on a sprite also works for using sprites out of a 
+                    single texture atlas!
+                </p>
+                <p>
+                    <a href="/example/animationDemo.js" target="_blank" title="Animation Demo Source">View Source</a>
+                </p>
+
+                <p>
+                    <a href="/example/animation.json" target="_blank" title="Animation JSON Source">View JSON</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Input Demo -->
+        <div class="panel panel-default">
+            <div class="panel-heading"><a name='input'>Input</a></div>
+            <div class="panel-body">
+                <canvas id="inputDemo"></canvas>
+                <p><em>
+                    Use "R" to rotate sprite. Move mouse over canvas to move sprite.
+                    Primary mouse click to fade sprite.
+                </em></p>
+                <p>
+                    frostFlake uses jQuery to track keyboard and mouse state. It also 
+                    provides mappings of key and mouse button codes to human-readable 
+                    names. Touchscreen input is supported but may require extra 
+                    effort and testing to implement as devices are changing rapidly!
+                </p>
+                <p>
+                    <a href="/example/inputDemo.js" target="_blank" title="Input Demo Source">View Source</a>
+                </p>
+            </div>
+        </div>
+
+
+        <!-- Camera Demo -->
+        <div class="panel panel-default">
+            <div class="panel-heading"><a name='cameras'>Cameras</a></div>
+            <div class="panel-body">
+                <canvas id="cameraDemo"></canvas>
+                <p><em>
+                    Use WASD to move the camera.
+                </em></p>
+                <p>
+                    frostFlake creates a default camera object on the game instance.
+                    The camera can have a position set or position velocity like a Sprite.
+                    You can create your own custom camera that derives from the frostFlake
+                    camera and set that as the primary camera. It's also possible to switch
+                    between different cameras simply by changing the camera used by the renderer!
+                </p>
+                <p>
+                    In the demo above, Sprites have a "parallax" percentage property that 
+                    simulates depth. The demo sprites have a random parallax percentage applied. 
+                    As the camera moves, sprites appear to exist at different depths due to the applied parallax.
+                    Sprites at the edge of the screen wrap, giving the appearance of an infinite
+                    field of objects.
+                </p>
+                <p>
+                    Note: frostFlake does not support camera rotation.
+                </p>
+
+                <p>
+                    <a href="/example/cameraDemo.js" target="_blank" title="Camera Demo Source">View Source</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Render Demo -->
+        <div class="panel panel-default">
+            <div class="panel-heading"><a name='renderers'>Renderers</a></div>
+            <div class="panel-body">
+                <canvas id="rendererDemo"></canvas>
+                <p><em>
+                    Use WASD to move the camera.
+                </em></p>
+                <p>
+                    The frostFlake renderer is flexible and extensible. In many games,
+                    you won't need to touch the renderer at all! However, it can be easily extended
+                    and customized to do some powerful stuff!
+                </p>
+                <p>
+                    The renderer takes a camera, a target canvas and a collection of sprites
+                    for each draw call. When you add sprites to a view with the addSprite method,
+                    they will automatically be rendered to the default canvas with the default camera.
+                    In most cases, this is all a game needs. However, some games will have a large
+                    number of sprites with unchanging position and rotation relative to each other.
+                    A good example of this is the background sprites or level art in a game level.
+                    Rendering large numbers of sprites with custom translations, 60 times per second
+                    is expensive and may make your game slow and buggy. This is where the renderer
+                    really shines! It's possible to create a unqiue canvas, render a large number of
+                    sprites a single time, and then use the canvas' data URL as the texture source
+                    for a single sprite!
+                </p>
+
+                <p>
+                    The above example renders 100 frost flake sprites with random rotation to a 
+                    dynamic canvas (often called a render target) and then uses the dynamic canvas' 
+                    dataUrl as the source for a single, large sprite. In this example, the background 
+                    color of the canvas is purple but it could be any color or transparent.
+                </p>
+
+                <p>
+                    <a href="/example/rendererDemo.js" target="_blank" title="Renderer Demo Source">View Source</a>
+                </p>
+            </div>
+        </div>
+
+    </div>
 
         <!-- dependencies -->
         <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 
-        <!-- frostFlake -->
+        <!-- frostFlake core -->
         <script type="text/javascript" src="Class.js"></script>
         <script type="text/javascript" src="Animation.js"></script>
         <script type="text/javascript" src="Camera.js"></script>
@@ -23,13 +210,14 @@
         <script type="text/javascript" src="View.js"></script>
         <script type="text/javascript" src="frostFlake.js"></script>
 
-        <!-- examplesFile -->
+        <!-- examples -->
         <script type="text/javascript" src="/example/spriteDemo.js"></script>
         <script type="text/javascript" src="/example/animationDemo.js"></script>
         <script type="text/javascript" src="/example/inputDemo.js"></script>
         <script type="text/javascript" src="/example/cameraDemo.js"></script>
         <script type="text/javascript" src="/example/rendererDemo.js"></script>
 
+        <!-- start up the apps -->
         <script>
             var d1, d2, d3, d4, d5;
 
@@ -47,127 +235,7 @@
 
             });
         </script>
-    </head>
-    <body>
-        <!-- SPRITE DEMO -->
-        <section class="demo">
-            <h1>Sprite Demo</h1>
-            <canvas id="spriteDemo"></canvas>
-            <p>
-                Sprites are the basic type that all game objects derive from. 
-                Sprites don't have to have a texture. A sprite may not have a 
-                texture of its own but can have textured child sprites that
-                render. This allows the developer to create complex objects
-                from modular, child objects.
-            </p>
-            <p>
-                This example demonstrates a custom parent sprite with no texture.
-                It contains two custom child sprites that are positioned relatively
-                to the parent. As the parent rotates, the children are rendered
-                relative to the parent rotation.
-            </p>
 
-            <p>
-                <a href="/example/spriteDemo.js" target="_blank" title="Sprite Demo Source">View Source</a>
-            </p>
-        </section>
-
-        <!-- ANIMATION DEMO -->
-        <section class="demo">
-            <h1>Animation Demo</h1>
-            <canvas id="animationDemo"></canvas>
-            <p>
-                Animations exist as a property on a sprite object. An animation
-                keeps track of sequences, frames, frame durations and the current
-                frame that should render. Animations can be defined in code but
-                it is recommended that developers define and load animations from
-                JSON.
-            </p>
-            <p>
-                This example demonstrates a spritesheet and a JSON-defined animation.
-                Animating sprites behave just like non-animated sprites and can be
-                attached to a parent sprite or have child sprites of their own.
-            </p>
-            <p>
-                <a href="/example/animationDemo.js" target="_blank" title="Animation Demo Source">View Source</a>
-            </p>
-
-            <p>
-                <a href="/example/animation.json" target="_blank" title="Animation JSON Source">View JSON</a>
-            </p>
-        </section>
-
-        <!-- MOUSE DEMO -->
-        <section class="demo">
-            <h1>Input Demo</h1>
-            <canvas id="inputDemo"></canvas>
-            <p>
-                FrostFlake provides a reference to keyboard and mouse input. Touchscreen
-                input is supported but may require extra effort to implement.
-            </p>
-            <p>
-                The frost flake in the example above will track the mouse. Press
-                "R" on the keyboard to rotate the sprite. Click the mouse to fade
-                the frost flake to 50% alpha.
-            </p>
-            <p>
-                <a href="/example/inputDemo.js" target="_blank" title="Input Demo Source">View Source</a>
-            </p>
-        </section>
-
-        <!-- CAMERA DEMO -->
-        <section class="demo">
-            <h1>Camera Demo (WASD moves camera)</h1>
-            <canvas id="cameraDemo"></canvas>
-            <p>
-                FrostFlake creates a default camera object on the game instance.
-                The camera can have a position set or position velocity like a Sprite.
-                FrostFlake does not currently support camera rotation.
-            </p>
-
-            <p>
-                Sprites have a "parallax" percentage property that allows them to move 
-                with the camera and simulate depth. Use the WASD keys in the example 
-                above to move the camera. The frost flake sprites have a random amount 
-                of parallax so they appear to be positioned at different distances from 
-                the camera. The sprites wrap at the screen edges so the camera appears
-                to move through an infinite field of sprites.
-            </p>
-
-            <p>
-                <a href="/example/cameraDemo.js" target="_blank" title="Camera Demo Source">View Source</a>
-            </p>
-        </section>
-
-        <!-- RENDER TARGETS -->
-        <section class="demo">
-            <h1>Render Targets (WASD moves camera)</h1>
-            <canvas id="rendererDemo"></canvas>
-            <p>
-                The FrostFlake renderer takes a camera, a target canvas and a collection of sprites
-                for each draw call. In most cases, this happens behind the scenes. When you add sprites 
-                using the currentView's addSprite() method, they are automatically rendered to the default
-                canvas using the default camera. But large collections of sprites that are unchanging may 
-                be inefficient to render individually 60 times per second. In these cases it's possible
-                to render the collection of sprites to a unique canvas and use the canvas' dataUrl as 
-                the source for a single sprite. This is extremely useful for things like tilemaps 
-                where a large number of sprites have a static relationship to one another.
-            </p>
-
-            <p>
-                The above example renders 100 frost flake sprites with random rotation to a 
-                canvas once and then uses the canvas' dataUrl as the source for a single, 
-                large sprite that's rendered every frame on the main canvas. Rendering many
-                sprites continuously at 60fps would unlrealistic for performance but
-                rendering a single, large sprite is possible. Once the first pass work is done, 
-                performance should be smooth.
-            </p>
-
-            <p>
-                <a href="/example/rendererDemo.js" target="_blank" title="Renderer Demo Source">View Source</a>
-            </p>
-        </section>        
-        
 
     </body>
 </html>

@@ -13,7 +13,7 @@ var rendererDemo = (function (ff, $) {
         // custom construct specifies texture URL
         init: function (callback) {
             // call base constructor with sprite URL and a custom load callback
-            this._super("/example/frostFlake.png", callback);
+            this._super("/example/textures/frostFlake.png", callback);
         }
     });
 
@@ -21,14 +21,14 @@ var rendererDemo = (function (ff, $) {
     demo.CustomView = ff.View.extend({
     	init: function () {
     		this._super();
-    		this.gridSize = 10;										// the size of sprite grid to render
+    		this.gridSize = 10;										    // the size of sprite grid to render
     		this.spriteSize = 32;										// the size of each sprite
     		this.spritesLoaded = 0;										// the number of sprites that have finished loading
     		this.flakeContainer = [];									// a container to hold our sprites while they load
     		this.renderComplete = false;								// flag to check if the render has been done
     		this.textureSize = (this.gridSize) * this.spriteSize;		// the size our canvas needs to be
     		
-    		// create a canvas large enough to hold our custom texture
+    		// create a dynamic canvas large enough to hold our custom texture
     		this.renderTarget = $("<canvas width='" + this.textureSize + "' height='" + this.textureSize + "'></canvas>")[0];
 
     		this.loadSprites();
@@ -39,6 +39,8 @@ var rendererDemo = (function (ff, $) {
             this._super(deltaTime);
             this.handleInput();
 
+            // TODO: improve how this is done?
+            // Checks to see if sprites are done loading and then renders to the target
             if(this.renderComplete === false) {
             	this.checkSpritesLoaded();
         	}
@@ -52,7 +54,7 @@ var rendererDemo = (function (ff, $) {
         			this.flakeContainer,			// our custom sprite list
         			demo.instance.camera,			// the camera to use
         			this.renderTarget,				// the canvas to use
-        			"rgb(255, 255, 255)"			// the background color to use
+        			"rgb(240, 240, 255)"			// the background color to use
         			);
 
         		// create a single sprite with the render target texture
@@ -62,7 +64,7 @@ var rendererDemo = (function (ff, $) {
         		this.addSprite(sprite);
 
         		// dispose of our array of sprites
-        		// TODO: these should probably be unloaded
+        		// TODO: these should probably be fully unloaded
         		this.flakeContainer = null;
 
         		// notify the view that the render has completed
@@ -127,7 +129,7 @@ var rendererDemo = (function (ff, $) {
 
     demo.Game = ff.Game.extend({
     	init: function (canvas) {
-    		this._super(canvas, 60, "rgba(150, 150, 150, 1)");
+    		this._super(canvas, 60, "rgba(225, 235, 255, 1)");
     		demo.instance = this;
     		this.currentView = new demo.CustomView();
     	}

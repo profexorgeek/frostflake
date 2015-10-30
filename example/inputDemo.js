@@ -12,7 +12,7 @@ var inputDemo = (function (ff) {
 
         // custom constructor loads sprite
         init: function () {
-            this._super("/example/frostFlake.png");
+            this._super("/example/textures/frostFlake.png");
         },
 
         // override the update function to call our custom method
@@ -61,7 +61,7 @@ var inputDemo = (function (ff) {
     // custom game instance sets currentView
     demo.Game = ff.Game.extend({
         init: function(canvas) {
-            this._super(canvas, 60, "rgba(150, 150, 150, 1)");
+            this._super(canvas, 60, "rgba(225, 235, 255, 1)");
             demo.instance = this;
             this.currentView = new demo.CustomView();
         }

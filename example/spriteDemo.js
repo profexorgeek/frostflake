@@ -10,7 +10,7 @@ var spriteDemo = (function(ff) {
         // custom construct specifies texture URL
         init: function () {
             // call base constructor with sprite URL and a custom load callback
-            this._super("/example/frostFlake.png");
+            this._super("/example/textures/frostFlake.png");
 
             // set a custom rotation speed
             this.rotationVelocity = 1.5;
@@ -65,7 +65,7 @@ var spriteDemo = (function(ff) {
         init: function (canvas) {
 
             // call parent constructor with canvas, FPS and background color
-            this._super(canvas, 60, "rgba(150, 150, 150, 1)");
+            this._super(canvas, 60, "rgba(225, 235, 255, 1)");
 
             // set the current view to an instance of our example view
             this.currentView = new demo.ExampleView();

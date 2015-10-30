@@ -19,7 +19,7 @@ var animationDemo = (function (ff) {
 
             // load our animation with a custom success callback
             // callback will fire after the animation and animation texture have loaded
-            me.loadAnimation("/example/animation.json", function () {
+            me.loadAnimation("/example/data/animation.json", function () {
                 console.log("Animation loaded successfully.");
 
                 // choose the sequence to play
@@ -52,7 +52,7 @@ var animationDemo = (function (ff) {
         init: function (canvas) {
 
             // call parent constructor with FPS and background color
-            this._super(canvas, 60, "rgba(150, 150, 150, 1)");
+            this._super(canvas, 60, "rgba(225, 235, 255, 1)");
 
             // use our custom view
             this.currentView = new demo.CustomView();

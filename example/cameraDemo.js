@@ -17,7 +17,7 @@ var cameraDemo = (function (ff) {
 
             // call parent and load texture
             // set custom values in success callback
-            this._super("/example/frostFlake.png", function () {
+            this._super("/example/textures/frostFlake.png", function () {
                 var scale, pos;
 
                 scale = ff.math.randomInRange(0.25, 1);
@@ -50,22 +50,23 @@ var cameraDemo = (function (ff) {
 
         // wrap the sprite if it goes offscreen
         wrapAtScreenEdge: function () {
-            var cam = demo.instance.camera;
+            var cam = demo.instance.camera,
+                wrapPadding = 16;
 
             // wrap the x axis
-            if(this.position.x > cam.viewPort.right) {
-                this.position.x = cam.viewPort.left;
+            if(this.position.x > cam.viewPort.right + wrapPadding) {
+                this.position.x = cam.viewPort.left - wrapPadding;
             }
-            if(this.position.x < cam.viewPort.left) {
-                this.position.x = cam.viewPort.right;
+            if(this.position.x < cam.viewPort.left - wrapPadding) {
+                this.position.x = cam.viewPort.right + wrapPadding;
             }
 
             // wrap the y axis
-            if(this.position.y > cam.viewPort.top) {
-                this.position.y = cam.viewPort.bottom;
+            if(this.position.y > cam.viewPort.top + wrapPadding) {
+                this.position.y = cam.viewPort.bottom - wrapPadding;
             }
-            if(this.position.y < cam.viewPort.bottom) {
-                this.position.y = cam.viewPort.top;
+            if(this.position.y < cam.viewPort.bottom - wrapPadding) {
+                this.position.y = cam.viewPort.top + wrapPadding;
             }
         }
     });
@@ -124,7 +125,7 @@ var cameraDemo = (function (ff) {
     // custom game instance sets currentView
     demo.Game = ff.Game.extend({
         init: function(canvas) {
-            this._super(canvas, 60, "rgba(150, 150, 150, 1)");
+            this._super(canvas, 60, "rgba(225, 235, 255, 1)");
             demo.instance = this;
             this.currentView = new demo.CustomView();
         }
