@@ -63,7 +63,7 @@ class CanvasRenderer {
         // recurse on children
         if(sprite.children.length > 0) {
             for(let i = 0; i < sprite.children.length; i++) {
-                this.drawEntity(sprite.children[i]);
+                this.drawSprite(sprite.children[i], ctx);
             }
         }
 
