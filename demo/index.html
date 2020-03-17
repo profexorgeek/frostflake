@@ -12,7 +12,7 @@
     <body>
         <canvas id="frostFlake" width="640" height="480"></canvas>
 
-        <!-- load FrostFlake -->
+        <!-- Include FrostFlake files -->
         <script type="text/javascript" src="/src/GameTime.js"></script>
         <script type="text/javascript" src="/src/Utility/MathUtil.js"></script>
         <script type="text/javascript" src="/src/Entities/Sprite.js"></script>
@@ -22,7 +22,7 @@
         <script type="text/javascript" src="/src/Views/View.js"></script>
         <script type="text/javascript" src="/src/FrostFlake.js"></script>
 
-        <!-- demo usage -->
+        <!-- Demo -->
         <script>
 
             // custom game screen just draws some sprites
@@ -36,28 +36,33 @@
                 constructor() {
                     super();
 
+                    // create a parent sprite and add it to the View sprites
                     this.parentFlake = new Sprite('/demo/Content/frostflake.png');
                     this.parentFlake.rotationVelocity = 3;
+                    this.sprites.push(this.parentFlake);
 
+                    // create and attach a child sprite
                     this.childFlake1 = new Sprite('/demo/Content/frostflake.png');
                     this.childFlake1.x = -40;
                     this.childFlake1.rotationVelocity = -5;
                     this.parentFlake.addChild(this.childFlake1);
 
+                    // create and attach a child sprite
                     this.childFlake2 = new Sprite('/demo/Content/frostflake.png');
                     this.childFlake2.x = 40;
                     this.childFlake2.rotationVelocity = 5;
                     this.parentFlake.addChild(this.childFlake2);
 
+                    // create a sprite based on part of a sprite sheet and add it to the View
                     this.spriteSheetSprite = new Sprite('/demo/Content/spritesheet.png');
                     this.spriteSheetSprite.coords = new Coords(32, 0, 32, 32);
-
-                    this.sprites.push(this.parentFlake);
                     this.sprites.push(this.spriteSheetSprite);
                 }
 
                 update() {
                     super.update();
+
+                    // set a sprite to the absolute position of another sprite
                     let abs = this.childFlake2.getAbsolutePosition();
                     this.spriteSheetSprite.x = abs.x;
                     this.spriteSheetSprite.y = abs.y;
