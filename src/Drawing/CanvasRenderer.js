@@ -35,7 +35,9 @@ class CanvasRenderer {
         ctx.globalAlpha = alpha;
 
         // draw texture
-        if(sprite.texture !== null && sprite.texture in this.#textureCache) {
+        if(sprite.texture !== null &&
+            sprite.texture in this.#textureCache &&
+            this.#textureCache[sprite.texture] instanceof HTMLImageElement === true) {
             let tex = this.#textureCache[sprite.texture];
             let coords = sprite.coords;
             ctx.drawImage(
@@ -72,6 +74,15 @@ class CanvasRenderer {
     loadTexture(url, success = null) {
         let xhr = new XMLHttpRequest();
         let me = this;
+
+        // return if we've already started loading this
+        if(url in this.#textureCache) {
+            return;
+        }
+
+        // insert placeholder so images aren't loaded
+        // multiple times if load requests are fired quickly
+        me.#textureCache[url] = "...";
         
         xhr.addEventListener('readystatechange', () => {
             if(xhr.readyState === XMLHttpRequest.DONE) {
