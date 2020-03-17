@@ -25,33 +25,42 @@
         <!-- demo usage -->
         <script>
 
-            // custom game screen just draws a bunch of sprites
+            // custom game screen just draws some sprites
             class MyGameScreen extends View {
                 constructor() {
                     super();
 
-                    let parentFlake = new Sprite('/demo/Content/frostFlake.png');
+                    let parentFlake = new Sprite('/demo/Content/frostflake.png');
                     parentFlake.rotationVelocity = 3;
-                    
 
-                    let childFlake1 = new Sprite('/demo/Content/frostFlake.png');
+                    let childFlake1 = new Sprite('/demo/Content/frostflake.png');
                     childFlake1.x = -40;
                     childFlake1.rotationVelocity = -5;
                     parentFlake.addChild(childFlake1);
 
-                    let childFlake2 = new Sprite('/demo/Content/frostFlake.png');
+                    let childFlake2 = new Sprite('/demo/Content/frostflake.png');
                     childFlake2.x = 40;
                     childFlake2.rotationVelocity = 5;
                     parentFlake.addChild(childFlake2);
 
+                    let spriteSheetSprite = new Sprite('/demo/Content/spritesheet.png');
+                    spriteSheetSprite.coords = new Coords(32, 0, 32, 32);
+                    spriteSheetSprite.x = -100;
+                    spriteSheetSprite.y = 100;
+                    spriteSheetSprite.rotationVelocity = -4;
+
                     this.sprites.push(parentFlake);
+                    this.sprites.push(spriteSheetSprite);
                 }
             }
 
-            let canvas = document.getElementById("frostFlake");
+            let canvas = document.getElementById('frostFlake');
+
             let ff = new FrostFlake(canvas);
-            ff.view = new MyGameScreen();
             ff.start();
+
+            ff.view = new MyGameScreen();
+            
         </script>
     </body>
 </html>
