@@ -2,15 +2,14 @@ class FrostFlake {
 
     static Game;
 
-    timer;
-    gameTime;
+    #timer;
+    time;
     fps;
     camera;
     canvas;
     renderer;
     view;
     background;
-
 
     constructor(canvas, fps = 30, background = "rgb(0,0,0)") {
         this.canvas = canvas;
@@ -21,19 +20,20 @@ class FrostFlake {
     }
 
     start() {
-        this.gameTime = new GameTime();
+        this.time = new GameTime();
         this.camera = new Camera();
         this.renderer = new CanvasRenderer();
 
         let me = this;
-        this.timer = window.setInterval( function () {
+        this.#timer = window.setInterval( function () {
             me.update();
         }, 1000 / this.fps);
     }
 
     update() {
-        this.gameTime.update();
+        this.time.update();
         this.camera.update();
+        this.view.update();
         this.renderer.draw(this.view.sprites, this.camera, this.canvas, this.background);
     }
 

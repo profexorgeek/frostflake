@@ -18,6 +18,7 @@
         <script type="text/javascript" src="/src/Entities/Sprite.js"></script>
         <script type="text/javascript" src="/src/Entities/Camera.js"></script>
         <script type="text/javascript" src="/src/Drawing/CanvasRenderer.js"></script>
+        <script type="text/javascript" src="/src/Drawing/Coords.js"></script>
         <script type="text/javascript" src="/src/Views/View.js"></script>
         <script type="text/javascript" src="/src/FrostFlake.js"></script>
 
@@ -29,21 +30,21 @@
                 constructor() {
                     super();
 
-                    for(let i = 0; i < 10; i++) {
-                        let sprite = new Sprite('/demo/Content/frostFlake.png');
-                        sprite.coords = {
-                            left: 0,
-                            top: 0,
-                            width: 32,
-                            height: 32
-                        };
-                        sprite.x = 20 * i;
-                        sprite.y = 20 * i;
-                        sprite.rotation = .15 * i;
-                        sprite.alpha = 1
+                    let parentFlake = new Sprite('/demo/Content/frostFlake.png');
+                    parentFlake.rotationVelocity = 3;
+                    
 
-                        this.sprites.push(sprite);
-                    }
+                    let childFlake1 = new Sprite('/demo/Content/frostFlake.png');
+                    childFlake1.x = -40;
+                    childFlake1.rotationVelocity = -5;
+                    parentFlake.addChild(childFlake1);
+
+                    let childFlake2 = new Sprite('/demo/Content/frostFlake.png');
+                    childFlake2.x = 40;
+                    childFlake2.rotationVelocity = 5;
+                    parentFlake.addChild(childFlake2);
+
+                    this.sprites.push(parentFlake);
                 }
             }
 

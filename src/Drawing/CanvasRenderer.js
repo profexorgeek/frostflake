@@ -40,6 +40,14 @@ class CanvasRenderer {
             this.#textureCache[sprite.texture] instanceof HTMLImageElement === true) {
             let tex = this.#textureCache[sprite.texture];
             let coords = sprite.coords;
+
+            // if null coords, default to sprite width
+            if(coords == null) {
+                coords = new Coords();
+                coords.width = tex.width;
+                coords.height = tex.height;
+            }
+
             ctx.drawImage(
                 tex,
                 coords.left,
