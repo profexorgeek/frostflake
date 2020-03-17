@@ -19,3 +19,4 @@ node_modules
 *.Cache
 *.sublime-project
 *.sublime-workspace
+.vs/
