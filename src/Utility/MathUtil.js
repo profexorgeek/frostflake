@@ -23,5 +23,10 @@ class MathUtil {
         const val = Math.random() * range;
         return val + min;
     }
+
+    static length(x, y) {
+        let len = Math.pow(x, 2) + Math.pow(y, 2);
+        return Math.abs(Math.sqrt(len));
+    }
     
 }

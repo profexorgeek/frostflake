@@ -27,30 +27,40 @@
 
             // custom game screen just draws some sprites
             class MyGameScreen extends View {
+
+                parentFlake;
+                childFlake1;
+                childFlake2;
+                spriteSheetSprite;
+
                 constructor() {
                     super();
 
-                    let parentFlake = new Sprite('/demo/Content/frostflake.png');
-                    parentFlake.rotationVelocity = 3;
+                    this.parentFlake = new Sprite('/demo/Content/frostflake.png');
+                    this.parentFlake.rotationVelocity = 3;
 
-                    let childFlake1 = new Sprite('/demo/Content/frostflake.png');
-                    childFlake1.x = -40;
-                    childFlake1.rotationVelocity = -5;
-                    parentFlake.addChild(childFlake1);
+                    this.childFlake1 = new Sprite('/demo/Content/frostflake.png');
+                    this.childFlake1.x = -40;
+                    this.childFlake1.rotationVelocity = -5;
+                    this.parentFlake.addChild(this.childFlake1);
 
-                    let childFlake2 = new Sprite('/demo/Content/frostflake.png');
-                    childFlake2.x = 40;
-                    childFlake2.rotationVelocity = 5;
-                    parentFlake.addChild(childFlake2);
+                    this.childFlake2 = new Sprite('/demo/Content/frostflake.png');
+                    this.childFlake2.x = 40;
+                    this.childFlake2.rotationVelocity = 5;
+                    this.parentFlake.addChild(this.childFlake2);
 
-                    let spriteSheetSprite = new Sprite('/demo/Content/spritesheet.png');
-                    spriteSheetSprite.coords = new Coords(32, 0, 32, 32);
-                    spriteSheetSprite.x = -100;
-                    spriteSheetSprite.y = 100;
-                    spriteSheetSprite.rotationVelocity = -4;
+                    this.spriteSheetSprite = new Sprite('/demo/Content/spritesheet.png');
+                    this.spriteSheetSprite.coords = new Coords(32, 0, 32, 32);
 
-                    this.sprites.push(parentFlake);
-                    this.sprites.push(spriteSheetSprite);
+                    this.sprites.push(this.parentFlake);
+                    this.sprites.push(this.spriteSheetSprite);
+                }
+
+                update() {
+                    super.update();
+                    let abs = this.childFlake2.getAbsolutePosition();
+                    this.spriteSheetSprite.x = abs.x;
+                    this.spriteSheetSprite.y = abs.y;
                 }
             }
 
