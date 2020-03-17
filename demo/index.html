@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>FrostFlake Demo</title>
+
+        <style>
+            canvas#frostFlake {
+                border:1px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="frostFlake" width="640" height="480"></canvas>
+
+        <!-- load FrostFlake -->
+        <script type="text/javascript" src="/src/GameTime.js"></script>
+        <script type="text/javascript" src="/src/Utility/MathUtil.js"></script>
+        <script type="text/javascript" src="/src/Entities/Sprite.js"></script>
+        <script type="text/javascript" src="/src/Entities/Camera.js"></script>
+        <script type="text/javascript" src="/src/Drawing/CanvasRenderer.js"></script>
+        <script type="text/javascript" src="/src/Views/View.js"></script>
+        <script type="text/javascript" src="/src/FrostFlake.js"></script>
+
+        <!-- demo usage -->
+        <script>
+
+            // custom game screen just draws a bunch of sprites
+            class MyGameScreen extends View {
+                constructor() {
+                    super();
+
+                    for(let i = 0; i < 10; i++) {
+                        let sprite = new Sprite('/demo/Content/frostFlake.png');
+                        sprite.coords = {
+                            left: 0,
+                            top: 0,
+                            width: 32,
+                            height: 32
+                        };
+                        sprite.x = 20 * i;
+                        sprite.y = 20 * i;
+                        sprite.rotation = .15 * i;
+                        sprite.alpha = 1
+
+                        this.sprites.push(sprite);
+                    }
+                }
+            }
+
+            let canvas = document.getElementById("frostFlake");
+            let ff = new FrostFlake(canvas);
+            ff.view = new MyGameScreen();
+            ff.start();
+        </script>
+    </body>
+</html>
