@@ -10,4 +10,12 @@ class View {
         }
     }
 
+    renderToTexture(width, height) {
+        let camera = new Camera();
+        let target = document.createElement('canvas');
+        target.width = width;
+        target.height = height;
+        FrostFlake.Game.renderer.draw(this.sprites, camera, target, "rgba(0,0,0,0)");
+        return target.toDataURL();
+    }
 }

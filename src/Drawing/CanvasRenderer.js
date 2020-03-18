@@ -4,6 +4,24 @@ class CanvasRenderer {
 
     // TODO: what about clearing texture cache
     // and images added to the DOM?
+
+    checkAndPreloadSprites(sprites) {
+        let preloaded = true;
+        for(let i = 0; i < sprites.length; i++) {
+            if(!this.textureLoaded(sprites[i].texture)) {
+                preloaded = false;
+            }
+
+            if(sprites[i].children.length > 0) {
+                let childrenLoaded = this.checkAndPreloadSprites(sprites[i].children);
+                if(childrenLoaded === false) {
+                    preloaded = false;
+                }
+            }
+        }
+
+        return preloaded;
+    }
     
     draw(sprites, camera, canvas, background = "rgb(0, 0, 0)") {
         let ctx = canvas.getContext("2d");
@@ -35,9 +53,7 @@ class CanvasRenderer {
         ctx.globalAlpha = alpha;
 
         // draw texture
-        if(sprite.texture !== null &&
-            sprite.texture in this.#textureCache &&
-            this.#textureCache[sprite.texture] instanceof HTMLImageElement === true) {
+        if(this.textureLoaded(sprite.texture)) {
             let tex = this.#textureCache[sprite.texture];
             let coords = sprite.coords;
 
@@ -62,17 +78,8 @@ class CanvasRenderer {
 
             // draw debug visualizations
             if(FrostFlake.Game.showDebug) {
-                let halfWidth = coords.width / 2;
-                let halfHeight = coords.height / 2;
-
                 ctx.strokeStyle = "rgb(255, 0, 0)";
-                ctx.beginPath();
-                ctx.moveTo(-halfWidth, halfHeight);
-                ctx.lineTo(halfWidth, halfHeight);
-                ctx.lineTo(halfWidth, -halfHeight);
-                ctx.lineTo(-halfWidth, -halfHeight);
-                ctx.lineTo(-halfWidth, halfHeight);
-                ctx.stroke();
+                ctx.strokeRect(-coords.width / 2, -coords.height / 2, coords.width, coords.height);
             }
         }
         // texture hasn't been loaded, load it now
@@ -92,6 +99,15 @@ class CanvasRenderer {
 
         // restore context
         ctx.restore();
+    }
+
+    textureLoaded(url) {
+        if(url !== null &&
+            url in this.#textureCache &&
+            this.#textureCache[url] instanceof HTMLImageElement === true) {
+                return true;
+            }
+        return false;
     }
 
     loadTexture(url, success = null) {

@@ -65,12 +65,10 @@
 
             let canvas = document.getElementById('frostFlake');
 
-            let ff = new FrostFlake(canvas);
+            let ff = new FrostFlake(canvas, 60);
             ff.showDebug = true;
             ff.start();
-
             ff.view = new MyGameScreen();
-            
         </script>
     </body>
 </html>
