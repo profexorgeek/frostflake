@@ -59,6 +59,21 @@ class CanvasRenderer {
                 coords.width,
                 coords.height
             );
+
+            // draw debug visualizations
+            if(FrostFlake.Game.showDebug) {
+                let halfWidth = coords.width / 2;
+                let halfHeight = coords.height / 2;
+
+                ctx.strokeStyle = "rgb(255, 0, 0)";
+                ctx.beginPath();
+                ctx.moveTo(-halfWidth, halfHeight);
+                ctx.lineTo(halfWidth, halfHeight);
+                ctx.lineTo(halfWidth, -halfHeight);
+                ctx.lineTo(-halfWidth, -halfHeight);
+                ctx.lineTo(-halfWidth, halfHeight);
+                ctx.stroke();
+            }
         }
         // texture hasn't been loaded, load it now
         else {

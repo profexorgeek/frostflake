@@ -10,6 +10,7 @@ class FrostFlake {
     renderer;
     view;
     background;
+    showDebug = false;
 
     constructor(canvas, fps = 30, background = "rgb(0,0,0)") {
         this.canvas = canvas;

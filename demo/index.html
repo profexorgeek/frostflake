@@ -2,12 +2,6 @@
 <html>
     <head>
         <title>FrostFlake Demo</title>
-
-        <style>
-            canvas#frostFlake {
-                border:1px solid black;
-            }
-        </style>
     </head>
     <body>
         <canvas id="frostFlake" width="640" height="480"></canvas>
@@ -72,6 +66,7 @@
             let canvas = document.getElementById('frostFlake');
 
             let ff = new FrostFlake(canvas);
+            ff.showDebug = true;
             ff.start();
 
             ff.view = new MyGameScreen();
