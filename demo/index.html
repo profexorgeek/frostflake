@@ -15,6 +15,10 @@
         <script type="text/javascript" src="/src/Drawing/Coords.js"></script>
         <script type="text/javascript" src="/src/Views/View.js"></script>
         <script type="text/javascript" src="/src/Logging/Log.js"></script>
+        <script type="text/javascript" src="/src/Input/Cursor.js"></script>
+        <script type="text/javascript" src="/src/Input/Keys.js"></script>
+        <script type="text/javascript" src="/src/Input/Mouse.js"></script>
+        <script type="text/javascript" src="/src/Input/Input.js"></script>
         <script type="text/javascript" src="/src/FrostFlake.js"></script>
 
         <!-- Demo -->
@@ -49,18 +53,44 @@
                     this.parentFlake.addChild(this.childFlake2);
 
                     // create a sprite based on part of a sprite sheet and add it to the View
-                    this.spriteSheetSprite = new Sprite('/demo/Content/spritesheet.png');
-                    this.spriteSheetSprite.coords = new Coords(32, 0, 32, 32);
-                    this.sprites.push(this.spriteSheetSprite);
+                    this.cursorSprite = new Sprite('/demo/Content/spritesheet.png');
+                    this.cursorSprite.coords = new Coords(32, 0, 32, 32);
+                    this.sprites.push(this.cursorSprite);
                 }
 
                 update() {
                     super.update();
 
-                    // set a sprite to the absolute position of another sprite
-                    let abs = this.childFlake2.getAbsolutePosition();
-                    this.spriteSheetSprite.x = abs.x;
-                    this.spriteSheetSprite.y = abs.y;
+                    // shortcuts
+                    let input = FrostFlake.Game.input;
+                    let cursor = input.cursor;
+                    let cam = FrostFlake.Game.camera;
+
+                    // make cursorSprite follow hardware cursor
+                    this.cursorSprite.x = cursor.worldX;
+                    this.cursorSprite.y = cursor.worldY;
+
+                    // make cursor rotate when clicked
+                    if(input.buttonDown(Mouse.Left)) {
+                        this.cursorSprite.rotationVelocity = -5;
+                    }
+                    else {
+                        this.cursorSprite.rotationVelocity = 0;
+                    }
+
+                    // move the camera when WASD pushed
+                    if(input.keyPushed(Keys.W)) {
+                        cam.y += 100;
+                    }
+                    if(input.keyPushed(Keys.S)) {
+                        cam.y -= 100;
+                    }
+                    if(input.keyPushed(Keys.A)) {
+                        cam.x -= 100;
+                    }
+                    if(input.keyPushed(Keys.D)) {
+                        cam.x += 100;
+                    }
                 }
             }
 

@@ -11,15 +11,18 @@ class FrostFlake {
     renderer;
     view;
     background;
+    input;
     showDebug = false;
 
     constructor(canvas, fps = 30, background = "rgb(0,0,0)") {
+        FrostFlake.Game = this;
+        FrostFlake.Log = new Log();
+
         this.canvas = canvas;
         this.fps = fps;
         this.background = background;
+        this.input = new Input();
         this.view = new View();
-        FrostFlake.Game = this;
-        FrostFlake.Log = new Log();
 
         FrostFlake.Log.info("FrostFlake instance created...");
     }
@@ -41,6 +44,7 @@ class FrostFlake {
         this.time.update();
         this.camera.update();
         this.view.update();
+        this.input.update();
         this.renderer.draw(this.view.sprites, this.camera, this.canvas, this.background);
     }
 
