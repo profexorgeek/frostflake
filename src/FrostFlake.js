@@ -1,6 +1,7 @@
 class FrostFlake {
 
     static Game;
+    static Log;
 
     #timer;
     time;
@@ -18,9 +19,14 @@ class FrostFlake {
         this.background = background;
         this.view = new View();
         FrostFlake.Game = this;
+        FrostFlake.Log = new Log();
+
+        FrostFlake.Log.info("FrostFlake instance created...");
     }
 
     start() {
+        FrostFlake.Log.info("Starting FrostFlake...");
+
         this.time = new GameTime();
         this.camera = new Camera();
         this.renderer = new CanvasRenderer();
