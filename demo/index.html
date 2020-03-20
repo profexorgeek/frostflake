@@ -24,6 +24,21 @@
         <!-- Demo -->
         <script>
 
+            class LotsOfSprites extends View {
+                constructor() {
+                    super();
+
+                    for(var i = 0; i < 2000; i++) {
+                        var s = new Sprite('/demo/Content/frostflake.png');
+                        s.x = MathUtil.randomInRange(-300, 300);
+                        s.y = MathUtil.randomInRange(-200,200);
+                        s.alpha = MathUtil.randomInRange(0.2, 0.85);
+                        s.rotationVelocity = MathUtil.randomInRange(-3, 3);
+                        this.addSprite(s);
+                    }
+                }
+            }
+
             // custom game screen just draws some sprites
             class MyGameScreen extends View {
 
@@ -38,7 +53,7 @@
                     // create a parent sprite and add it to the View sprites
                     this.parentFlake = new Sprite('/demo/Content/frostflake.png');
                     this.parentFlake.rotationVelocity = 3;
-                    this.sprites.push(this.parentFlake);
+                    this.addSprite(this.parentFlake);
 
                     // create and attach a child sprite
                     this.childFlake1 = new Sprite('/demo/Content/frostflake.png');
@@ -55,7 +70,7 @@
                     // create a sprite based on part of a sprite sheet and add it to the View
                     this.cursorSprite = new Sprite('/demo/Content/spritesheet.png');
                     this.cursorSprite.coords = new Coords(32, 0, 32, 32);
-                    this.sprites.push(this.cursorSprite);
+                    this.addSprite(this.cursorSprite);
                 }
 
                 update() {
@@ -97,9 +112,9 @@
             let canvas = document.getElementById('frostFlake');
 
             let ff = new FrostFlake(canvas, 60);
-            ff.showDebug = true;
+            ff.showDebug = false;
+            ff.view = new LotsOfSprites();
             ff.start();
-            ff.view = new MyGameScreen();
         </script>
     </body>
 </html>

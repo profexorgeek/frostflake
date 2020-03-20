@@ -18,4 +18,23 @@ class View {
         FrostFlake.Game.renderer.draw(this.sprites, camera, target, "rgba(0,0,0,0)");
         return target.toDataURL();
     }
+
+    addSprite(sprite) {
+        if(this.sprites.indexOf(sprite) > -1) {
+            throw "Sprite has already been added to view."
+        }
+
+        this.sprites.push(sprite);
+    }
+
+    removeSprite(sprite) {
+        let i = this.sprites.indexOf(sprite);
+        if(i > -1) {
+            this.sprites.splice(i, 1);
+        }
+    }
+
+    clearSprites() {
+        this.sprites = [];
+    }
 }

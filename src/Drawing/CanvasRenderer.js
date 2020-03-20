@@ -47,7 +47,6 @@ class CanvasRenderer {
 
         ctx.save();
 
-        
         ctx.translate(transX, transY);
         ctx.rotate(transRot);
         ctx.globalAlpha = alpha;
