@@ -12,7 +12,8 @@
         <script type="text/javascript" src="/src/Entities/Sprite.js"></script>
         <script type="text/javascript" src="/src/Entities/Camera.js"></script>
         <script type="text/javascript" src="/src/Drawing/CanvasRenderer.js"></script>
-        <script type="text/javascript" src="/src/Drawing/Coords.js"></script>
+        <script type="text/javascript" src="/src/Drawing/Frame.js"></script>
+        <script type="text/javascript" src="/src/Drawing/Animation.js"></script>
         <script type="text/javascript" src="/src/Views/View.js"></script>
         <script type="text/javascript" src="/src/Logging/Log.js"></script>
         <script type="text/javascript" src="/src/Input/Cursor.js"></script>
@@ -24,7 +25,7 @@
         <!-- Demo -->
         <script>
 
-            class LotsOfSprites extends View {
+            class ManySpriteDemo extends View {
                 constructor() {
                     super();
 
@@ -39,13 +40,10 @@
                 }
             }
 
-            // custom game screen just draws some sprites
-            class MyGameScreen extends View {
-
+            class ParentChildDemo extends View {
                 parentFlake;
                 childFlake1;
                 childFlake2;
-                spriteSheetSprite;
 
                 constructor() {
                     super();
@@ -66,10 +64,29 @@
                     this.childFlake2.x = 40;
                     this.childFlake2.rotationVelocity = 5;
                     this.parentFlake.addChild(this.childFlake2);
+                }
+            }
+
+            class InputDemo extends View {
+                
+                cursorSprite;
+
+                constructor() {
+                    super();
+
+                    // create some sprites so camera movement is visible
+                    for(var i = 0; i < 10; i++) {
+                        var s = new Sprite('/demo/Content/frostflake.png');
+                        s.x = MathUtil.randomInRange(-300, 300);
+                        s.y = MathUtil.randomInRange(-200,200);
+                        s.alpha = MathUtil.randomInRange(0.2, 0.85);
+                        s.rotationVelocity = MathUtil.randomInRange(-3, 3);
+                        this.addSprite(s);
+                    }
 
                     // create a sprite based on part of a sprite sheet and add it to the View
                     this.cursorSprite = new Sprite('/demo/Content/spritesheet.png');
-                    this.cursorSprite.coords = new Coords(32, 0, 32, 32);
+                    this.cursorSprite.frame = new Frame(32, 0, 32, 32);
                     this.addSprite(this.cursorSprite);
                 }
 
@@ -109,11 +126,35 @@
                 }
             }
 
+            class AnimationDemo extends View {
+                animation;
+                sprite;
+
+                constructor() {
+                    super();
+
+                    // create an animation with three, one-second frames
+                    this.animation = new Animation();
+                    this.animation.frames = [
+                        new Frame(0, 0, 32, 32, 1),
+                        new Frame(32, 0, 32, 32, 1),
+                        new Frame(64, 0, 32, 32, 1)
+                    ];
+                    this.animation.texture = '/demo/Content/spritesheet.png';
+
+                    // create a sprite and set the animation
+                    this.sprite = new Sprite();
+                    this.sprite.animation = this.animation;
+                    this.sprite.rotationVelocity = MathUtil.randomInRange(-3, 3);
+
+                    this.addSprite(this.sprite);
+                }
+            }
+
             let canvas = document.getElementById('frostFlake');
 
             let ff = new FrostFlake(canvas, 60);
             ff.showDebug = false;
-            ff.view = new LotsOfSprites();
             ff.start();
         </script>
     </body>

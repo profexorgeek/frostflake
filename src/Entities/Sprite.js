@@ -13,10 +13,11 @@ class Sprite {
     layer = 0;
     parent = null;
     children = [];
-    coords = null;
+    frame = null;
     texture = null;
+    animation = null;
 
-    constructor(texture) {
+    constructor(texture = null) {
         let me = this;
         this.texture = texture;
     }
@@ -67,7 +68,6 @@ class Sprite {
         let delta = FrostFlake.Game.time.frameSeconds;
 
         let deltaSquaredHalved = delta * delta / 2;
-        let twoPi = Math.PI * 2;
 
         this.x += (this.velocityX * delta) + (this.accelX * deltaSquaredHalved);
         this.y += (this.velocityY * delta) + (this.accelY * deltaSquaredHalved);
@@ -86,6 +86,13 @@ class Sprite {
         // update children
         for(let i = 0; i < this.children.length; i++) {
             this.children[i].update();
+        }
+
+        // play animation
+        if(this.animation) {
+            this.animation.update();
+            this.texture = this.animation.texture;
+            this.frame = this.animation.currentFrame();
         }
     }
 }

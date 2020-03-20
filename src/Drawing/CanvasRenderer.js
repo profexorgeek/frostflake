@@ -54,31 +54,31 @@ class CanvasRenderer {
         // draw texture
         if(this.textureLoaded(sprite.texture)) {
             let tex = this.#textureCache[sprite.texture];
-            let coords = sprite.coords;
+            let frame = sprite.frame;
 
-            // if null coords, default to sprite width
-            if(coords == null) {
-                coords = new Coords();
-                coords.width = tex.width;
-                coords.height = tex.height;
+            // if null frame, default to sprite width
+            if(frame == null) {
+                frame = new Frame();
+                frame.width = tex.width;
+                frame.height = tex.height;
             }
 
             ctx.drawImage(
                 tex,
-                coords.left,
-                coords.top,
-                coords.width,
-                coords.height,
-                coords.width / -2,
-                coords.height / -2,
-                coords.width,
-                coords.height
+                frame.left,
+                frame.top,
+                frame.width,
+                frame.height,
+                frame.width / -2,
+                frame.height / -2,
+                frame.width,
+                frame.height
             );
 
             // draw debug visualizations
             if(FrostFlake.Game.showDebug) {
                 ctx.strokeStyle = "rgb(255, 0, 0)";
-                ctx.strokeRect(-coords.width / 2, -coords.height / 2, coords.width, coords.height);
+                ctx.strokeRect(-frame.width / 2, -frame.height / 2, frame.width, frame.height);
             }
         }
         // texture hasn't been loaded, load it now
