@@ -35,6 +35,9 @@ class Sprite {
         let me = this;
         this.texture = texture;
         this.collision = new Circle();
+
+        // call runtime-appended logic
+        this.customConstruct();
     }
 
     addChild(sprite) {
@@ -109,5 +112,13 @@ class Sprite {
             this.texture = this.animation.texture;
             this.frame = this.animation.currentFrame();
         }
+
+        // call runtime-appended logic
+        this.customUpdate();
     }
+
+    // These methods allow custom logic to be appended to the constructor
+    // and update methods without overwriting the core logic
+    customConstruct() {}
+    customUpdate() {}
 }
