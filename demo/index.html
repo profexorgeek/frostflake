@@ -162,7 +162,7 @@
 
                 let view = this;
 
-                for (let i = 0; i < 120; i++) {
+                for (let i = 0; i < 75; i++) {
                     let s = new Sprite('Content/frostflake.png');
 
                     // override custom function to make sprites always bounce
@@ -190,8 +190,9 @@
                     // give the sprites some random starting positions and velocities
                     s.x = MathUtil.randomInRange(-300, 300);
                     s.y = MathUtil.randomInRange(-200, 200);
-                    s.velocityX = MathUtil.randomInRange(-100, 100);
-                    s.velocityY = MathUtil.randomInRange(-100, 100);
+                    s.velocityX = MathUtil.randomInRange(-500, 500);
+                    s.velocityY = MathUtil.randomInRange(-500, 500);
+                    s.drag = 0.25;
                     s.rotationVelocity = MathUtil.randomInRange(-2, 2);
 
                     this.addSprite(s);
@@ -227,11 +228,11 @@
                 }
             }
 
-            getRandomBounceVelocity(sprite) {
+            getRandomBounceVelocity(sprite, energyLossOnBounce = 0) {
                 let fortyFiveDegrees = Math.PI / 4;
                 let velocityAngle = Math.atan2(sprite.velocityY, sprite.velocityX);
                 let reverseAngle = MathUtil.normalizeAngle(velocityAngle - Math.PI);
-                let magnitude = MathUtil.length(sprite.velocityX, sprite.velocityY);
+                let magnitude = MathUtil.length(sprite.velocityX, sprite.velocityY) * (1 - energyLossOnBounce);
                 let newAngle = reverseAngle + MathUtil.randomInRange(-fortyFiveDegrees, fortyFiveDegrees);
                 let velX = Math.cos(newAngle) * magnitude;
                 let velY = Math.sin(newAngle) * magnitude;
