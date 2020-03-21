@@ -1,161 +1,194 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>FrostFlake Demo</title>
-    </head>
-    <body>
-        <canvas id="frostFlake" width="640" height="480"></canvas>
 
-        <!-- Include FrostFlake files -->
-        <script type="text/javascript" src="/src/GameTime.js"></script>
-        <script type="text/javascript" src="/src/Utility/MathUtil.js"></script>
-        <script type="text/javascript" src="/src/Entities/Sprite.js"></script>
-        <script type="text/javascript" src="/src/Entities/Camera.js"></script>
-        <script type="text/javascript" src="/src/Drawing/CanvasRenderer.js"></script>
-        <script type="text/javascript" src="/src/Drawing/Frame.js"></script>
-        <script type="text/javascript" src="/src/Drawing/Animation.js"></script>
-        <script type="text/javascript" src="/src/Views/View.js"></script>
-        <script type="text/javascript" src="/src/Logging/Log.js"></script>
-        <script type="text/javascript" src="/src/Input/Cursor.js"></script>
-        <script type="text/javascript" src="/src/Input/Keys.js"></script>
-        <script type="text/javascript" src="/src/Input/Mouse.js"></script>
-        <script type="text/javascript" src="/src/Input/Input.js"></script>
-        <script type="text/javascript" src="/src/FrostFlake.js"></script>
+<head>
+    <title>FrostFlake Demo</title>
+</head>
 
-        <!-- Demo -->
-        <script>
+<body>
+    <canvas id="frostFlake" width="640" height="480"></canvas>
 
-            class ManySpriteDemo extends View {
-                constructor() {
-                    super();
+    <!-- Include FrostFlake files -->
+    <script type="text/javascript" src="../src/GameTime.js"></script>
+    <script type="text/javascript" src="../src/Utility/MathUtil.js"></script>
+    <script type="text/javascript" src="../src/Entities/Sprite.js"></script>
+    <script type="text/javascript" src="../src/Entities/Camera.js"></script>
+    <script type="text/javascript" src="../src/Drawing/CanvasRenderer.js"></script>
+    <script type="text/javascript" src="../src/Drawing/Frame.js"></script>
+    <script type="text/javascript" src="../src/Drawing/Animation.js"></script>
+    <script type="text/javascript" src="../src/Shapes/Shape.js"></script>
+    <script type="text/javascript" src="../src/Shapes/Circle.js"></script>
+    <script type="text/javascript" src="../src/Views/View.js"></script>
+    <script type="text/javascript" src="../src/Logging/Log.js"></script>
+    <script type="text/javascript" src="../src/Input/Cursor.js"></script>
+    <script type="text/javascript" src="../src/Input/Keys.js"></script>
+    <script type="text/javascript" src="../src/Input/Mouse.js"></script>
+    <script type="text/javascript" src="../src/Input/Input.js"></script>
+    <script type="text/javascript" src="../src/FrostFlake.js"></script>
 
-                    for(var i = 0; i < 2000; i++) {
-                        var s = new Sprite('/demo/Content/frostflake.png');
-                        s.x = MathUtil.randomInRange(-300, 300);
-                        s.y = MathUtil.randomInRange(-200,200);
-                        s.alpha = MathUtil.randomInRange(0.2, 0.85);
-                        s.rotationVelocity = MathUtil.randomInRange(-3, 3);
-                        this.addSprite(s);
-                    }
+    <!-- Demo -->
+    <script>
+
+        class ManySpriteDemo extends View {
+            constructor() {
+                super();
+
+                for (var i = 0; i < 2000; i++) {
+                    var s = new Sprite('Content/frostflake.png');
+                    s.x = MathUtil.randomInRange(-300, 300);
+                    s.y = MathUtil.randomInRange(-200, 200);
+                    s.alpha = MathUtil.randomInRange(0.2, 0.85);
+                    s.rotationVelocity = MathUtil.randomInRange(-3, 3);
+                    this.addSprite(s);
                 }
             }
+        }
 
-            class ParentChildDemo extends View {
-                parentFlake;
-                childFlake1;
-                childFlake2;
+        class ParentChildDemo extends View {
+            parentFlake;
+            childFlake1;
+            childFlake2;
 
-                constructor() {
-                    super();
+            constructor() {
+                super();
 
-                    // create a parent sprite and add it to the View sprites
-                    this.parentFlake = new Sprite('/demo/Content/frostflake.png');
-                    this.parentFlake.rotationVelocity = 3;
-                    this.addSprite(this.parentFlake);
+                // create a parent sprite and add it to the View sprites
+                this.parentFlake = new Sprite('Content/frostflake.png');
+                this.parentFlake.rotationVelocity = 3;
+                this.addSprite(this.parentFlake);
 
-                    // create and attach a child sprite
-                    this.childFlake1 = new Sprite('/demo/Content/frostflake.png');
-                    this.childFlake1.x = -40;
-                    this.childFlake1.rotationVelocity = -5;
-                    this.parentFlake.addChild(this.childFlake1);
+                // create and attach a child sprite
+                this.childFlake1 = new Sprite('Content/frostflake.png');
+                this.childFlake1.x = -40;
+                this.childFlake1.rotationVelocity = -5;
+                this.parentFlake.addChild(this.childFlake1);
 
-                    // create and attach a child sprite
-                    this.childFlake2 = new Sprite('/demo/Content/frostflake.png');
-                    this.childFlake2.x = 40;
-                    this.childFlake2.rotationVelocity = 5;
-                    this.parentFlake.addChild(this.childFlake2);
+                // create and attach a child sprite
+                this.childFlake2 = new Sprite('Content/frostflake.png');
+                this.childFlake2.x = 40;
+                this.childFlake2.rotationVelocity = 5;
+                this.parentFlake.addChild(this.childFlake2);
+            }
+        }
+
+        class InputDemo extends View {
+
+            cursorSprite;
+
+            constructor() {
+                super();
+
+                // create some sprites so camera movement is visible
+                for (var i = 0; i < 10; i++) {
+                    var s = new Sprite('Content/frostflake.png');
+                    s.x = MathUtil.randomInRange(-300, 300);
+                    s.y = MathUtil.randomInRange(-200, 200);
+                    s.alpha = MathUtil.randomInRange(0.2, 0.85);
+                    s.rotationVelocity = MathUtil.randomInRange(-3, 3);
+                    this.addSprite(s);
                 }
+
+                // create a sprite based on part of a sprite sheet and add it to the View
+                this.cursorSprite = new Sprite('/demo/Content/spritesheet.png');
+                this.cursorSprite.frame = new Frame(32, 0, 32, 32);
+                this.addSprite(this.cursorSprite);
             }
 
-            class InputDemo extends View {
-                
-                cursorSprite;
+            update() {
+                super.update();
 
-                constructor() {
-                    super();
+                // shortcuts
+                let input = FrostFlake.Game.input;
+                let cursor = input.cursor;
+                let cam = FrostFlake.Game.camera;
 
-                    // create some sprites so camera movement is visible
-                    for(var i = 0; i < 10; i++) {
-                        var s = new Sprite('/demo/Content/frostflake.png');
-                        s.x = MathUtil.randomInRange(-300, 300);
-                        s.y = MathUtil.randomInRange(-200,200);
-                        s.alpha = MathUtil.randomInRange(0.2, 0.85);
-                        s.rotationVelocity = MathUtil.randomInRange(-3, 3);
-                        this.addSprite(s);
-                    }
+                // make cursorSprite follow hardware cursor
+                this.cursorSprite.x = cursor.worldX;
+                this.cursorSprite.y = cursor.worldY;
 
-                    // create a sprite based on part of a sprite sheet and add it to the View
-                    this.cursorSprite = new Sprite('/demo/Content/spritesheet.png');
-                    this.cursorSprite.frame = new Frame(32, 0, 32, 32);
-                    this.addSprite(this.cursorSprite);
+                // make cursor rotate when clicked
+                if (input.buttonDown(Mouse.Left)) {
+                    this.cursorSprite.rotationVelocity = -5;
+                }
+                else {
+                    this.cursorSprite.rotationVelocity = 0;
                 }
 
-                update() {
-                    super.update();
-
-                    // shortcuts
-                    let input = FrostFlake.Game.input;
-                    let cursor = input.cursor;
-                    let cam = FrostFlake.Game.camera;
-
-                    // make cursorSprite follow hardware cursor
-                    this.cursorSprite.x = cursor.worldX;
-                    this.cursorSprite.y = cursor.worldY;
-
-                    // make cursor rotate when clicked
-                    if(input.buttonDown(Mouse.Left)) {
-                        this.cursorSprite.rotationVelocity = -5;
-                    }
-                    else {
-                        this.cursorSprite.rotationVelocity = 0;
-                    }
-
-                    // move the camera when WASD pushed
-                    if(input.keyPushed(Keys.W)) {
-                        cam.y += 100;
-                    }
-                    if(input.keyPushed(Keys.S)) {
-                        cam.y -= 100;
-                    }
-                    if(input.keyPushed(Keys.A)) {
-                        cam.x -= 100;
-                    }
-                    if(input.keyPushed(Keys.D)) {
-                        cam.x += 100;
-                    }
+                // move the camera when WASD pushed
+                if (input.keyPushed(Keys.W)) {
+                    cam.y += 100;
+                }
+                if (input.keyPushed(Keys.S)) {
+                    cam.y -= 100;
+                }
+                if (input.keyPushed(Keys.A)) {
+                    cam.x -= 100;
+                }
+                if (input.keyPushed(Keys.D)) {
+                    cam.x += 100;
                 }
             }
+        }
 
-            class AnimationDemo extends View {
-                animation;
-                sprite;
+        class AnimationDemo extends View {
+            animation;
+            sprite;
 
-                constructor() {
-                    super();
+            constructor() {
+                super();
 
-                    // create an animation with three, one-second frames
-                    this.animation = new Animation();
-                    this.animation.frames = [
-                        new Frame(0, 0, 32, 32, 1),
-                        new Frame(32, 0, 32, 32, 1),
-                        new Frame(64, 0, 32, 32, 1)
-                    ];
-                    this.animation.texture = '/demo/Content/spritesheet.png';
+                // create an animation with three, one-second frames
+                this.animation = new Animation();
+                this.animation.frames = [
+                    new Frame(0, 0, 32, 32, 1),
+                    new Frame(32, 0, 32, 32, 1),
+                    new Frame(64, 0, 32, 32, 1)
+                ];
+                this.animation.texture = '/demo/Content/spritesheet.png';
 
-                    // create a sprite and set the animation
-                    this.sprite = new Sprite();
-                    this.sprite.animation = this.animation;
-                    this.sprite.rotationVelocity = MathUtil.randomInRange(-3, 3);
+                // create a sprite and set the animation
+                this.sprite = new Sprite();
+                this.sprite.animation = this.animation;
+                this.sprite.rotationVelocity = MathUtil.randomInRange(-3, 3);
 
-                    this.addSprite(this.sprite);
-                }
+                this.addSprite(this.sprite);
+            }
+        }
+
+        class CollisionDemo extends View {
+            sprite1;
+            sprite2;
+
+            constructor() {
+                super();
+
+                this.sprite1 = new Sprite('Content/frostflake.png');
+                this.sprite1.x = 100;
+                this.sprite1.accelX = -100;
+                this.addSprite(this.sprite1);
+
+                this.sprite2 = new Sprite('Content/frostflake.png');
+                this.sprite2.x = -100;
+                this.sprite2.accelX = 100;
+                this.addSprite(this.sprite2);
             }
 
-            let canvas = document.getElementById('frostFlake');
+            update() {
+                super.update();
 
-            let ff = new FrostFlake(canvas, 60);
-            ff.showDebug = false;
-            ff.start();
-        </script>
-    </body>
+                if (this.sprite1.collision.collidesWith(this.sprite2.collision)) {
+                    this.sprite1.velocityX = 50;
+                    this.sprite2.velocityX = -50;
+                }
+            }
+        }
+
+        let canvas = document.getElementById('frostFlake');
+
+        let ff = new FrostFlake(canvas, 60);
+        ff.showDebug = false;
+        ff.start();
+    </script>
+</body>
+
 </html>
