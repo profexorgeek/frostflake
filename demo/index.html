@@ -6,8 +6,47 @@
     <body>
         <canvas id="frostFlake" width="640" height="480"></canvas>
 
-        <script type="text/javascript" src="/build/frostflake.concat.js"></script>
+        <!-- DEV: include all files -->
+        <script type='text/javascript' src='/src/GameTime.js'></script>
+        <script type='text/javascript' src='/src/Utility/MathUtil.js'></script>
+        <script type='text/javascript' src='/src/Entities/Sprite.js'></script>
+        <script type='text/javascript' src='/src/Entities/Camera.js'></script>
+        <script type='text/javascript' src='/src/Drawing/CanvasRenderer.js'></script>
+        <script type='text/javascript' src='/src/Drawing/Frame.js'></script>
+        <script type='text/javascript' src='/src/Drawing/Animation.js'></script>
+        <script type='text/javascript' src='/src/Shapes/Shape.js'></script>
+        <script type='text/javascript' src='/src/Shapes/Circle.js'></script>
+        <script type='text/javascript' src='/src/Views/View.js'></script>
+        <script type='text/javascript' src='/src/Logging/Log.js'></script>
+        <script type='text/javascript' src='/src/Input/Cursor.js'></script>
+        <script type='text/javascript' src='/src/Input/Keys.js'></script>
+        <script type='text/javascript' src='/src/Input/Mouse.js'></script>
+        <script type='text/javascript' src='/src/Input/Input.js'></script>
+        <script type='text/javascript' src='/src/FrostFlake.js'></script>
+
+        <!-- PROD: include built file-->
+        <!-- <script type="text/javascript" src="/build/frostflake.concat.js"></script> -->
+
         <script>
+
+        // get a reference to the canvas element
+        let canvas = document.getElementById('frostFlake');
+
+        // initialize frostflake with a reference to the canvas
+        // and a target framerate
+        let ff = new FrostFlake(canvas, 60);
+
+        // turn debug visualizations on or off
+        ff.showDebug = false;
+
+        // start running the game
+        ff.start();
+
+        // Each of the following demo classes shows how
+        // to use basic engine features. Load one of these
+        // demo classes by typing the following command
+        // in your browser's JavaScript console:
+        // ff.view = new DemoClassName();
         class ManySpriteDemo extends View {
             constructor() {
                 super();
@@ -110,25 +149,27 @@
         }
 
         class AnimationDemo extends View {
-            animation;
+            runCycle;
             sprite;
 
             constructor() {
                 super();
 
                 // create an animation with three, one-second frames
-                this.animation = new Animation();
-                this.animation.frames = [
-                    new Frame(0, 0, 32, 32, 1),
-                    new Frame(32, 0, 32, 32, 1),
-                    new Frame(64, 0, 32, 32, 1)
-                ];
-                this.animation.texture = 'Content/spritesheet.png';
+                this.runCycle = new Animation();
+                this.runCycle.texture = 'Content/spritesheet.png';
+                this.runCycle.frames = [];
+
+                // use a loop to add 8 frames in a row from the spritesheet
+                for(let i = 0; i < 8; i++) {
+                    this.runCycle.frames.push(new Frame(i * 16, 160, 16, 16, 0.2));
+                }
 
                 // create a sprite and set the animation
+                // the source sprite is small so double its drawscale
                 this.sprite = new Sprite();
-                this.sprite.animation = this.animation;
-                this.sprite.rotationVelocity = MathUtil.randomInRange(-3, 3);
+                this.sprite.scale = 10;
+                this.sprite.animation = this.runCycle;
 
                 this.addSprite(this.sprite);
             }
@@ -219,11 +260,6 @@
             }
         }
 
-        let canvas = document.getElementById('frostFlake');
-
-        let ff = new FrostFlake(canvas, 60);
-        ff.showDebug = false;
-        ff.start();
     </script>
 </body>
 
