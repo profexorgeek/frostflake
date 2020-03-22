@@ -25,14 +25,15 @@ class CanvasRenderer {
     
     draw(sprites, camera, canvas, background = "rgb(0, 0, 0)", antialias = false) {
         let ctx = canvas.getContext("2d");
-        let transX = MathUtil.invert(camera.x) + (ctx.canvas.width / 2);
-        let transY = camera.y + (ctx.canvas.height / 2);
-
-        ctx.imageSmoothingEnabled = antialias;
-        ctx.fillStyle = background;
-        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        let scale = 1 / camera.resolution;
+        let transX = MathUtil.invert(camera.x) + (ctx.canvas.width / 2) * camera.resolution;
+        let transY = camera.y + (ctx.canvas.height / 2) * camera.resolution;
 
         ctx.save();
+        ctx.imageSmoothingEnabled = antialias;
+        ctx.scale(scale, scale);
+        ctx.fillStyle = background;
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         ctx.translate(transX, transY);
         for(let i = 0; i < sprites.length; i++) {
             this.drawSprite(sprites[i], ctx);
