@@ -6,7 +6,9 @@ const concat = require('concat')
 
 const config = {
     buildDirPath: path.dirname(__dirname) + '/build',
-    buildFileName: 'FrostFlake.min.js',
+    concatFileName: 'frostflake.concat.js',
+    buildFileName: 'frostflake.js',
+    mapFileName: 'frostflake.js.map',
     babelOptions: {
         plugins: [
             "@babel/plugin-proposal-class-properties",
@@ -14,7 +16,7 @@ const config = {
         ]
     },
     uglifyOptions: {
-        sourceMap: process.argv[2] === "no-sourceMap" ? false : {url: "inline"}
+        sourceMap: process.argv[2] === "no-sourceMap" ? false : {url: "frostflake.js.map", filename: "frostflake.js.map"}
     }
 }
 
@@ -40,10 +42,19 @@ concat([
     const transpiled = babel.transform(result, config.babelOptions);
     const uglified = uglify.minify(transpiled.code, config.uglifyOptions);
     cleanBuildDir(config.buildDirPath);
+
+    // write concat file
+    fs.writeFileSync(`${config.buildDirPath}/${config.concatFileName}`, result);
+
+    // write sourcemap
+    fs.writeFileSync(`${config.buildDirPath}/${config.mapFileName}`, uglified.map);
+
+    // write transpiled/minified file
     fs.writeFileSync(`${config.buildDirPath}/${config.buildFileName}`, uglified.code);
 })
 .catch(error => console.log(error));
 
+// wipe everything in the build directory
 const cleanBuildDir = (buildDirPath) => {
     if (fs.existsSync(buildDirPath)) {
         fs.readdirSync(buildDirPath).forEach(filename => fs.unlinkSync(`${buildDirPath}/${filename}`));

@@ -6,19 +6,19 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "http-server",
-    "build-js": "node scripts/build.js"
+    "build": "node scripts/build.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jmhammock/frostflake.git"
+    "url": "git+https://github.com/profexorgeek/frostflake.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "profexorgeek",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jmhammock/frostflake/issues"
+    "url": "https://github.com/profexorgeek/frostflake/issues"
   },
-  "homepage": "https://github.com/jmhammock/frostflake#readme",
+  "homepage": "https://github.com/profexorgeek/frostflake#readme",
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
