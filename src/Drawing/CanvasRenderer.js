@@ -79,8 +79,12 @@ class CanvasRenderer {
 
             // draw debug visualizations
             if(FrostFlake.Game.showDebug) {
-                ctx.strokeStyle = "rgb(255, 0, 0)";
-                ctx.strokeRect(-frame.width / 2, -frame.height / 2, frame.width, frame.height);
+                ctx.strokeStyle = "white";
+                ctx.strokeRect(
+                    -frame.width / 2 * sprite.scale,
+                    -frame.height / 2 * sprite.scale,
+                    frame.width * sprite.scale,
+                    frame.height * sprite.scale);
             }
         }
         // texture hasn't been loaded, load it now
