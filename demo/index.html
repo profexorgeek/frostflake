@@ -7,53 +7,10 @@
         <canvas id="frostFlake" width="640" height="480"></canvas>
 
         <!-- Include FrostFlake files -->
-        <script type="text/javascript" src="/build/FrostFlake.min.js"></script>
+        <script type="text/javascript" src="../build/FrostFlake.min.js"></script>
 
         <!-- Demo -->
         <script>
-
-            class ManySpriteDemo extends View {
-                constructor() {
-                    super();
-
-                    for(var i = 0; i < 2000; i++) {
-                        var s = new Sprite('/demo/Content/frostflake.png');
-                        s.x = MathUtil.randomInRange(-300, 300);
-                        s.y = MathUtil.randomInRange(-200,200);
-                        s.alpha = MathUtil.randomInRange(0.2, 0.85);
-                        s.rotationVelocity = MathUtil.randomInRange(-3, 3);
-                        this.addSprite(s);
-                    }
-                }
-            }
-
-<head>
-    <title>FrostFlake Demo</title>
-</head>
-
-<body>
-    <canvas id="frostFlake" width="640" height="480"></canvas>
-
-    <!-- Include FrostFlake files -->
-    <script type="text/javascript" src="../src/GameTime.js"></script>
-    <script type="text/javascript" src="../src/Utility/MathUtil.js"></script>
-    <script type="text/javascript" src="../src/Entities/Sprite.js"></script>
-    <script type="text/javascript" src="../src/Entities/Camera.js"></script>
-    <script type="text/javascript" src="../src/Drawing/CanvasRenderer.js"></script>
-    <script type="text/javascript" src="../src/Drawing/Frame.js"></script>
-    <script type="text/javascript" src="../src/Drawing/Animation.js"></script>
-    <script type="text/javascript" src="../src/Shapes/Shape.js"></script>
-    <script type="text/javascript" src="../src/Shapes/Circle.js"></script>
-    <script type="text/javascript" src="../src/Views/View.js"></script>
-    <script type="text/javascript" src="../src/Logging/Log.js"></script>
-    <script type="text/javascript" src="../src/Input/Cursor.js"></script>
-    <script type="text/javascript" src="../src/Input/Keys.js"></script>
-    <script type="text/javascript" src="../src/Input/Mouse.js"></script>
-    <script type="text/javascript" src="../src/Input/Input.js"></script>
-    <script type="text/javascript" src="../src/FrostFlake.js"></script>
-
-    <!-- Demo -->
-    <script>
 
         class ManySpriteDemo extends View {
             constructor() {
@@ -115,7 +72,7 @@
                 }
 
                 // create a sprite based on part of a sprite sheet and add it to the View
-                this.cursorSprite = new Sprite('/demo/Content/spritesheet.png');
+                this.cursorSprite = new Sprite('Content/spritesheet.png');
                 this.cursorSprite.frame = new Frame(32, 0, 32, 32);
                 this.addSprite(this.cursorSprite);
             }
@@ -170,7 +127,7 @@
                     new Frame(32, 0, 32, 32, 1),
                     new Frame(64, 0, 32, 32, 1)
                 ];
-                this.animation.texture = '/demo/Content/spritesheet.png';
+                this.animation.texture = 'Content/spritesheet.png';
 
                 // create a sprite and set the animation
                 this.sprite = new Sprite();

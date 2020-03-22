@@ -14,9 +14,7 @@ const config = {
         ]
     },
     uglifyOptions: {
-        sourceMap: {
-            url: "inline"
-        }
+        sourceMap: process.argv[2] === "no-sourceMap" ? false : {url: "inline"}
     }
 }
 
@@ -28,6 +26,8 @@ concat([
     './src/Drawing/CanvasRenderer.js',
     './src/Drawing/Frame.js',
     './src/Drawing/Animation.js',
+    './src/Shapes/Shape.js',
+    './src/Shapes/Circle.js',
     './src/Views/View.js',
     './src/Logging/Log.js',
     './src/Input/Cursor.js',
@@ -41,7 +41,8 @@ concat([
     const uglified = uglify.minify(transpiled.code, config.uglifyOptions);
     cleanBuildDir(config.buildDirPath);
     fs.writeFileSync(`${config.buildDirPath}/${config.buildFileName}`, uglified.code);
-}).catch(error => console.log(error));
+})
+.catch(error => console.log(error));
 
 const cleanBuildDir = (buildDirPath) => {
     if (fs.existsSync(buildDirPath)) {
