@@ -5,11 +5,26 @@ class Sprite extends Positionable{
     texture = null;
     animation = null;
     scale = 1;
+    #collisionShape = null;
+
+    get collision() {
+        return this.#collisionShape;
+    }
+
+    set collision(shape) {
+        if(this.#collisionShape) {
+            this.#collisionShape.parent = null;
+        }
+
+        this.#collisionShape = shape;
+        this.#collisionShape.parent = this;
+    }
 
     constructor(texture = null) {
         super();
         let me = this;
         this.texture = texture;
+        this.collision = new Circle();
     }
 
     getAbsolutePosition() {

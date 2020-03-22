@@ -24,16 +24,20 @@ class Rectangle extends Shape {
         this.height = height;
     }
 
+    // TODO: not yet working
     collidesWith(shape, repositionOutside = false) {
         if(shape instanceof Circle) {
-
+            throw new "Not implemented yet!";
         }
         else if(shape instanceof Rectangle) {
             this.collideWithRect(shape, repositionOutside);
         }
     }
 
+    // TODO: not yet working
     collideWithRect(rect, repositionOutside = false) {
+
+        throw new "Not implemented yet!";
         let didCollide = false;
 
         if(this.bottom < rect.top) {

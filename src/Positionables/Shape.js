@@ -1,10 +1,8 @@
-class Shape {
-    x = 0;
-    y = 0;
-    rotation;
-    parent = null;
+class Shape extends Positionable {
 
-    constructor() {}
+    constructor() {
+        super();
+    }
 
     get absolutePosition() {
         let absPos = {x: 0, y: 0, rotation: 0};

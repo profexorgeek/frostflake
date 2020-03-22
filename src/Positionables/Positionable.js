@@ -6,8 +6,6 @@ class Positionable {
     layer = 0;
     parent = null;
     children = [];
-    #collisionShape = null;
-    
     
     get x() {
         return this.position.x;
@@ -52,21 +50,8 @@ class Positionable {
         return absPos;
     }
 
-    get collision() {
-        return this.#collisionShape;
-    }
-
-    set collision(shape) {
-        if(this.#collisionShape) {
-            this.#collisionShape.parent = null;
-        }
-
-        this.#collisionShape = shape;
-        this.#collisionShape.parent = this;
-    }
-
     constructor(x = 0, y = 0) {
-        this.collision = new Circle();
+        
     }
 
     addChild(positionable) {

@@ -31,7 +31,7 @@ class FrostFlake {
         FrostFlake.Log.info("Starting FrostFlake...");
 
         this.time = new GameTime();
-        this.camera = new Camera();
+        this.camera = new Camera(this.canvas.width, this.canvas.height);
         this.renderer = new CanvasRenderer();
 
         let me = this;
