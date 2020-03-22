@@ -23,11 +23,12 @@ class CanvasRenderer {
         return preloaded;
     }
     
-    draw(sprites, camera, canvas, background = "rgb(0, 0, 0)") {
+    draw(sprites, camera, canvas, background = "rgb(0, 0, 0)", antialias = false) {
         let ctx = canvas.getContext("2d");
         let transX = MathUtil.invert(camera.x) + (ctx.canvas.width / 2);
         let transY = camera.y + (ctx.canvas.height / 2);
 
+        ctx.imageSmoothingEnabled = antialias;
         ctx.fillStyle = background;
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
@@ -69,10 +70,10 @@ class CanvasRenderer {
                 frame.top,
                 frame.width,
                 frame.height,
-                frame.width / -2,
-                frame.height / -2,
-                frame.width,
-                frame.height
+                frame.width / -2 * sprite.scale,
+                frame.height / -2 * sprite.scale,
+                frame.width * sprite.scale,
+                frame.height * sprite.scale
             );
 
             // draw debug visualizations

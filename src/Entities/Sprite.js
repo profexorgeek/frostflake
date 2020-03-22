@@ -16,6 +16,7 @@ class Sprite {
     frame = null;
     texture = null;
     animation = null;
+    scale = 1;
     #collisionShape = null;
 
     set collision(shape) {
