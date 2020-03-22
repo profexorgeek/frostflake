@@ -162,13 +162,13 @@
 
                 // use a loop to add 8 frames in a row from the spritesheet
                 for(let i = 0; i < 8; i++) {
-                    this.runCycle.frames.push(new Frame(i * 16, 160, 16, 16, 0.2));
+                    this.runCycle.frames.push(new Frame(i * 16, 160, 16, 16, 0.1));
                 }
 
                 // create a sprite and set the animation
                 // the sprite is really small so turn up its scale
                 this.sprite = new Sprite();
-                this.sprite.scale = 10;
+                this.sprite.scale = 3;
                 this.sprite.animation = this.runCycle;
 
                 this.addSprite(this.sprite);
