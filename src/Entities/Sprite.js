@@ -110,7 +110,7 @@ class Sprite {
         if(this.animation) {
             this.animation.update();
             this.texture = this.animation.texture;
-            this.frame = this.animation.currentFrame();
+            this.frame = this.animation.currentFrame;
         }
 
         // call runtime-appended logic

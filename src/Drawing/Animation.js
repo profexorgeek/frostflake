@@ -8,7 +8,7 @@ class Animation {
     frameIndex = -1;
     #secondsLeftInFrame = 0;
 
-    currentFrame() {
+    get currentFrame() {
         return this.frames[this.frameIndex];
     }
 
@@ -25,7 +25,7 @@ class Animation {
 
     restart() {
         this.frameIndex = 0;
-        this.#secondsLeftInFrame = this.currentFrame().seconds;
+        this.#secondsLeftInFrame = this.currentFrame.seconds;
         this.playing = true;
     }
 
@@ -44,11 +44,11 @@ class Animation {
                     }
                 }
 
-                this.#secondsLeftInFrame += this.currentFrame().seconds;
+                this.#secondsLeftInFrame += this.currentFrame.seconds;
 
                 // we can never exit this loop because this frame is zero seconds long
                 // force exit
-                if(this.#secondsLeftInFrame < 0 && this.currentFrame().seconds <= 0) {
+                if(this.#secondsLeftInFrame < 0 && this.currentFrame.seconds <= 0) {
                     break;
                 }
             }
