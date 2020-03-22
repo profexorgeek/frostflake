@@ -1,12 +1,12 @@
 class View {
-    sprites = [];
+    children = [];
 
     constructor() {
     }
 
     update() {
-        for (let i = 0; i < this.sprites.length; i++) {
-            this.sprites[i].update();
+        for (let i = 0; i < this.children.length; i++) {
+            this.children[i].update();
         }
     }
 
@@ -15,26 +15,26 @@ class View {
         let target = document.createElement('canvas');
         target.width = width;
         target.height = height;
-        FrostFlake.Game.renderer.draw(this.sprites, camera, target, "rgba(0,0,0,0)");
+        FrostFlake.Game.renderer.draw(this.children, camera, target, "rgba(0,0,0,0)");
         return target.toDataURL();
     }
 
-    addSprite(sprite) {
-        if(this.sprites.indexOf(sprite) > -1) {
-            throw "Sprite has already been added to view."
+    addChild(positionable) {
+        if(this.children.indexOf(positionable) > -1) {
+            throw "positionable has already been added to view."
         }
 
-        this.sprites.push(sprite);
+        this.children.push(positionable);
     }
 
-    removeSprite(sprite) {
-        let i = this.sprites.indexOf(sprite);
+    removeChild(positionable) {
+        let i = this.children.indexOf(positionable);
         if(i > -1) {
-            this.sprites.splice(i, 1);
+            this.children.splice(i, 1);
         }
     }
 
-    clearSprites() {
-        this.sprites = [];
+    clearChildren() {
+        this.children = [];
     }
 }

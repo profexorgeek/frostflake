@@ -9,13 +9,14 @@
         <!-- DEV: include all files -->
         <script type='text/javascript' src='/src/GameTime.js'></script>
         <script type='text/javascript' src='/src/Utility/MathUtil.js'></script>
-        <script type='text/javascript' src='/src/Entities/Sprite.js'></script>
-        <script type='text/javascript' src='/src/Entities/Camera.js'></script>
+        <script type='text/javascript' src='/src/Positionables/Positionable.js'></script>
+        <script type='text/javascript' src='/src/Positionables/Sprite.js'></script>
+        <script type='text/javascript' src='/src/Positionables/Camera.js'></script>
+        <script type='text/javascript' src='/src/Positionables/Shape.js'></script>
+        <script type='text/javascript' src='/src/Positionables/Circle.js'></script>
         <script type='text/javascript' src='/src/Drawing/CanvasRenderer.js'></script>
         <script type='text/javascript' src='/src/Drawing/Frame.js'></script>
         <script type='text/javascript' src='/src/Drawing/Animation.js'></script>
-        <script type='text/javascript' src='/src/Shapes/Shape.js'></script>
-        <script type='text/javascript' src='/src/Shapes/Circle.js'></script>
         <script type='text/javascript' src='/src/Views/View.js'></script>
         <script type='text/javascript' src='/src/Logging/Log.js'></script>
         <script type='text/javascript' src='/src/Input/Cursor.js'></script>
@@ -56,8 +57,8 @@
                     s.x = MathUtil.randomInRange(-300, 300);
                     s.y = MathUtil.randomInRange(-200, 200);
                     s.alpha = MathUtil.randomInRange(0.2, 0.85);
-                    s.rotationVelocity = MathUtil.randomInRange(-3, 3);
-                    this.addSprite(s);
+                    s.velocity.rotation = MathUtil.randomInRange(-3, 3);
+                    this.addChild(s);
                 }
             }
         }
@@ -72,19 +73,19 @@
 
                 // create a parent sprite and add it to the View sprites
                 this.parentFlake = new Sprite('Content/frostflake.png');
-                this.parentFlake.rotationVelocity = 3;
-                this.addSprite(this.parentFlake);
+                this.parentFlake.velocity.rotation = 3;
+                this.addChild(this.parentFlake);
 
                 // create and attach a child sprite
                 this.childFlake1 = new Sprite('Content/frostflake.png');
                 this.childFlake1.x = -40;
-                this.childFlake1.rotationVelocity = -5;
+                this.childFlake1.velocity.rotation = -5;
                 this.parentFlake.addChild(this.childFlake1);
 
                 // create and attach a child sprite
                 this.childFlake2 = new Sprite('Content/frostflake.png');
                 this.childFlake2.x = 40;
-                this.childFlake2.rotationVelocity = 5;
+                this.childFlake2.velocity.rotation = 5;
                 this.parentFlake.addChild(this.childFlake2);
             }
         }
@@ -102,14 +103,14 @@
                     s.x = MathUtil.randomInRange(-300, 300);
                     s.y = MathUtil.randomInRange(-200, 200);
                     s.alpha = MathUtil.randomInRange(0.2, 0.85);
-                    s.rotationVelocity = MathUtil.randomInRange(-3, 3);
-                    this.addSprite(s);
+                    s.velocity.rotation = MathUtil.randomInRange(-3, 3);
+                    this.addChild(s);
                 }
 
                 // create a sprite based on part of a sprite sheet and add it to the View
                 this.cursorSprite = new Sprite('Content/spritesheet.png');
                 this.cursorSprite.frame = new Frame(32, 0, 32, 32);
-                this.addSprite(this.cursorSprite);
+                this.addChild(this.cursorSprite);
             }
 
             update() {
@@ -126,10 +127,10 @@
 
                 // make cursor rotate when clicked
                 if (input.buttonDown(Mouse.Left)) {
-                    this.cursorSprite.rotationVelocity = -5;
+                    this.cursorSprite.velocity.rotation = -5;
                 }
                 else {
-                    this.cursorSprite.rotationVelocity = 0;
+                    this.cursorSprite.velocity.rotation = 0;
                 }
 
                 // move the camera when WASD pushed
@@ -171,7 +172,7 @@
                 this.sprite.scale = 3;
                 this.sprite.animation = this.runCycle;
 
-                this.addSprite(this.sprite);
+                this.addChild(this.sprite);
             }
         }
 
@@ -187,7 +188,7 @@
 
                     // override custom function to make sprites always bounce
                     // towards the center of the screen
-                    s.customUpdate = function () {
+                    s.preUpdate = function () {
                         let cam = FrostFlake.Game.camera;
                         if (s.x > cam.right ||
                             s.x < cam.left ||
@@ -195,39 +196,33 @@
                             s.y < cam.bottom) {
 
                             let angleToCenter = MathUtil.angleTo(s, cam);
-                            let speed = MathUtil.length(s.velocityX, s.velocityY);
-                            s.velocityX = Math.cos(angleToCenter) * speed;
-                            s.velocityY = Math.sin(angleToCenter) * speed;
-
-                            // s.x = MathUtil.clamp(s.x, cam.left, cam.right);
-                            // s.y = MathUtil.clamp(s.y, cam.bottom, cam.top);
-                            // let newVel = view.getRandomBounceVelocity(s);
-                            // s.velocityX = newVel.x;
-                            // s.velocityY = newVel.y;
+                            let speed = MathUtil.length(s.velocity.x, s.velocity.y);
+                            s.velocity.x = Math.cos(angleToCenter) * speed;
+                            s.velocity.y = Math.sin(angleToCenter) * speed;
                         }
                     }
 
                     // give the sprites some random starting positions and velocities
                     s.x = MathUtil.randomInRange(-300, 300);
                     s.y = MathUtil.randomInRange(-200, 200);
-                    s.velocityX = MathUtil.randomInRange(-500, 500);
-                    s.velocityY = MathUtil.randomInRange(-500, 500);
+                    s.velocity.x = MathUtil.randomInRange(-500, 500);
+                    s.velocity.y = MathUtil.randomInRange(-500, 500);
                     s.drag = 0.25;
-                    s.rotationVelocity = MathUtil.randomInRange(-2, 2);
+                    s.velocity.rotation = MathUtil.randomInRange(-2, 2);
 
-                    this.addSprite(s);
+                    this.addChild(s);
                 }
             }
 
             update() {
                 super.update();
 
-                // collide all sprites with all other sprites
-                for (let i = this.sprites.length - 1; i > -1; i--) {
-                    let s1 = this.sprites[i];
+                // collide all children with all other children
+                for (let i = this.children.length - 1; i > -1; i--) {
+                    let s1 = this.children[i];
 
-                    for (let j = this.sprites.length - 1; j > -1; j--) {
-                        let s2 = this.sprites[j];
+                    for (let j = this.children.length - 1; j > -1; j--) {
+                        let s2 = this.children[j];
 
                         if (s1 == s2) {
                             continue;
@@ -239,10 +234,10 @@
                             let newVel1 = this.getRandomBounceVelocity(s1);
                             let newVel2 = this.getRandomBounceVelocity(s2);
 
-                            s1.velocityX = newVel1.x
-                            s1.velocityY = newVel1.y;
-                            s2.velocityX = newVel2.x;
-                            s2.velocityY = newVel2.y;
+                            s1.velocity.x = newVel1.x
+                            s1.velocity.y = newVel1.y;
+                            s2.velocity.x = newVel2.x;
+                            s2.velocity.y = newVel2.y;
                         }
                     }
                 }
@@ -250,9 +245,9 @@
 
             getRandomBounceVelocity(sprite, energyLossOnBounce = 0) {
                 let fortyFiveDegrees = Math.PI / 4;
-                let velocityAngle = Math.atan2(sprite.velocityY, sprite.velocityX);
+                let velocityAngle = Math.atan2(sprite.velocity.y, sprite.velocity.x);
                 let reverseAngle = MathUtil.normalizeAngle(velocityAngle - Math.PI);
-                let magnitude = MathUtil.length(sprite.velocityX, sprite.velocityY) * (1 - energyLossOnBounce);
+                let magnitude = MathUtil.length(sprite.velocity.x, sprite.velocity.y) * (1 - energyLossOnBounce);
                 let newAngle = reverseAngle + MathUtil.randomInRange(-fortyFiveDegrees, fortyFiveDegrees);
                 let velX = Math.cos(newAngle) * magnitude;
                 let velY = Math.sin(newAngle) * magnitude;
@@ -260,6 +255,29 @@
             }
         }
 
+        // class RectTest extends View {
+        //     s1;
+        //     s2;
+
+        //     constructor() {
+        //         super();
+
+        //         this.s1 = new Sprite('Content/frostflake.png');
+        //         this.s1.collision = new Rectangle(12, 12);
+
+        //         this.s2 = new Sprite('Content/frostflake.png');
+        //         this.s2.collision = new Rectangle(12, 12);
+
+        //         this.addChild(this.s1);
+        //         this.addChild(this.s2);
+        //     }
+
+        //     update() {
+        //         super.update();
+
+        //         this.s1.collision.collidesWith(this.s2.collision, true);
+        //     }
+        // }
     </script>
 </body>
 

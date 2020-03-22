@@ -1,10 +1,16 @@
-class Shape {
-    x = 0;
-    y = 0;
-    rotation;
-    parent = null;
+class Sprite extends Positionable{
 
-    constructor() {}
+    alpha = 1;
+    frame = null;
+    texture = null;
+    animation = null;
+    scale = 1;
+
+    constructor(texture = null) {
+        super();
+        let me = this;
+        this.texture = texture;
+    }
 
     getAbsolutePosition() {
         let absPos = {x: 0, y: 0, rotation: 0};
@@ -23,5 +29,16 @@ class Shape {
         }
 
         return absPos;
+    }
+
+    update() {
+        super.update();
+
+        // play animation
+        if(this.animation) {
+            this.animation.update();
+            this.texture = this.animation.texture;
+            this.frame = this.animation.currentFrame;
+        }
     }
 }

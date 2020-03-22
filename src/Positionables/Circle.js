@@ -8,8 +8,8 @@ class Circle extends Shape {
 
     collidesWith(shape, repositionOutside = false) {
         if(shape instanceof Circle) {
-            let shape1Position = this.getAbsolutePosition();
-            let shape2Position = shape.getAbsolutePosition();
+            let shape1Position = this.absolutePosition;
+            let shape2Position = shape.absolutePosition;
             let delta = MathUtil.vectorSubtract(shape1Position, shape2Position);
             let distanceApart = MathUtil.length(delta.x, delta.y);
             let collideDistance = this.radius + shape.radius;
@@ -23,16 +23,11 @@ class Circle extends Shape {
                 let collisionAngle = MathUtil.angleTo(shape1Position, shape2Position);
                 let reverseAngle = MathUtil.normalizeAngle(collisionAngle - Math.PI);
 
+                
                 // to stop colliding we need to move in the reverse direction
                 // by the magnitude of the overlap amount
-                if(this.parent) {
-                    this.parent.x += Math.cos(reverseAngle) * overlapAmount;
-                    this.parent.y += Math.sin(reverseAngle) * overlapAmount;
-                }
-                else {
-                    this.x += Math.cos(reverseAngle) * overlapAmount;
-                    this.y += Math.cos(reverseAngle) * overlapAmount;
-                }
+                this.moveAbsoluteX(Math.cos(reverseAngle) * overlapAmount);
+                this.moveAbsoluteY(Math.sin(reverseAngle) * overlapAmount)
             }
 
             return didCollide;

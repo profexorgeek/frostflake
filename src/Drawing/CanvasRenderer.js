@@ -5,15 +5,15 @@ class CanvasRenderer {
     // TODO: what about clearing texture cache
     // and images added to the DOM?
 
-    checkAndPreloadSprites(sprites) {
+    checkAndPreloadpositionables(positionables) {
         let preloaded = true;
-        for(let i = 0; i < sprites.length; i++) {
-            if(!this.textureLoaded(sprites[i].texture)) {
+        for(let i = 0; i < positionables.length; i++) {
+            if(!this.textureLoaded(positionables[i].texture)) {
                 preloaded = false;
             }
 
-            if(sprites[i].children.length > 0) {
-                let childrenLoaded = this.checkAndPreloadSprites(sprites[i].children);
+            if(positionables[i].children.length > 0) {
+                let childrenLoaded = this.checkAndPreloadpositionables(positionables[i].children);
                 if(childrenLoaded === false) {
                     preloaded = false;
                 }
@@ -23,7 +23,7 @@ class CanvasRenderer {
         return preloaded;
     }
     
-    draw(sprites, camera, canvas, background = "rgb(0, 0, 0)") {
+    draw(positionables, camera, canvas, background = "rgb(0, 0, 0)") {
         let ctx = canvas.getContext("2d");
         let scale = 1 / camera.resolution;
         let transX = MathUtil.invert(camera.x) + (ctx.canvas.width / 2) * camera.resolution;
@@ -35,8 +35,13 @@ class CanvasRenderer {
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         ctx.scale(scale, scale);
         ctx.translate(transX, transY);
-        for(let i = 0; i < sprites.length; i++) {
-            this.drawSprite(sprites[i], ctx);
+
+        for(let i = 0; i < positionables.length; i++) {
+
+            // draw sprites
+            if(positionables[i] instanceof Sprite) {
+                this.drawSprite(positionables[i], ctx);
+            }
         }
         ctx.restore();
     }
