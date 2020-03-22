@@ -16,10 +16,28 @@ class Sprite {
     frame = null;
     texture = null;
     animation = null;
+    #collisionShape = null;
+
+    set collision(shape) {
+        if(this.#collisionShape) {
+            this.#collisionShape.parent = null;
+        }
+
+        this.#collisionShape = shape;
+        this.#collisionShape.parent = this;
+    }
+
+    get collision() {
+        return this.#collisionShape;
+    }
 
     constructor(texture = null) {
         let me = this;
         this.texture = texture;
+        this.collision = new Circle();
+
+        // call runtime-appended logic
+        this.customConstruct();
     }
 
     addChild(sprite) {
@@ -94,5 +112,13 @@ class Sprite {
             this.texture = this.animation.texture;
             this.frame = this.animation.currentFrame();
         }
+
+        // call runtime-appended logic
+        this.customUpdate();
     }
+
+    // These methods allow custom logic to be appended to the constructor
+    // and update methods without overwriting the core logic
+    customConstruct() {}
+    customUpdate() {}
 }
