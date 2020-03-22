@@ -2,6 +2,7 @@ class Camera {
     x;
     y;
     resolution = 1;
+    antialias = false;
 
     get width() {
         return FrostFlake.Game.canvas.width;

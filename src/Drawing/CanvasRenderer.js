@@ -23,17 +23,17 @@ class CanvasRenderer {
         return preloaded;
     }
     
-    draw(sprites, camera, canvas, background = "rgb(0, 0, 0)", antialias = false) {
+    draw(sprites, camera, canvas, background = "rgb(0, 0, 0)") {
         let ctx = canvas.getContext("2d");
         let scale = 1 / camera.resolution;
         let transX = MathUtil.invert(camera.x) + (ctx.canvas.width / 2) * camera.resolution;
         let transY = camera.y + (ctx.canvas.height / 2) * camera.resolution;
 
         ctx.save();
-        ctx.imageSmoothingEnabled = antialias;
-        ctx.scale(scale, scale);
+        ctx.imageSmoothingEnabled = camera.antialias;
         ctx.fillStyle = background;
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.scale(scale, scale);
         ctx.translate(transX, transY);
         for(let i = 0; i < sprites.length; i++) {
             this.drawSprite(sprites[i], ctx);
