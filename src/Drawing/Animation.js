@@ -46,11 +46,12 @@ class Animation {
 
                 this.#secondsLeftInFrame += this.currentFrame().seconds;
 
-                // TODO: check to make sure we're not stuck in this loop if
-                // frames have non-sane second values?
+                // we can never exit this loop because this frame is zero seconds long
+                // force exit
+                if(this.#secondsLeftInFrame < 0 && this.currentFrame().seconds <= 0) {
+                    break;
+                }
             }
         }
     }
-
-
 }
