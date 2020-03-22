@@ -7,14 +7,15 @@
         <canvas id="frostFlake" width="640" height="480"></canvas>
 
         <!-- DEV: include all files -->
-        <script type='text/javascript' src='/src/GameTime.js'></script>
+        <!-- <script type='text/javascript' src='/src/GameTime.js'></script>
         <script type='text/javascript' src='/src/Utility/MathUtil.js'></script>
         <script type='text/javascript' src='/src/Positionables/Positionable.js'></script>
         <script type='text/javascript' src='/src/Positionables/Sprite.js'></script>
-        <script type='text/javascript' src='/src/Positionables/Camera.js'></script>
         <script type='text/javascript' src='/src/Positionables/Shape.js'></script>
         <script type='text/javascript' src='/src/Positionables/Circle.js'></script>
+        <script type='text/javascript' src='/src/Positionables/Rectangle.js'></script>
         <script type='text/javascript' src='/src/Drawing/CanvasRenderer.js'></script>
+        <script type='text/javascript' src='/src/Positionables/Camera.js'></script>
         <script type='text/javascript' src='/src/Drawing/Frame.js'></script>
         <script type='text/javascript' src='/src/Drawing/Animation.js'></script>
         <script type='text/javascript' src='/src/Views/View.js'></script>
@@ -23,10 +24,10 @@
         <script type='text/javascript' src='/src/Input/Keys.js'></script>
         <script type='text/javascript' src='/src/Input/Mouse.js'></script>
         <script type='text/javascript' src='/src/Input/Input.js'></script>
-        <script type='text/javascript' src='/src/FrostFlake.js'></script>
+        <script type='text/javascript' src='/src/FrostFlake.js'></script> -->
 
         <!-- PROD: include built file-->
-        <!-- <script type="text/javascript" src="/build/frostflake.concat.js"></script> -->
+        <script type="text/javascript" src="/build/frostflake.concat.js"></script>
 
         <script>
 
@@ -121,6 +122,25 @@
                 let cursor = input.cursor;
                 let cam = FrostFlake.Game.camera;
 
+                // give the camera drag so it slows down when
+                // no buttons are pushed.
+                cam.drag = 3;
+
+                // move the camera when WASD pushed
+                if (input.keyDown(Keys.W)) {
+                    cam.velocity.y = 100;
+                }
+                else if (input.keyDown(Keys.S)) {
+                    cam.velocity.y = -100;
+                }
+
+                if (input.keyDown(Keys.A)) {
+                    cam.velocity.x = -100;
+                }
+                else if (input.keyDown(Keys.D)) {
+                    cam.velocity.x = 100;
+                }
+
                 // make cursorSprite follow hardware cursor
                 this.cursorSprite.x = cursor.worldX;
                 this.cursorSprite.y = cursor.worldY;
@@ -131,20 +151,6 @@
                 }
                 else {
                     this.cursorSprite.velocity.rotation = 0;
-                }
-
-                // move the camera when WASD pushed
-                if (input.keyPushed(Keys.W)) {
-                    cam.y += 100;
-                }
-                if (input.keyPushed(Keys.S)) {
-                    cam.y -= 100;
-                }
-                if (input.keyPushed(Keys.A)) {
-                    cam.x -= 100;
-                }
-                if (input.keyPushed(Keys.D)) {
-                    cam.x += 100;
                 }
             }
         }
@@ -255,29 +261,6 @@
             }
         }
 
-        // class RectTest extends View {
-        //     s1;
-        //     s2;
-
-        //     constructor() {
-        //         super();
-
-        //         this.s1 = new Sprite('Content/frostflake.png');
-        //         this.s1.collision = new Rectangle(12, 12);
-
-        //         this.s2 = new Sprite('Content/frostflake.png');
-        //         this.s2.collision = new Rectangle(12, 12);
-
-        //         this.addChild(this.s1);
-        //         this.addChild(this.s2);
-        //     }
-
-        //     update() {
-        //         super.update();
-
-        //         this.s1.collision.collidesWith(this.s2.collision, true);
-        //     }
-        // }
     </script>
 </body>
 

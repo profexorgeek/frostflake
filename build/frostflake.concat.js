@@ -85,25 +85,143 @@ class MathUtil {
         return val;
     }
 }
-class Sprite {
-
-    x = 0;
-    y = 0;
-    rotation = 0;
-    velocityX = 0;
-    velocityY = 0;
-    rotationVelocity = 0;
-    accelX = 0
-    accelY = 0;
-    alpha = 1;
+class Positionable {
+    position = {x: 0, y: 0, rotation: 0}
+    velocity = {x: 0, y: 0, rotation: 0}
+    acceleration = {x: 0, y: 0, rotation: 0}
     drag = 0;
     layer = 0;
     parent = null;
     children = [];
+    
+    get x() {
+        return this.position.x;
+    }
+
+    set x(val) {
+        this.position.x = val;
+    }
+
+    get y() {
+        return this.position.y;
+    }
+
+    set y(val) {
+        this.position.y = val;
+    }
+
+    get rotation() {
+        return this.position.rotation;
+    }
+
+    set rotation(val) {
+        this.position.rotation = val;
+    }
+
+    get absolutePosition() {
+        let absPos = {x: 0, y: 0, rotation: 0};
+
+        if(this.parent != null) {
+            let parentAbsPos = this.parent.absolutePosition;
+            let magnitude = MathUtil.length(this.x, this.y);
+            absPos.x = Math.cos(parentAbsPos.rotation) * magnitude + parentAbsPos.x;
+            absPos.y = Math.sin(parentAbsPos.rotation) * magnitude + parentAbsPos.y;
+            absPos.rotation = parentAbsPos.rotation + this.rotation;
+        }
+        else {
+            absPos.x = this.x;
+            absPos.y = this.y;
+            absPos.rotation = this.rotation;
+        }
+
+        return absPos;
+    }
+
+    constructor(x = 0, y = 0) {
+        
+    }
+
+    addChild(positionable) {
+        positionable.parent = this;
+        this.children.push(positionable);
+    }
+
+    removeChild(positionable) {
+        let i = this.children.indexOf(positionable);
+        if(i > -1) {
+            this.children.splice(i, 1);
+        }
+        positionable.parent = null;
+    }
+
+    attach(positionable) {
+        positionable.addChild(this);
+    }
+
+    detach() {
+        if(this.parent instanceof Positionable) {
+            this.parent.removeChild(this);
+        }
+    }
+
+    moveRootX(amt) {
+        var obj = this;
+        while(obj.parent instanceof Positionable) {
+            obj = obj.parent;
+        }
+        obj.position.x += amt;
+    }
+
+    moveRootY(amt) {
+        var obj = this;
+        while(obj.parent instanceof Positionable) {
+            obj = obj.parent;
+        }
+        obj.position.y += amt;
+    }
+
+    update() {
+        this.preUpdate();
+
+        let delta = FrostFlake.Game.time.frameSeconds;
+        let deltaSquaredHalved = delta * delta / 2;
+
+        this.position.x += (this.velocity.x * delta) + (this.acceleration.x * deltaSquaredHalved);
+        this.position.y += (this.velocity.y * delta) + (this.acceleration.y * deltaSquaredHalved);
+        this.position.rotation += (this.velocity.rotation * delta) + (this.acceleration.rotation * deltaSquaredHalved);
+
+        this.velocity.x += (this.acceleration.x * delta) - (this.drag * this.velocity.x * delta);
+        this.velocity.y += (this.acceleration.y * delta) - (this.drag * this.velocity.y * delta);
+        this.velocity.rotation += (this.acceleration.rotation * delta) - (this.drag * this.velocity.rotation * delta);
+
+        this.position.rotation = MathUtil.normalizeAngle(this.position.rotation);
+
+        // sort children by layer
+        this.children.sort((a, b) => {
+            return a.layer - b.layer;
+        });
+
+        // update children
+        for(let i = 0; i < this.children.length; i++) {
+            this.children[i].update();
+        }
+    }
+
+    // this method is intentionally empty so devs can inject custom logic into the update cycle
+    preUpdate() {}
+}
+class Sprite extends Positionable{
+
+    alpha = 1;
     frame = null;
     texture = null;
     animation = null;
+    scale = 1;
     #collisionShape = null;
+
+    get collision() {
+        return this.#collisionShape;
+    }
 
     set collision(shape) {
         if(this.#collisionShape) {
@@ -114,40 +232,11 @@ class Sprite {
         this.#collisionShape.parent = this;
     }
 
-    get collision() {
-        return this.#collisionShape;
-    }
-
     constructor(texture = null) {
+        super();
         let me = this;
         this.texture = texture;
         this.collision = new Circle();
-
-        // call runtime-appended logic
-        this.customConstruct();
-    }
-
-    addChild(sprite) {
-        sprite.parent = this;
-        this.children.push(sprite);
-    }
-
-    removeChild(sprite) {
-        let i = this.children.indexOf(sprite);
-        if(i > -1) {
-            this.children.splice(i, 1);
-        }
-        sprite.parent = null;
-    }
-
-    attach(sprite) {
-        sprite.addChild(this);
-    }
-
-    detach() {
-        if(this.parent != null) {
-            this.parent.removeChild(this);
-        }
     }
 
     getAbsolutePosition() {
@@ -170,79 +259,149 @@ class Sprite {
     }
 
     update() {
-        let delta = FrostFlake.Game.time.frameSeconds;
-
-        let deltaSquaredHalved = delta * delta / 2;
-
-        this.x += (this.velocityX * delta) + (this.accelX * deltaSquaredHalved);
-        this.y += (this.velocityY * delta) + (this.accelY * deltaSquaredHalved);
-        
-        this.velocityX += (this.accelX * delta) - (this.drag * this.velocityX * delta);
-        this.velocityY += (this.accelY * delta) - (this.drag * this.velocityY * delta);
-
-        this.rotation += this.rotationVelocity * delta;
-        this.rotation = MathUtil.normalizeAngle(this.rotation);
-
-        // sort children by layer
-        this.children.sort((a, b) => {
-            return a.layer - b.layer;
-        });
-
-        // update children
-        for(let i = 0; i < this.children.length; i++) {
-            this.children[i].update();
-        }
+        super.update();
 
         // play animation
         if(this.animation) {
             this.animation.update();
             this.texture = this.animation.texture;
-            this.frame = this.animation.currentFrame();
+            this.frame = this.animation.currentFrame;
+        }
+    }
+}
+class Shape extends Positionable {
+
+    constructor() {
+        super();
+    }
+
+    get absolutePosition() {
+        let absPos = {x: 0, y: 0, rotation: 0};
+
+        if(this.parent != null) {
+            let parentAbsPos = this.parent.absolutePosition;
+            let magnitude = MathUtil.length(this.x, this.y);
+            absPos.x = Math.cos(parentAbsPos.rotation) * magnitude + parentAbsPos.x;
+            absPos.y = Math.sin(parentAbsPos.rotation) * magnitude + parentAbsPos.y;
+            absPos.rotation = parentAbsPos.rotation + this.rotation;
+        }
+        else {
+            absPos.x = this.x;
+            absPos.y = this.y;
+            absPos.rotation = this.rotation;
         }
 
-        // call runtime-appended logic
-        this.customUpdate();
+        return absPos;
     }
 
-    // These methods allow custom logic to be appended to the constructor
-    // and update methods without overwriting the core logic
-    customConstruct() {}
-    customUpdate() {}
+    moveAbsoluteX(amount) {
+        if(this.parent) {
+            this.parent.x += amount;
+        }
+        else {
+            this.x += amount;
+        }
+    }
+
+    moveAbsoluteY(amount) {
+        if(this.parent) {
+            this.parent.y += amount;
+        }
+        else {
+            this.y += amount;
+        }
+    }
 }
-class Camera {
-    x;
-    y;
+class Circle extends Shape {
+    radius;
 
-    get width() {
-        return FrostFlake.Game.canvas.width;
+    constructor(radius = 16) {
+        super();
+        this.radius = radius;
     }
 
-    get height() {
-        return FrostFlake.Game.canvas.height;
+    collidesWith(shape, repositionOutside = false) {
+        if(shape instanceof Circle) {
+            let shape1Position = this.absolutePosition;
+            let shape2Position = shape.absolutePosition;
+            let delta = MathUtil.vectorSubtract(shape1Position, shape2Position);
+            let distanceApart = MathUtil.length(delta.x, delta.y);
+            let collideDistance = this.radius + shape.radius;
+
+            // circles are colliding if the sum of their radii is
+            // smaller than their distance apart
+            let didCollide = distanceApart < collideDistance;
+
+            if(didCollide && repositionOutside) {
+                let overlapAmount = collideDistance - distanceApart;
+                let collisionAngle = MathUtil.angleTo(shape1Position, shape2Position);
+                let reverseAngle = MathUtil.normalizeAngle(collisionAngle - Math.PI);
+
+                
+                // to stop colliding we need to move in the reverse direction
+                // by the magnitude of the overlap amount
+                this.moveAbsoluteX(Math.cos(reverseAngle) * overlapAmount);
+                this.moveAbsoluteY(Math.sin(reverseAngle) * overlapAmount)
+            }
+
+            return didCollide;
+        }
+    }
+}
+class Rectangle extends Shape {
+    width;
+    height;
+
+    get left() {
+        return this.getAbsolutePosition.x - this.width / 2;
     }
 
     get right() {
-        return this.x + (FrostFlake.Game.canvas.width / 2);
-    }
-
-    get left() {
-        return this.x - (FrostFlake.Game.canvas.width / 2);
+        return this.getAbsolutePosition.x + this.width / 2;
     }
 
     get top() {
-        return this.y + (FrostFlake.Game.canvas.height / 2);
+        return this.getAbsolutePosition.y + this.height / 2;
     }
 
     get bottom() {
-        return this.y - (FrostFlake.Game.canvas.height / 2);
+        return this.getAbsolutePosition.y - this.height / 2;
     }
 
-    constructor() {
-        this.x = 0;
-        this.y = 0;
+    constructor(width, height) {
+        super();
+        this.width = width;
+        this.height = height;
     }
 
-    update() {
+    // TODO: not yet working
+    collidesWith(shape, repositionOutside = false) {
+        if(shape instanceof Circle) {
+            throw new "Not implemented yet!";
+        }
+        else if(shape instanceof Rectangle) {
+            this.collideWithRect(shape, repositionOutside);
+        }
+    }
+
+    // TODO: not yet working
+    collideWithRect(rect, repositionOutside = false) {
+
+        throw new "Not implemented yet!";
+        let didCollide = false;
+
+        if(this.bottom < rect.top) {
+            didCollide = true;
+            if(repositionOutside) {
+                this.moveAbsoluteY(rect.top - this.bottom);
+            }
+        }
+        else if(this.top > rect.bottom) {
+            didCollide = true;
+            if(repositionOutside) {
+                this.moveAbsoluteY(rect.bottom - this.top);
+            }
+        }
     }
 }
 class CanvasRenderer {
@@ -252,15 +411,15 @@ class CanvasRenderer {
     // TODO: what about clearing texture cache
     // and images added to the DOM?
 
-    checkAndPreloadSprites(sprites) {
+    checkAndPreloadpositionables(positionables) {
         let preloaded = true;
-        for(let i = 0; i < sprites.length; i++) {
-            if(!this.textureLoaded(sprites[i].texture)) {
+        for(let i = 0; i < positionables.length; i++) {
+            if(!this.textureLoaded(positionables[i].texture)) {
                 preloaded = false;
             }
 
-            if(sprites[i].children.length > 0) {
-                let childrenLoaded = this.checkAndPreloadSprites(sprites[i].children);
+            if(positionables[i].children.length > 0) {
+                let childrenLoaded = this.checkAndPreloadpositionables(positionables[i].children);
                 if(childrenLoaded === false) {
                     preloaded = false;
                 }
@@ -270,18 +429,25 @@ class CanvasRenderer {
         return preloaded;
     }
     
-    draw(sprites, camera, canvas, background = "rgb(0, 0, 0)") {
+    draw(positionables, camera, canvas, background = "rgb(0, 0, 0)") {
         let ctx = canvas.getContext("2d");
-        let transX = MathUtil.invert(camera.x) + (ctx.canvas.width / 2);
-        let transY = camera.y + (ctx.canvas.height / 2);
-
-        ctx.fillStyle = background;
-        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        let scale = 1 / camera.resolution;
+        let transX = MathUtil.invert(camera.x) + (ctx.canvas.width / 2) * camera.resolution;
+        let transY = camera.y + (ctx.canvas.height / 2) * camera.resolution;
 
         ctx.save();
+        ctx.imageSmoothingEnabled = camera.antialias;
+        ctx.fillStyle = background;
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.scale(scale, scale);
         ctx.translate(transX, transY);
-        for(let i = 0; i < sprites.length; i++) {
-            this.drawSprite(sprites[i], ctx);
+
+        for(let i = 0; i < positionables.length; i++) {
+
+            // draw sprites
+            if(positionables[i] instanceof Sprite) {
+                this.drawSprite(positionables[i], ctx);
+            }
         }
         ctx.restore();
     }
@@ -316,16 +482,20 @@ class CanvasRenderer {
                 frame.top,
                 frame.width,
                 frame.height,
-                frame.width / -2,
-                frame.height / -2,
-                frame.width,
-                frame.height
+                frame.width / -2 * sprite.scale,
+                frame.height / -2 * sprite.scale,
+                frame.width * sprite.scale,
+                frame.height * sprite.scale
             );
 
             // draw debug visualizations
             if(FrostFlake.Game.showDebug) {
-                ctx.strokeStyle = "rgb(255, 0, 0)";
-                ctx.strokeRect(-frame.width / 2, -frame.height / 2, frame.width, frame.height);
+                ctx.strokeStyle = "white";
+                ctx.strokeRect(
+                    -frame.width / 2 * sprite.scale,
+                    -frame.height / 2 * sprite.scale,
+                    frame.width * sprite.scale,
+                    frame.height * sprite.scale);
             }
         }
         // texture hasn't been loaded, load it now
@@ -387,6 +557,14 @@ class CanvasRenderer {
         xhr.send();
     }
 }
+class Camera extends Rectangle{
+    resolution = 1;
+    antialias = false;
+
+    constructor(width, height) {
+        super(width, height);
+    }
+}
 class Frame {
     top = 0;
     left = 0;
@@ -412,7 +590,7 @@ class Animation {
     frameIndex = -1;
     #secondsLeftInFrame = 0;
 
-    currentFrame() {
+    get currentFrame() {
         return this.frames[this.frameIndex];
     }
 
@@ -429,7 +607,7 @@ class Animation {
 
     restart() {
         this.frameIndex = 0;
-        this.#secondsLeftInFrame = this.currentFrame().seconds;
+        this.#secondsLeftInFrame = this.currentFrame.seconds;
         this.playing = true;
     }
 
@@ -448,93 +626,26 @@ class Animation {
                     }
                 }
 
-                this.#secondsLeftInFrame += this.currentFrame().seconds;
+                this.#secondsLeftInFrame += this.currentFrame.seconds;
 
-                // TODO: check to make sure we're not stuck in this loop if
-                // frames have non-sane second values?
-            }
-        }
-    }
-
-
-}
-class Shape {
-    x = 0;
-    y = 0;
-    rotation;
-    parent = null;
-
-    constructor() {}
-
-    getAbsolutePosition() {
-        let absPos = {x: 0, y: 0, rotation: 0};
-
-        if(this.parent != null) {
-            let parentAbsPos = this.parent.getAbsolutePosition();
-            let magnitude = MathUtil.length(this.x, this.y);
-            absPos.x = Math.cos(parentAbsPos.rotation) * magnitude + parentAbsPos.x;
-            absPos.y = Math.sin(parentAbsPos.rotation) * magnitude + parentAbsPos.y;
-            absPos.rotation = parentAbsPos.rotation + this.rotation;
-        }
-        else {
-            absPos.x = this.x;
-            absPos.y = this.y;
-            absPos.rotation = this.rotation;
-        }
-
-        return absPos;
-    }
-}
-class Circle extends Shape {
-    radius;
-
-    constructor(radius = 16) {
-        super();
-        this.radius = radius;
-    }
-
-    collidesWith(shape, repositionOutside = false) {
-        if(shape instanceof Circle) {
-            let shape1Position = this.getAbsolutePosition();
-            let shape2Position = shape.getAbsolutePosition();
-            let delta = MathUtil.vectorSubtract(shape1Position, shape2Position);
-            let distanceApart = MathUtil.length(delta.x, delta.y);
-            let collideDistance = this.radius + shape.radius;
-
-            // circles are colliding if the sum of their radii is
-            // smaller than their distance apart
-            let didCollide = distanceApart < collideDistance;
-
-            if(didCollide && repositionOutside) {
-                let overlapAmount = collideDistance - distanceApart;
-                let collisionAngle = MathUtil.angleTo(shape1Position, shape2Position);
-                let reverseAngle = MathUtil.normalizeAngle(collisionAngle - Math.PI);
-
-                // to stop colliding we need to move in the reverse direction
-                // by the magnitude of the overlap amount
-                if(this.parent) {
-                    this.parent.x += Math.cos(reverseAngle) * overlapAmount;
-                    this.parent.y += Math.sin(reverseAngle) * overlapAmount;
-                }
-                else {
-                    this.x += Math.cos(reverseAngle) * overlapAmount;
-                    this.y += Math.cos(reverseAngle) * overlapAmount;
+                // we can never exit this loop because this frame is zero seconds long
+                // force exit
+                if(this.#secondsLeftInFrame < 0 && this.currentFrame.seconds <= 0) {
+                    break;
                 }
             }
-
-            return didCollide;
         }
     }
 }
 class View {
-    sprites = [];
+    children = [];
 
     constructor() {
     }
 
     update() {
-        for (let i = 0; i < this.sprites.length; i++) {
-            this.sprites[i].update();
+        for (let i = 0; i < this.children.length; i++) {
+            this.children[i].update();
         }
     }
 
@@ -543,27 +654,27 @@ class View {
         let target = document.createElement('canvas');
         target.width = width;
         target.height = height;
-        FrostFlake.Game.renderer.draw(this.sprites, camera, target, "rgba(0,0,0,0)");
+        FrostFlake.Game.renderer.draw(this.children, camera, target, "rgba(0,0,0,0)");
         return target.toDataURL();
     }
 
-    addSprite(sprite) {
-        if(this.sprites.indexOf(sprite) > -1) {
-            throw "Sprite has already been added to view."
+    addChild(positionable) {
+        if(this.children.indexOf(positionable) > -1) {
+            throw "positionable has already been added to view."
         }
 
-        this.sprites.push(sprite);
+        this.children.push(positionable);
     }
 
-    removeSprite(sprite) {
-        let i = this.sprites.indexOf(sprite);
+    removeChild(positionable) {
+        let i = this.children.indexOf(positionable);
         if(i > -1) {
-            this.sprites.splice(i, 1);
+            this.children.splice(i, 1);
         }
     }
 
-    clearSprites() {
-        this.sprites = [];
+    clearChildren() {
+        this.children = [];
     }
 }
 class Log {
@@ -988,7 +1099,7 @@ class FrostFlake {
         FrostFlake.Log.info("Starting FrostFlake...");
 
         this.time = new GameTime();
-        this.camera = new Camera();
+        this.camera = new Camera(this.canvas.width, this.canvas.height);
         this.renderer = new CanvasRenderer();
 
         let me = this;
@@ -1002,7 +1113,7 @@ class FrostFlake {
         this.camera.update();
         this.view.update();
         this.input.update();
-        this.renderer.draw(this.view.sprites, this.camera, this.canvas, this.background);
+        this.renderer.draw(this.view.children, this.camera, this.canvas, this.background);
     }
 
 }
