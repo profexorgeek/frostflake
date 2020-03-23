@@ -5,11 +5,13 @@ class GameTime {
     // to zero. Prevents runaway game behavior if major
     // hiccups happen
     static MAX_FRAME_DELTA = 500;
+    static FPS_SAMPLES = 60;
 
     startTime;
     lastFrameTime;
     frameSeconds;
     gameTimeSeconds;
+    recentFrames = [];
 
     constructor() {
         this.startTime = new Date();
@@ -34,5 +36,18 @@ class GameTime {
 
         this.gameTimeSeconds += this.frameSeconds;
         this.lastFrameTime = currentFrame;
+
+        this.recentFrames.push(this.frameSeconds);
+        if(this.recentFrames.length > GameTime.FPS_SAMPLES) {
+            this.recentFrames.shift()
+        }
+    }
+
+    aveFps() {
+        let ave = 0;
+        for(let i = 0; i < this.recentFrames.length; i++) {
+            ave += this.recentFrames[i];
+        }
+        return 1 / (ave / this.recentFrames.length);
     }
 }
