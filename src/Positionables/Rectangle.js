@@ -3,19 +3,19 @@ class Rectangle extends Shape {
     height;
 
     get left() {
-        return this.getAbsolutePosition.x - this.width / 2;
+        return this.absolutePosition.x - this.width / 2;
     }
 
     get right() {
-        return this.getAbsolutePosition.x + this.width / 2;
+        return this.absolutePosition.x + this.width / 2;
     }
 
     get top() {
-        return this.getAbsolutePosition.y + this.height / 2;
+        return this.absolutePosition.y + this.height / 2;
     }
 
     get bottom() {
-        return this.getAbsolutePosition.y - this.height / 2;
+        return this.absolutePosition.y - this.height / 2;
     }
 
     constructor(width, height) {
