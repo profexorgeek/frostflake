@@ -57,6 +57,11 @@ class Positionable {
     addChild(positionable) {
         positionable.parent = this;
         this.children.push(positionable);
+
+        //sort children by layer
+        this.children.sort((a, b) => {
+            return a.layer - b.layer;
+        });
     }
 
     removeChild(positionable) {
@@ -108,11 +113,6 @@ class Positionable {
         this.velocity.rotation += (this.acceleration.rotation * delta) - (this.drag * this.velocity.rotation * delta);
 
         this.position.rotation = MathUtil.normalizeAngle(this.position.rotation);
-
-        // sort children by layer
-        this.children.sort((a, b) => {
-            return a.layer - b.layer;
-        });
 
         // update children
         for(let i = 0; i < this.children.length; i++) {
