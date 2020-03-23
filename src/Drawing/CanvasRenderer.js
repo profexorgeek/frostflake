@@ -1,9 +1,16 @@
 class CanvasRenderer {
 
     #textureCache = {};
+    context;
+    background = "rgb(0,0,0)";
 
     // TODO: what about clearing texture cache
     // and images added to the DOM?
+
+    constructor(canvas, background) {
+        this.context = canvas.getContext("2d");
+        this.background = background;
+    }
 
     checkAndPreloadpositionables(positionables) {
         let preloaded = true;
@@ -23,69 +30,68 @@ class CanvasRenderer {
         return preloaded;
     }
     
-    draw(positionables, camera, canvas, background = "rgb(0, 0, 0)") {
-        let ctx = canvas.getContext("2d");
+    draw(positionables, camera) {
+        this.context;
+        this.background;
         let scale = 1 / camera.resolution;
-        let transX = MathUtil.invert(camera.x) + (ctx.canvas.width / 2) * camera.resolution;
-        let transY = camera.y + (ctx.canvas.height / 2) * camera.resolution;
+        let transX = MathUtil.invert(camera.x) + (this.context.canvas.width / 2) * camera.resolution;
+        let transY = camera.y + (this.context.canvas.height / 2) * camera.resolution;
 
-        ctx.save();
-        ctx.imageSmoothingEnabled = camera.antialias;
-        ctx.fillStyle = background;
-        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        ctx.scale(scale, scale);
-        ctx.translate(transX, transY);
+        this.context.save();
+        this.context.imageSmoothingEnabled = camera.antialias;
+        this.context.fillStyle = this.background;
+        this.context.fillRect(0, 0, this.context.canvas.width, this.context.canvas.height);
+        this.context.scale(scale, scale);
+        this.context.translate(transX, transY);
 
         for(let i = 0; i < positionables.length; i++) {
 
             // draw sprites
             if(positionables[i] instanceof Sprite) {
-                this.drawSprite(positionables[i], ctx);
+                this.drawSprite(positionables[i], this.context);
             }
         }
-        ctx.restore();
+        this.context.restore();
     }
 
-    drawSprite(sprite, ctx) {
+    drawSprite(sprite, context) {
         let transX = sprite.x;
         let transY = MathUtil.invert(sprite.y);
         let transRot = -sprite.rotation;
         let alpha = sprite.alpha;
 
-        ctx.save();
-
-        ctx.translate(transX, transY);
-        ctx.rotate(transRot);
-        ctx.globalAlpha = alpha;
+        this.context.save();
+        this.context.translate(transX, transY);
+        this.context.rotate(transRot);
+        this.context.globalAlpha = alpha;
 
         // draw texture
         if(this.textureLoaded(sprite.texture)) {
             let tex = this.#textureCache[sprite.texture];
-            let frame = sprite.frame;
 
-            // if null frame, default to sprite width
-            if(frame == null) {
-                frame = new Frame();
-                frame.width = tex.width;
-                frame.height = tex.height;
+            // if null frame, force sprite to have a frame matching its width
+            if(sprite.frame == null) {
+                sprite.frame = new Frame();
+                sprite.frame.width = tex.width;
+                sprite.frame.height = tex.height;
             }
 
-            ctx.drawImage(
+            this.context.drawImage(
                 tex,
-                frame.left,
-                frame.top,
-                frame.width,
-                frame.height,
-                frame.width / -2 * sprite.scale,
-                frame.height / -2 * sprite.scale,
-                frame.width * sprite.scale,
-                frame.height * sprite.scale
+                sprite.frame.left,
+                sprite.frame.top,
+                sprite.frame.width,
+                sprite.frame.height,
+                sprite.frame.width / -2 * sprite.scale,
+                sprite.frame.height / -2 * sprite.scale,
+                sprite.frame.width * sprite.scale,
+                sprite.frame.height * sprite.scale
             );
 
             // draw debug visualizations
             if(FrostFlake.Game.showDebug) {
-                ctx.strokeStyle = "white";
-                ctx.strokeRect(
+                this.context.strokeStyle = "white";
+                this.context.strokeRect(
                     -frame.width / 2 * sprite.scale,
                     -frame.height / 2 * sprite.scale,
                     frame.width * sprite.scale,
@@ -98,23 +104,24 @@ class CanvasRenderer {
         }
 
         // reset alpha
-        ctx.globalAlpha = 1;
+        this.context.globalAlpha = 1;
 
         // recurse on children
         if(sprite.children.length > 0) {
             for(let i = 0; i < sprite.children.length; i++) {
-                this.drawSprite(sprite.children[i], ctx);
+                this.drawSprite(sprite.children[i], this.context);
             }
         }
 
         // restore context
-        ctx.restore();
+        this.context.restore();
     }
 
     textureLoaded(url) {
         if(url !== null &&
             url in this.#textureCache &&
-            this.#textureCache[url] instanceof HTMLImageElement === true) {
+            this.#textureCache[url] instanceof HTMLImageElement === true &&
+            this.#textureCache[url].complete === true) {
                 return true;
             }
         return false;

@@ -32,7 +32,7 @@ class FrostFlake {
 
         this.time = new GameTime();
         this.camera = new Camera(this.canvas.width, this.canvas.height);
-        this.renderer = new CanvasRenderer();
+        this.renderer = new CanvasRenderer(this.canvas);
 
         let me = this;
         this.#timer = window.setInterval( function () {
