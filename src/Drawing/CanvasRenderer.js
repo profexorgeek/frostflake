@@ -12,7 +12,7 @@ class CanvasRenderer {
         this.background = background;
     }
 
-    checkAndPreloadpositionables(positionables) {
+    checkAndPreloadPositionables(positionables) {
         let preloaded = true;
         for(let i = 0; i < positionables.length; i++) {
             if(!this.textureLoaded(positionables[i].texture)) {
@@ -20,7 +20,7 @@ class CanvasRenderer {
             }
 
             if(positionables[i].children.length > 0) {
-                let childrenLoaded = this.checkAndPreloadpositionables(positionables[i].children);
+                let childrenLoaded = this.checkAndPreloadPositionables(positionables[i].children);
                 if(childrenLoaded === false) {
                     preloaded = false;
                 }
@@ -90,12 +90,41 @@ class CanvasRenderer {
 
             // draw debug visualizations
             if(FrostFlake.Game.showDebug) {
-                this.context.strokeStyle = "white";
+                
+                // draw sprite bounds
+                this.context.strokeStyle = "LightGray";
                 this.context.strokeRect(
-                    -frame.width / 2 * sprite.scale,
-                    -frame.height / 2 * sprite.scale,
-                    frame.width * sprite.scale,
-                    frame.height * sprite.scale);
+                    -sprite.frame.width / 2 * sprite.scale,
+                    -sprite.frame.height / 2 * sprite.scale,
+                    sprite.frame.width * sprite.scale,
+                    sprite.frame.height * sprite.scale);
+
+                // draw collision
+                this.context.strokeStyle = "Red";
+                if(sprite.collision instanceof Circle) {
+                    this.context.beginPath();
+                    this.context.arc(
+                        0,
+                        0,
+                        sprite.collision.radius,
+                        0,
+                        Math.PI * 2
+                    );
+                    this.context.stroke();
+                }
+                else if(sprite.collision instanceof Rectangle) {
+                    this.context.save();
+                    this.strokeStyle = "Red";
+                    this.context.rotate(sprite.collision.absolutePosition.rotation);
+                    this.context.strokeRect(
+                        -sprite.collision.width / 2,
+                        -sprite.collision.height / 2,
+                        sprite.collision.width,
+                        sprite.collision.height
+                    )
+                    this.context.restore();
+                }
+
             }
         }
         // texture hasn't been loaded, load it now
