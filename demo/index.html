@@ -7,8 +7,9 @@
         <canvas id="frostFlake" width="640" height="480"></canvas>
 
         <!-- DEV: include all files -->
-        <!-- <script type='text/javascript' src='/src/GameTime.js'></script>
+        <script type='text/javascript' src='/src/GameTime.js'></script>
         <script type='text/javascript' src='/src/Utility/MathUtil.js'></script>
+        <script type='text/javascript' src='/src/Positionables/RepositionType.js'></script>
         <script type='text/javascript' src='/src/Positionables/Positionable.js'></script>
         <script type='text/javascript' src='/src/Positionables/Sprite.js'></script>
         <script type='text/javascript' src='/src/Positionables/Shape.js'></script>
@@ -24,10 +25,10 @@
         <script type='text/javascript' src='/src/Input/Keys.js'></script>
         <script type='text/javascript' src='/src/Input/Mouse.js'></script>
         <script type='text/javascript' src='/src/Input/Input.js'></script>
-        <script type='text/javascript' src='/src/FrostFlake.js'></script> -->
+        <script type='text/javascript' src='/src/FrostFlake.js'></script>
 
         <!-- PROD: include built file-->
-        <script type="text/javascript" src="/build/frostflake.concat.js"></script>
+        <!-- <script type="text/javascript" src="/build/frostflake.concat.js"></script> -->
 
         <script>
 
@@ -39,7 +40,7 @@
         let ff = new FrostFlake(canvas, 60);
 
         // turn debug visualizations on or off
-        ff.showDebug = false;
+        ff.showDebug = true;
 
         // start running the game
         ff.start();
@@ -184,83 +185,33 @@
 
         class CollisionDemo extends View {
 
+            roundSprite;
+            cursorSprite;
+
             constructor() {
                 super();
 
-                let view = this;
+                this.roundSprite = new Sprite('Content/frostflake.png');
+                this.roundSprite.collision = new Circle(16);
+                this.addChild(this.roundSprite);
 
-                for (let i = 0; i < 75; i++) {
-                    let s = new Sprite('Content/frostflake.png');
-
-                    // override custom function to make sprites always bounce
-                    // towards the center of the screen
-                    s.preUpdate = function () {
-                        let cam = FrostFlake.Game.camera;
-                        if (s.x > cam.right ||
-                            s.x < cam.left ||
-                            s.y > cam.top ||
-                            s.y < cam.bottom) {
-
-                            let angleToCenter = MathUtil.angleTo(s, cam);
-                            let speed = MathUtil.length(s.velocity.x, s.velocity.y);
-                            s.velocity.x = Math.cos(angleToCenter) * speed;
-                            s.velocity.y = Math.sin(angleToCenter) * speed;
-                        }
-                    }
-
-                    // give the sprites some random starting positions and velocities
-                    s.x = MathUtil.randomInRange(-300, 300);
-                    s.y = MathUtil.randomInRange(-200, 200);
-                    s.velocity.x = MathUtil.randomInRange(-500, 500);
-                    s.velocity.y = MathUtil.randomInRange(-500, 500);
-                    s.drag = 0.25;
-                    s.velocity.rotation = MathUtil.randomInRange(-2, 2);
-
-                    this.addChild(s);
-                }
+                this.cursorSprite = new Sprite('Content/spritesheet.png');
+                this.cursorSprite.collision = new Circle(32);
+                this.cursorSprite.frame = new Frame(7 * 32, 1 * 32, 32, 32);
+                this.addChild(this.cursorSprite);
             }
 
             update() {
                 super.update();
 
-                // collide all children with all other children
-                for (let i = this.children.length - 1; i > -1; i--) {
-                    let s1 = this.children[i];
+                this.cursorSprite.x = FrostFlake.Game.input.cursor.worldX;
+                this.cursorSprite.y = FrostFlake.Game.input.cursor.worldY;
 
-                    for (let j = this.children.length - 1; j > -1; j--) {
-                        let s2 = this.children[j];
-
-                        if (s1 == s2) {
-                            continue;
-                        }
-
-                        if (s1.collision.collidesWith(s2.collision, true)) {
-
-                            // get random bounce directions
-                            let newVel1 = this.getRandomBounceVelocity(s1);
-                            let newVel2 = this.getRandomBounceVelocity(s2);
-
-                            s1.velocity.x = newVel1.x
-                            s1.velocity.y = newVel1.y;
-                            s2.velocity.x = newVel2.x;
-                            s2.velocity.y = newVel2.y;
-                        }
-                    }
-                }
-            }
-
-            getRandomBounceVelocity(sprite, energyLossOnBounce = 0) {
-                let fortyFiveDegrees = Math.PI / 4;
-                let velocityAngle = Math.atan2(sprite.velocity.y, sprite.velocity.x);
-                let reverseAngle = MathUtil.normalizeAngle(velocityAngle - Math.PI);
-                let magnitude = MathUtil.length(sprite.velocity.x, sprite.velocity.y) * (1 - energyLossOnBounce);
-                let newAngle = reverseAngle + MathUtil.randomInRange(-fortyFiveDegrees, fortyFiveDegrees);
-                let velX = Math.cos(newAngle) * magnitude;
-                let velY = Math.sin(newAngle) * magnitude;
-                return { x: velX, y: velY };
+                this.cursorSprite.collision.collideWith(this.roundSprite.collision, RepositionType.Move, 0.5, 0.5);
             }
         }
 
+        ff.view = new CollisionDemo();
     </script>
 </body>
 

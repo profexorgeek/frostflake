@@ -24,33 +24,13 @@ class Rectangle extends Shape {
         this.height = height;
     }
 
-    // TODO: not yet working
-    collidesWith(shape, repositionOutside = false) {
+    collideWith(shape, repoType = RepositionType.None, thisWeight = 1, targetWeight = 0, repoForce = 1) {
         if(shape instanceof Circle) {
-            throw new "Not implemented yet!";
+            throw "NOT IMPLEMENTED!"
+            //Shape.collideCircleVsRect(this, shape, repoType, thisWeight, targetWeight, repoForce);
         }
         else if(shape instanceof Rectangle) {
-            this.collideWithRect(shape, repositionOutside);
-        }
-    }
-
-    // TODO: not yet working
-    collideWithRect(rect, repositionOutside = false) {
-
-        throw new "Not implemented yet!";
-        let didCollide = false;
-
-        if(this.bottom < rect.top) {
-            didCollide = true;
-            if(repositionOutside) {
-                this.moveAbsoluteY(rect.top - this.bottom);
-            }
-        }
-        else if(this.top > rect.bottom) {
-            didCollide = true;
-            if(repositionOutside) {
-                this.moveAbsoluteY(rect.bottom - this.top);
-            }
+            Shape.collideRectVsRect(this, shape, repoType, thisWeight, targetWeight, repoForce);
         }
     }
 }
