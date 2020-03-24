@@ -50,6 +50,14 @@ class Positionable {
         return absPos;
     }
 
+    get root() {
+        var obj = this;
+        while(obj.parent instanceof Positionable) {
+            obj = obj.parent;
+        }
+        return obj;
+    }
+
     constructor(x = 0, y = 0) {
         
     }

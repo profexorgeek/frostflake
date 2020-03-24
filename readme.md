@@ -34,7 +34,9 @@ The source code for the demos is in the **/demo/index.html** file. Try creating 
 
 Here are some things I'd like to add:
 
-- Circle collision with basic physics
-- Axis-aligned rectangle collision with basic physics
+- Circle vs circle collision with basic physics
+- AAR vs AAR collision with basic physics
+- AAR vs circle collision with basic physics
 - Tilemap loading
 - Render target demo
+- Shape render color based on Shape object property

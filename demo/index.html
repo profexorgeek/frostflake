@@ -185,29 +185,83 @@
 
         class CollisionDemo extends View {
 
-            roundSprite;
-            cursorSprite;
+            walls = [];
+            objects = [];
 
             constructor() {
                 super();
 
-                this.roundSprite = new Sprite('Content/frostflake.png');
-                this.roundSprite.collision = new Circle(16);
-                this.addChild(this.roundSprite);
+                // make some walls from sprites
+                for(let x = 0; x < 20; x++) {
+                    var w1 = new Sprite('Content/spritesheet.png');
+                    w1.collision = new Rectangle(32, 32);
+                    w1.frame = new Frame(7 * 32, 1 * 32, 32, 32);
+                    w1.x = -320 + (x * 32) + 16;
+                    w1.y = 240 - 16;
+                    this.walls.push(w1);
+                    this.addChild(w1);
 
-                this.cursorSprite = new Sprite('Content/spritesheet.png');
-                this.cursorSprite.collision = new Circle(32);
-                this.cursorSprite.frame = new Frame(7 * 32, 1 * 32, 32, 32);
-                this.addChild(this.cursorSprite);
+                    var w2 = new Sprite('Content/spritesheet.png');
+                    w2.collision = new Rectangle(32, 32);
+                    w2.frame = new Frame(7 * 32, 1 * 32, 32, 32);
+                    w2.x = -320 + (x * 32) + 16;
+                    w2.y = -240 + 16;
+                    this.walls.push(w2);
+                    this.addChild(w2);
+                }
+
+                for(let y = 0; y < 14; y++) {
+                    var w1 = new Sprite('Content/spritesheet.png');
+                    w1.collision = new Rectangle(32, 32);
+                    w1.frame = new Frame(7 * 32, 1 * 32, 32, 32);
+                    w1.x = -320 + 16;
+                    w1.y = -240 + (y * 32) + 16;
+                    this.walls.push(w1);
+                    this.addChild(w1);
+
+                    var w2 = new Sprite('Content/spritesheet.png');
+                    w2.collision = new Rectangle(32, 32);
+                    w2.frame = new Frame(7 * 32, 1 * 32, 32, 32);
+                    w2.x = 320 - 16;
+                    w2.y = -240 + (y * 32) + 16;
+                    this.walls.push(w2);
+                    this.addChild(w2);
+                }
+
+                // make some things to collide
+                for(let i = 0; i < 200; i++) {
+                    var s = new Sprite('Content/frostflake.png');
+                    s.collision.radius = 8;
+                    s.scale = 0.5;
+                    s.position.x = MathUtil.randomInRange(-200, 200);
+                    s.position.y = MathUtil.randomInRange(-200, 200);
+                    s.velocity.x = 150;
+                    this.objects.push(s);
+                    this.addChild(s);
+                }
             }
 
             update() {
                 super.update();
 
-                this.cursorSprite.x = FrostFlake.Game.input.cursor.worldX;
-                this.cursorSprite.y = FrostFlake.Game.input.cursor.worldY;
+                for(let i = this.objects.length - 1; i > -1; i--) {
+                    let obj = this.objects[i];
 
-                this.cursorSprite.collision.collideWith(this.roundSprite.collision, RepositionType.Move, 0.5, 0.5);
+                    // collide with other objects
+                    for(let j = i; j > -1; j--) {
+                        let obj2 = this.objects[j];
+
+                        if(obj != obj2) {
+                            obj.collision.collideWith(obj2.collision, RepositionType.Bounce, 0.5, 0.5);
+                        }
+                    }
+
+                    // collide with walls
+                    for(let k = this.walls.length - 1; k > -1; k--) {
+                        let wall = this.walls[k];
+                        obj.collision.collideWith(wall.collision, RepositionType.Bounce, 0, 1);
+                    }
+                }
             }
         }
 
