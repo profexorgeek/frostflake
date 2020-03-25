@@ -43,8 +43,8 @@ class FrostFlake {
     update() {
         this.time.update();
         this.camera.update();
-        this.view.update();
         this.input.update();
+        this.view.update();
         this.renderer.draw(this.view.children, this.camera, this.canvas, this.background);
     }
 
