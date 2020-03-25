@@ -1,11 +1,11 @@
 class Cursor {
-    x;
-    y;
-    changeX;
-    changeY;
-    worldX;
-    worldY;
-    isInFrame;
+    x = 0;
+    y = 0;
+    changeX = 0;
+    changeY = 0;
+    worldX = 0;
+    worldY = 0;
+    isInFrame = false;
 
     update() {
         this.worldX = FrostFlake.Game.camera.x + this.x;
