@@ -23,6 +23,7 @@ const config = {
 concat([
     './src/GameTime.js',
     './src/Utility/MathUtil.js',
+    './src/Positionables/RepositionType.js',
     './src/Positionables/Positionable.js',
     './src/Positionables/Sprite.js',
     './src/Positionables/Shape.js',

@@ -5,11 +5,13 @@ class GameTime {
     // to zero. Prevents runaway game behavior if major
     // hiccups happen
     static MAX_FRAME_DELTA = 500;
+    static FPS_SAMPLES = 60;
 
     startTime;
     lastFrameTime;
     frameSeconds;
     gameTimeSeconds;
+    recentFrames = [];
 
     constructor() {
         this.startTime = new Date();
@@ -34,6 +36,19 @@ class GameTime {
 
         this.gameTimeSeconds += this.frameSeconds;
         this.lastFrameTime = currentFrame;
+
+        this.recentFrames.push(this.frameSeconds);
+        if(this.recentFrames.length > GameTime.FPS_SAMPLES) {
+            this.recentFrames.shift()
+        }
+    }
+
+    aveFps() {
+        let ave = 0;
+        for(let i = 0; i < this.recentFrames.length; i++) {
+            ave += this.recentFrames[i];
+        }
+        return 1 / (ave / this.recentFrames.length);
     }
 }
 class MathUtil {
@@ -69,9 +84,46 @@ class MathUtil {
     }
 
     static vectorSubtract(v1, v2) {
-        let dx = v1.x - v2.x;
-        let dy = v1.y - v2.y;
-        return {x: dx, y: dy};
+        if(typeof v2 === "number") {
+            return {
+                x: v1.x - v2,
+                y: v1.y - v2
+            };
+        }
+        else {
+            return {
+                x: v1.x - v2.x,
+                y: v1.y - v2.y
+            };
+        }
+    }
+
+    static vectorMultiply(v1, v2) {
+        if(typeof v2 === "number") {
+            return {
+                x: v1.x * v2,
+                y: v1.y * v2
+            };
+        }
+        else {
+            return {
+                x: v1.x * v2.x,
+                y: v1.y * v2.y
+            };
+        }
+    }
+
+    static vectorNormalize(v1) {
+        let len = MathUtil.vectorLength(v1);
+        return len == 0 ? v1 : {x: (v1.x / len), y: (v1.y / len)};
+    }
+
+    static vectorDot(v1, v2) {
+        return (v1.x * v2.x) + (v1.y * v2.y);
+    }
+
+    static vectorLength(v1) {
+        return MathUtil.length(v1.x, v1.y);
     }
 
     static length(x, y) {
@@ -84,6 +136,12 @@ class MathUtil {
         val = Math.max(min, val);
         return val;
     }
+}
+// pseudo enum
+class RepositionType {
+    static None = 0;
+    static Move = 1;
+    static Bounce = 2;
 }
 class Positionable {
     position = {x: 0, y: 0, rotation: 0}
@@ -137,6 +195,14 @@ class Positionable {
         return absPos;
     }
 
+    get root() {
+        var obj = this;
+        while(obj.parent instanceof Positionable) {
+            obj = obj.parent;
+        }
+        return obj;
+    }
+
     constructor(x = 0, y = 0) {
         
     }
@@ -144,6 +210,11 @@ class Positionable {
     addChild(positionable) {
         positionable.parent = this;
         this.children.push(positionable);
+
+        //sort children by layer
+        this.children.sort((a, b) => {
+            return a.layer - b.layer;
+        });
     }
 
     removeChild(positionable) {
@@ -195,11 +266,6 @@ class Positionable {
         this.velocity.rotation += (this.acceleration.rotation * delta) - (this.drag * this.velocity.rotation * delta);
 
         this.position.rotation = MathUtil.normalizeAngle(this.position.rotation);
-
-        // sort children by layer
-        this.children.sort((a, b) => {
-            return a.layer - b.layer;
-        });
 
         // update children
         for(let i = 0; i < this.children.length; i++) {
@@ -294,22 +360,152 @@ class Shape extends Positionable {
         return absPos;
     }
 
-    moveAbsoluteX(amount) {
-        if(this.parent) {
-            this.parent.x += amount;
+    static collideCircleVsCircle(circle1, circle2, repositionType = RepositionType.None, circle1Weight = 1, circle2Weight = 0, forceScale = 1) {
+        // figure out if we're overlapping by calculating
+        // if the distance apart is less than the sum of the radii
+        let delta = MathUtil.vectorSubtract(circle2.absolutePosition, circle1.absolutePosition);
+        let distApart = MathUtil.length(delta.x, delta.y);
+        let collideDist = circle1.radius + circle2.radius;
+        let overlap = collideDist - distApart;
+        let didCollide = overlap > 0;
+
+        if(didCollide && repositionType != RepositionType.None) {
+            let normalDelta = MathUtil.vectorNormalize(delta);
+
+            // just pick a default direction in case of perfect overlap
+            if(MathUtil.vectorLength(normalDelta) == 0) {
+                normalDelta.y = 1;
+            }
+            
+            let circle1Factor = circle2Weight / (circle1Weight + circle2Weight);
+            let circle2Factor = circle1Weight / (circle1Weight + circle2Weight);
+
+            circle1.root.position.x += normalDelta.x * -(overlap * circle1Factor);
+            circle1.root.position.y += normalDelta.y * -(overlap * circle1Factor);
+
+            circle2.root.position.x += normalDelta.x * (overlap * circle2Factor);
+            circle2.root.position.y += normalDelta.y * (overlap * circle2Factor);
+
+            if(repositionType == RepositionType.Bounce) {
+                let velocityLength = MathUtil.vectorDot(MathUtil.vectorSubtract(circle1.root.velocity, circle2.root.velocity), normalDelta) * forceScale;
+                
+                let circle1VelocityAdjust = MathUtil.vectorMultiply(normalDelta, velocityLength * circle1Factor);
+                circle1.root.velocity.x -= circle1VelocityAdjust.x * 2;
+                circle1.root.velocity.y -= circle1VelocityAdjust.y * 2;
+
+                let circle2VelocityAdjust = MathUtil.vectorMultiply(normalDelta, velocityLength * circle2Factor);
+                circle2.root.velocity.x += circle2VelocityAdjust.x * 2;
+                circle2.root.velocity.y += circle2VelocityAdjust.y * 2;
+            }
         }
-        else {
-            this.x += amount;
-        }
+
+        return didCollide;
     }
 
-    moveAbsoluteY(amount) {
-        if(this.parent) {
-            this.parent.y += amount;
+    static collideCircleVsRect(circle, rect, repositionType = RepositionType.None, circleWeight = 1, rectWeight = 0, forceScale = 1) {
+        // figure out if we're overlapping on each axis by
+        // calculating if the distance apart is larger than
+        // the sum of half of the widths
+        let xCollisionDist = circle.radius + (rect.width / 2);
+        let xDist = circle.absolutePosition.x - rect.absolutePosition.x;
+        let xOverlap = xCollisionDist - Math.abs(xDist);
+
+        let yCollisionDist = circle.radius + (rect.height / 2);
+        let yDist = circle.absolutePosition.y - rect.absolutePosition.y;
+        let yOverlap = yCollisionDist - Math.abs(yDist);
+
+        // if overlap is positive on both axis, there's a collision
+        let didCollide = (xOverlap > 0) && (yOverlap > 0);
+
+        if(didCollide && repositionType != RepositionType.None) {
+
+            // TODO: handle corners!
+
+            let normalDelta = {
+                x: (xOverlap <= yOverlap ? 1 : 0) * Math.sign(xDist),
+                y: (xOverlap >= yOverlap ? 1 : 0) * Math.sign(yDist)
+            };
+
+            // just pick a default direction in case of perfect overlap
+            if(MathUtil.vectorLength(normalDelta) == 0) {
+                normalDelta.y = 1;
+            }
+
+            let circleFactor = rectWeight / (circleWeight + rectWeight);
+            let rectFactor = circleWeight / (circleWeight + rectWeight);
+
+            circle.root.position.x += normalDelta.x * xOverlap * circleFactor;
+            circle.root.position.y += normalDelta.y * yOverlap * circleFactor;
+
+            rect.root.position.x -= normalDelta.x * xOverlap * rectFactor;
+            rect.root.position.y -= normalDelta.y * yOverlap * rectFactor;
+
+            if(repositionType == RepositionType.Bounce) {
+                let velocityLength = MathUtil.vectorDot(MathUtil.vectorSubtract(circle.root.velocity, rect.root.velocity), normalDelta) * forceScale;
+                
+                let circleVelocityAdjust = MathUtil.vectorMultiply(normalDelta, velocityLength * circleFactor);
+                circle.root.velocity.x -= circleVelocityAdjust.x * 2;
+                circle.root.velocity.y -= circleVelocityAdjust.y * 2;
+
+                let rectVelocityAdjust = MathUtil.vectorMultiply(normalDelta, velocityLength * rectFactor);
+                rect.root.velocity.x += rectVelocityAdjust.x * 2;
+                rect.root.velocity.y += rectVelocityAdjust.y * 2;
+            }
         }
-        else {
-            this.y += amount;
+
+        return didCollide;
+    }
+
+    static collideRectVsRect(rect1, rect2, repositionType = RepositionType.None, rect1Weight = 1, rect2Weight = 0, forceScale = 1) {
+        // figure out if we're overlapping on each axis by
+        // calculating if the distance apart is larger than
+        // the sum of half of the widths
+        let xCollisionDist = (rect1.width / 2) + (rect2.width / 2);
+        let xDist = rect1.absolutePosition.x - rect2.absolutePosition.x;
+        let xOverlap = xCollisionDist - Math.abs(xDist);
+
+        let yCollisionDist = (rect1.height / 2) + (rect2.height / 2);
+        let yDist = rect1.absolutePosition.y - rect2.absolutePosition.y;
+        let yOverlap = yCollisionDist - Math.abs(yDist);
+
+        // if overlap is positive on both axis, there's a collision
+        let didCollide = (xOverlap > 0) && (yOverlap > 0);
+
+        if(didCollide && repositionType != RepositionType.None) {
+
+            let normalDelta = {
+                x: (xOverlap <= yOverlap ? 1 : 0) * Math.sign(xDist),
+                y: (xOverlap <= yOverlap ? 0 : 1) * Math.sign(yDist)
+            };
+
+            // just pick a default direction in case of perfect overlap
+            if(MathUtil.vectorLength(normalDelta) == 0) {
+                normalDelta.y = 1;
+            }
+
+            let rect1Factor = rect2Weight / (rect1Weight + rect2Weight);
+            let rect2Factor = rect1Weight / (rect1Weight + rect2Weight);
+
+            rect1.root.position.x += normalDelta.x * xOverlap * rect1Factor;
+            rect1.root.position.y += normalDelta.y * yOverlap * rect1Factor;
+
+            rect2.root.position.x -= normalDelta.x * xOverlap * rect2Factor;
+            rect2.root.position.y -= normalDelta.y * yOverlap * rect2Factor;
+
+            if(repositionType == RepositionType.Bounce) {
+                let velocityLength = MathUtil.vectorDot(MathUtil.vectorSubtract(rect1.root.velocity, rect2.root.velocity), normalDelta) * forceScale;
+                
+                let r1VelocityAdjust = MathUtil.vectorMultiply(normalDelta, velocityLength * rect1Factor);
+                rect1.root.velocity.x -= r1VelocityAdjust.x * 2;
+                rect1.root.velocity.y -= r1VelocityAdjust.y * 2;
+
+                let r2VelocityAdjust = MathUtil.vectorMultiply(normalDelta, velocityLength * rect2Factor);
+                rect2.root.velocity.x += r2VelocityAdjust.x * 2;
+                rect2.root.velocity.y += r2VelocityAdjust.y * 2;
+            }
         }
+
+        return didCollide;
     }
 }
 class Circle extends Shape {
@@ -320,31 +516,12 @@ class Circle extends Shape {
         this.radius = radius;
     }
 
-    collidesWith(shape, repositionOutside = false) {
+    collideWith(shape, repoType = RepositionType.None, thisWeight = 1, targetWeight = 0, repoForce = 1) {
         if(shape instanceof Circle) {
-            let shape1Position = this.absolutePosition;
-            let shape2Position = shape.absolutePosition;
-            let delta = MathUtil.vectorSubtract(shape1Position, shape2Position);
-            let distanceApart = MathUtil.length(delta.x, delta.y);
-            let collideDistance = this.radius + shape.radius;
-
-            // circles are colliding if the sum of their radii is
-            // smaller than their distance apart
-            let didCollide = distanceApart < collideDistance;
-
-            if(didCollide && repositionOutside) {
-                let overlapAmount = collideDistance - distanceApart;
-                let collisionAngle = MathUtil.angleTo(shape1Position, shape2Position);
-                let reverseAngle = MathUtil.normalizeAngle(collisionAngle - Math.PI);
-
-                
-                // to stop colliding we need to move in the reverse direction
-                // by the magnitude of the overlap amount
-                this.moveAbsoluteX(Math.cos(reverseAngle) * overlapAmount);
-                this.moveAbsoluteY(Math.sin(reverseAngle) * overlapAmount)
-            }
-
-            return didCollide;
+            Shape.collideCircleVsCircle(this, shape, repoType, thisWeight, targetWeight, repoForce);
+        }
+        else if(shape instanceof Rectangle) {
+            Shape.collideCircleVsRect(this, shape, repoType, thisWeight, targetWeight, repoForce);
         }
     }
 }
@@ -353,19 +530,19 @@ class Rectangle extends Shape {
     height;
 
     get left() {
-        return this.getAbsolutePosition.x - this.width / 2;
+        return this.absolutePosition.x - this.width / 2;
     }
 
     get right() {
-        return this.getAbsolutePosition.x + this.width / 2;
+        return this.absolutePosition.x + this.width / 2;
     }
 
     get top() {
-        return this.getAbsolutePosition.y + this.height / 2;
+        return this.absolutePosition.y + this.height / 2;
     }
 
     get bottom() {
-        return this.getAbsolutePosition.y - this.height / 2;
+        return this.absolutePosition.y - this.height / 2;
     }
 
     constructor(width, height) {
@@ -374,44 +551,30 @@ class Rectangle extends Shape {
         this.height = height;
     }
 
-    // TODO: not yet working
-    collidesWith(shape, repositionOutside = false) {
+    collideWith(shape, repoType = RepositionType.None, thisWeight = 1, targetWeight = 0, repoForce = 1) {
         if(shape instanceof Circle) {
-            throw new "Not implemented yet!";
+            Shape.collideCircleVsRect(shape, this, repoType, targetWeight, thisWeight, repoForce);
         }
         else if(shape instanceof Rectangle) {
-            this.collideWithRect(shape, repositionOutside);
-        }
-    }
-
-    // TODO: not yet working
-    collideWithRect(rect, repositionOutside = false) {
-
-        throw new "Not implemented yet!";
-        let didCollide = false;
-
-        if(this.bottom < rect.top) {
-            didCollide = true;
-            if(repositionOutside) {
-                this.moveAbsoluteY(rect.top - this.bottom);
-            }
-        }
-        else if(this.top > rect.bottom) {
-            didCollide = true;
-            if(repositionOutside) {
-                this.moveAbsoluteY(rect.bottom - this.top);
-            }
+            Shape.collideRectVsRect(this, shape, repoType, thisWeight, targetWeight, repoForce);
         }
     }
 }
 class CanvasRenderer {
 
     #textureCache = {};
+    context;
+    background = "rgb(0,0,0)";
 
     // TODO: what about clearing texture cache
     // and images added to the DOM?
 
-    checkAndPreloadpositionables(positionables) {
+    constructor(canvas, background) {
+        this.context = canvas.getContext("2d");
+        this.background = background;
+    }
+
+    checkAndPreloadPositionables(positionables) {
         let preloaded = true;
         for(let i = 0; i < positionables.length; i++) {
             if(!this.textureLoaded(positionables[i].texture)) {
@@ -419,7 +582,7 @@ class CanvasRenderer {
             }
 
             if(positionables[i].children.length > 0) {
-                let childrenLoaded = this.checkAndPreloadpositionables(positionables[i].children);
+                let childrenLoaded = this.checkAndPreloadPositionables(positionables[i].children);
                 if(childrenLoaded === false) {
                     preloaded = false;
                 }
@@ -429,73 +592,101 @@ class CanvasRenderer {
         return preloaded;
     }
     
-    draw(positionables, camera, canvas, background = "rgb(0, 0, 0)") {
-        let ctx = canvas.getContext("2d");
+    draw(positionables, camera) {
+        this.context;
+        this.background;
         let scale = 1 / camera.resolution;
-        let transX = MathUtil.invert(camera.x) + (ctx.canvas.width / 2) * camera.resolution;
-        let transY = camera.y + (ctx.canvas.height / 2) * camera.resolution;
+        let transX = MathUtil.invert(camera.x) + (this.context.canvas.width / 2) * camera.resolution;
+        let transY = camera.y + (this.context.canvas.height / 2) * camera.resolution;
 
-        ctx.save();
-        ctx.imageSmoothingEnabled = camera.antialias;
-        ctx.fillStyle = background;
-        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        ctx.scale(scale, scale);
-        ctx.translate(transX, transY);
+        this.context.save();
+        this.context.imageSmoothingEnabled = camera.antialias;
+        this.context.fillStyle = this.background;
+        this.context.fillRect(0, 0, this.context.canvas.width, this.context.canvas.height);
+        this.context.scale(scale, scale);
+        this.context.translate(transX, transY);
 
         for(let i = 0; i < positionables.length; i++) {
 
             // draw sprites
             if(positionables[i] instanceof Sprite) {
-                this.drawSprite(positionables[i], ctx);
+                this.drawSprite(positionables[i], this.context);
             }
         }
-        ctx.restore();
+        this.context.restore();
     }
 
-    drawSprite(sprite, ctx) {
+    drawSprite(sprite, context) {
         let transX = sprite.x;
         let transY = MathUtil.invert(sprite.y);
         let transRot = -sprite.rotation;
         let alpha = sprite.alpha;
 
-        ctx.save();
-
-        ctx.translate(transX, transY);
-        ctx.rotate(transRot);
-        ctx.globalAlpha = alpha;
+        this.context.save();
+        this.context.translate(transX, transY);
+        this.context.rotate(transRot);
+        this.context.globalAlpha = alpha;
 
         // draw texture
         if(this.textureLoaded(sprite.texture)) {
             let tex = this.#textureCache[sprite.texture];
-            let frame = sprite.frame;
 
-            // if null frame, default to sprite width
-            if(frame == null) {
-                frame = new Frame();
-                frame.width = tex.width;
-                frame.height = tex.height;
+            // if null frame, force sprite to have a frame matching its width
+            if(sprite.frame == null) {
+                sprite.frame = new Frame();
+                sprite.frame.width = tex.width;
+                sprite.frame.height = tex.height;
             }
 
-            ctx.drawImage(
+            this.context.drawImage(
                 tex,
-                frame.left,
-                frame.top,
-                frame.width,
-                frame.height,
-                frame.width / -2 * sprite.scale,
-                frame.height / -2 * sprite.scale,
-                frame.width * sprite.scale,
-                frame.height * sprite.scale
+                sprite.frame.left,
+                sprite.frame.top,
+                sprite.frame.width,
+                sprite.frame.height,
+                sprite.frame.width / -2 * sprite.scale,
+                sprite.frame.height / -2 * sprite.scale,
+                sprite.frame.width * sprite.scale,
+                sprite.frame.height * sprite.scale
             );
 
             // draw debug visualizations
             if(FrostFlake.Game.showDebug) {
-                ctx.strokeStyle = "white";
-                ctx.strokeRect(
-                    -frame.width / 2 * sprite.scale,
-                    -frame.height / 2 * sprite.scale,
-                    frame.width * sprite.scale,
-                    frame.height * sprite.scale);
+                
+                // draw sprite bounds
+                this.context.strokeStyle = "LightGray";
+                this.context.strokeRect(
+                    -sprite.frame.width / 2 * sprite.scale,
+                    -sprite.frame.height / 2 * sprite.scale,
+                    sprite.frame.width * sprite.scale,
+                    sprite.frame.height * sprite.scale);
+
+                // draw collision
+                this.context.strokeStyle = "Red";
+                if(sprite.collision instanceof Circle) {
+                    this.context.beginPath();
+                    this.context.arc(
+                        0,
+                        0,
+                        sprite.collision.radius,
+                        0,
+                        Math.PI * 2
+                    );
+                    this.context.stroke();
+                }
+                else if(sprite.collision instanceof Rectangle) {
+                    this.context.save();
+                    this.strokeStyle = "Red";
+                    this.context.rotate(sprite.collision.absolutePosition.rotation);
+                    this.context.strokeRect(
+                        -sprite.collision.width / 2,
+                        -sprite.collision.height / 2,
+                        sprite.collision.width,
+                        sprite.collision.height
+                    )
+                    this.context.restore();
+                }
+
             }
         }
         // texture hasn't been loaded, load it now
@@ -504,23 +695,24 @@ class CanvasRenderer {
         }
 
         // reset alpha
-        ctx.globalAlpha = 1;
+        this.context.globalAlpha = 1;
 
         // recurse on children
         if(sprite.children.length > 0) {
             for(let i = 0; i < sprite.children.length; i++) {
-                this.drawSprite(sprite.children[i], ctx);
+                this.drawSprite(sprite.children[i], this.context);
             }
         }
 
         // restore context
-        ctx.restore();
+        this.context.restore();
     }
 
     textureLoaded(url) {
         if(url !== null &&
             url in this.#textureCache &&
-            this.#textureCache[url] instanceof HTMLImageElement === true) {
+            this.#textureCache[url] instanceof HTMLImageElement === true &&
+            this.#textureCache[url].complete === true) {
                 return true;
             }
         return false;
@@ -731,13 +923,13 @@ class Log {
     }
 }
 class Cursor {
-    x;
-    y;
-    changeX;
-    changeY;
-    worldX;
-    worldY;
-    isInFrame;
+    x = 0;
+    y = 0;
+    changeX = 0;
+    changeY = 0;
+    worldX = 0;
+    worldY = 0;
+    isInFrame = false;
 
     update() {
         this.worldX = FrostFlake.Game.camera.x + this.x;
@@ -1100,7 +1292,7 @@ class FrostFlake {
 
         this.time = new GameTime();
         this.camera = new Camera(this.canvas.width, this.canvas.height);
-        this.renderer = new CanvasRenderer();
+        this.renderer = new CanvasRenderer(this.canvas);
 
         let me = this;
         this.#timer = window.setInterval( function () {
@@ -1111,8 +1303,8 @@ class FrostFlake {
     update() {
         this.time.update();
         this.camera.update();
-        this.view.update();
         this.input.update();
+        this.view.update();
         this.renderer.draw(this.view.children, this.camera, this.canvas, this.background);
     }
 
