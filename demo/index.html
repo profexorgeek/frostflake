@@ -7,7 +7,7 @@
         <canvas id="frostFlake" width="640" height="480"></canvas>
 
         <!-- DEV: include all files -->
-        <script type='text/javascript' src='/src/GameTime.js'></script>
+        <!-- <script type='text/javascript' src='/src/GameTime.js'></script>
         <script type='text/javascript' src='/src/Utility/MathUtil.js'></script>
         <script type='text/javascript' src='/src/Positionables/RepositionType.js'></script>
         <script type='text/javascript' src='/src/Positionables/Positionable.js'></script>
@@ -25,10 +25,10 @@
         <script type='text/javascript' src='/src/Input/Keys.js'></script>
         <script type='text/javascript' src='/src/Input/Mouse.js'></script>
         <script type='text/javascript' src='/src/Input/Input.js'></script>
-        <script type='text/javascript' src='/src/FrostFlake.js'></script>
+        <script type='text/javascript' src='/src/FrostFlake.js'></script> -->
 
         <!-- PROD: include built file-->
-        <!-- <script type="text/javascript" src="/build/frostflake.concat.js"></script> -->
+        <script type="text/javascript" src="/build/frostflake.concat.js"></script>
 
         <script>
 
@@ -40,7 +40,7 @@
         let ff = new FrostFlake(canvas, 60);
 
         // turn debug visualizations on or off
-        ff.showDebug = true;
+        ff.showDebug = false;
 
         // start running the game
         ff.start();
@@ -229,13 +229,12 @@
                 }
 
                 // make some things to collide
-                for(let i = 0; i < 200; i++) {
+                for(let i = 0; i < 25; i++) {
                     var s = new Sprite('Content/frostflake.png');
-                    s.collision.radius = 8;
-                    s.scale = 0.5;
                     s.position.x = MathUtil.randomInRange(-200, 200);
                     s.position.y = MathUtil.randomInRange(-200, 200);
-                    s.velocity.x = 150;
+                    s.velocity.x = MathUtil.randomInRange(-300, 300);
+                    s.velocity.y = MathUtil.randomInRange(-300, 300);
                     this.objects.push(s);
                     this.addChild(s);
                 }
@@ -252,20 +251,18 @@
                         let obj2 = this.objects[j];
 
                         if(obj != obj2) {
-                            obj.collision.collideWith(obj2.collision, RepositionType.Bounce, 0.5, 0.5);
+                            obj.collision.collideWith(obj2.collision, RepositionType.Bounce, 0.5, 0.5, 1);
                         }
                     }
 
                     // collide with walls
                     for(let k = this.walls.length - 1; k > -1; k--) {
                         let wall = this.walls[k];
-                        obj.collision.collideWith(wall.collision, RepositionType.Bounce, 0, 1);
+                        obj.collision.collideWith(wall.collision, RepositionType.Bounce, 0, 1, 1);
                     }
                 }
             }
         }
-
-        ff.view = new CollisionDemo();
     </script>
 </body>
 
