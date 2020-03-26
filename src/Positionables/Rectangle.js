@@ -26,10 +26,10 @@ class Rectangle extends Shape {
 
     collideWith(shape, repoType = RepositionType.None, thisWeight = 1, targetWeight = 0, repoForce = 1) {
         if(shape instanceof Circle) {
-            Shape.collideCircleVsRect(shape, this, repoType, targetWeight, thisWeight, repoForce);
+            return Shape.collideCircleVsRect(shape, this, repoType, targetWeight, thisWeight, repoForce);
         }
         else if(shape instanceof Rectangle) {
-            Shape.collideRectVsRect(this, shape, repoType, thisWeight, targetWeight, repoForce);
+            return Shape.collideRectVsRect(this, shape, repoType, thisWeight, targetWeight, repoForce);
         }
     }
 }
