@@ -92,39 +92,12 @@ class CanvasRenderer {
             if(FrostFlake.Game.showDebug) {
                 
                 // draw sprite bounds
-                this.context.strokeStyle = "LightGray";
+                this.context.strokeStyle = "rgba(255, 255, 255, 0.3)";
                 this.context.strokeRect(
                     -sprite.frame.width / 2 * sprite.scale,
                     -sprite.frame.height / 2 * sprite.scale,
                     sprite.frame.width * sprite.scale,
                     sprite.frame.height * sprite.scale);
-
-                // draw collision
-                this.context.strokeStyle = "Red";
-                if(sprite.collision instanceof Circle) {
-                    this.context.beginPath();
-                    this.context.arc(
-                        0,
-                        0,
-                        sprite.collision.radius,
-                        0,
-                        Math.PI * 2
-                    );
-                    this.context.stroke();
-                }
-                else if(sprite.collision instanceof Rectangle) {
-                    this.context.save();
-                    this.strokeStyle = "Red";
-                    this.context.rotate(sprite.collision.absolutePosition.rotation);
-                    this.context.strokeRect(
-                        -sprite.collision.width / 2,
-                        -sprite.collision.height / 2,
-                        sprite.collision.width,
-                        sprite.collision.height
-                    )
-                    this.context.restore();
-                }
-
             }
         }
         // texture hasn't been loaded, load it now
@@ -134,6 +107,34 @@ class CanvasRenderer {
 
         // reset alpha
         this.context.globalAlpha = 1;
+
+        // draw collision shapes
+        if(FrostFlake.Game.showDebug) {
+            this.context.strokeStyle = "Red";
+            if(sprite.collision instanceof Circle) {
+                this.context.beginPath();
+                this.context.arc(
+                    0,
+                    0,
+                    sprite.collision.radius,
+                    0,
+                    Math.PI * 2
+                );
+                this.context.stroke();
+            }
+            else if(sprite.collision instanceof Rectangle) {
+                this.context.save();
+                this.strokeStyle = "Red";
+                this.context.rotate(sprite.collision.absolutePosition.rotation);
+                this.context.strokeRect(
+                    -sprite.collision.width / 2,
+                    -sprite.collision.height / 2,
+                    sprite.collision.width,
+                    sprite.collision.height
+                )
+                this.context.restore();
+            }
+        }
 
         // recurse on children
         if(sprite.children.length > 0) {
