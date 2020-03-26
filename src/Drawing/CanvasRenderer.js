@@ -160,8 +160,8 @@ class CanvasRenderer {
         let xhr = new XMLHttpRequest();
         let me = this;
 
-        // return if we've already started loading this
-        if(url in this.#textureCache) {
+        // return on bad URL or loading in progress
+        if(url == '' || url == null || url in this.#textureCache) {
             return;
         }
 
