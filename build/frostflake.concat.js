@@ -518,10 +518,10 @@ class Circle extends Shape {
 
     collideWith(shape, repoType = RepositionType.None, thisWeight = 1, targetWeight = 0, repoForce = 1) {
         if(shape instanceof Circle) {
-            Shape.collideCircleVsCircle(this, shape, repoType, thisWeight, targetWeight, repoForce);
+            return Shape.collideCircleVsCircle(this, shape, repoType, thisWeight, targetWeight, repoForce);
         }
         else if(shape instanceof Rectangle) {
-            Shape.collideCircleVsRect(this, shape, repoType, thisWeight, targetWeight, repoForce);
+            return Shape.collideCircleVsRect(this, shape, repoType, thisWeight, targetWeight, repoForce);
         }
     }
 }
@@ -553,10 +553,10 @@ class Rectangle extends Shape {
 
     collideWith(shape, repoType = RepositionType.None, thisWeight = 1, targetWeight = 0, repoForce = 1) {
         if(shape instanceof Circle) {
-            Shape.collideCircleVsRect(shape, this, repoType, targetWeight, thisWeight, repoForce);
+            return Shape.collideCircleVsRect(shape, this, repoType, targetWeight, thisWeight, repoForce);
         }
         else if(shape instanceof Rectangle) {
-            Shape.collideRectVsRect(this, shape, repoType, thisWeight, targetWeight, repoForce);
+            return Shape.collideRectVsRect(this, shape, repoType, thisWeight, targetWeight, repoForce);
         }
     }
 }
@@ -654,39 +654,12 @@ class CanvasRenderer {
             if(FrostFlake.Game.showDebug) {
                 
                 // draw sprite bounds
-                this.context.strokeStyle = "LightGray";
+                this.context.strokeStyle = "rgba(255, 255, 255, 0.3)";
                 this.context.strokeRect(
                     -sprite.frame.width / 2 * sprite.scale,
                     -sprite.frame.height / 2 * sprite.scale,
                     sprite.frame.width * sprite.scale,
                     sprite.frame.height * sprite.scale);
-
-                // draw collision
-                this.context.strokeStyle = "Red";
-                if(sprite.collision instanceof Circle) {
-                    this.context.beginPath();
-                    this.context.arc(
-                        0,
-                        0,
-                        sprite.collision.radius,
-                        0,
-                        Math.PI * 2
-                    );
-                    this.context.stroke();
-                }
-                else if(sprite.collision instanceof Rectangle) {
-                    this.context.save();
-                    this.strokeStyle = "Red";
-                    this.context.rotate(sprite.collision.absolutePosition.rotation);
-                    this.context.strokeRect(
-                        -sprite.collision.width / 2,
-                        -sprite.collision.height / 2,
-                        sprite.collision.width,
-                        sprite.collision.height
-                    )
-                    this.context.restore();
-                }
-
             }
         }
         // texture hasn't been loaded, load it now
@@ -696,6 +669,34 @@ class CanvasRenderer {
 
         // reset alpha
         this.context.globalAlpha = 1;
+
+        // draw collision shapes
+        if(FrostFlake.Game.showDebug) {
+            this.context.strokeStyle = "Red";
+            if(sprite.collision instanceof Circle) {
+                this.context.beginPath();
+                this.context.arc(
+                    0,
+                    0,
+                    sprite.collision.radius,
+                    0,
+                    Math.PI * 2
+                );
+                this.context.stroke();
+            }
+            else if(sprite.collision instanceof Rectangle) {
+                this.context.save();
+                this.strokeStyle = "Red";
+                this.context.rotate(sprite.collision.absolutePosition.rotation);
+                this.context.strokeRect(
+                    -sprite.collision.width / 2,
+                    -sprite.collision.height / 2,
+                    sprite.collision.width,
+                    sprite.collision.height
+                )
+                this.context.restore();
+            }
+        }
 
         // recurse on children
         if(sprite.children.length > 0) {
@@ -722,8 +723,8 @@ class CanvasRenderer {
         let xhr = new XMLHttpRequest();
         let me = this;
 
-        // return if we've already started loading this
-        if(url in this.#textureCache) {
+        // return on bad URL or loading in progress
+        if(url == '' || url == null || url in this.#textureCache) {
             return;
         }
 
