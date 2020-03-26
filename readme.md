@@ -45,16 +45,17 @@ To build the engine:
 1. Use `npm run-script build` to concatenate, transpile and minify the source
 1. Use `npm start` to serve the directory with `http-server`
 
-## Future features
+## Contribute
 
-Here are some things I'd like to add. If you want to contribute, these are features you could take:
+Here are features I'd like to add. This is a good place to start if you want to contribute. Keep in mind that the point of this engine is simplicity for beginners so please reach out if you plan to PR a new feature!
 
-- [x] Circle vs circle collision with basic physics
-- [x] AAR vs AAR collision with basic physics
-- [x] AAR vs circle collision with basic physics
+- [ ] Improved build system (source map generation is not working correctly)
 - [ ] [TMX Tilemap](https://mapeditor.org) loading
 - [ ] Improve asset loading and texture buffering
 - [ ] Create a render target demo
 - [ ] Add color property to shapes and use it when rendering debug outlines
 - [ ] Touch input system (currently only Mouse and Keyboard are supported)
 - [ ] Audio playing system
+- [x] Circle vs circle collision with basic physics
+- [x] AAR vs AAR collision with basic physics
+- [x] AAR vs circle collision with basic physics
