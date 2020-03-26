@@ -7,7 +7,7 @@
         <canvas id="frostFlake" width="640" height="480"></canvas>
 
         <!-- DEV: include all files -->
-        <!-- <script type='text/javascript' src='/src/GameTime.js'></script>
+        <script type='text/javascript' src='/src/GameTime.js'></script>
         <script type='text/javascript' src='/src/Utility/MathUtil.js'></script>
         <script type='text/javascript' src='/src/Positionables/RepositionType.js'></script>
         <script type='text/javascript' src='/src/Positionables/Positionable.js'></script>
@@ -25,10 +25,10 @@
         <script type='text/javascript' src='/src/Input/Keys.js'></script>
         <script type='text/javascript' src='/src/Input/Mouse.js'></script>
         <script type='text/javascript' src='/src/Input/Input.js'></script>
-        <script type='text/javascript' src='/src/FrostFlake.js'></script> -->
+        <script type='text/javascript' src='/src/FrostFlake.js'></script>
 
         <!-- PROD: include built file-->
-        <script type="text/javascript" src="/build/frostflake.concat.js"></script>
+        <!-- <script type="text/javascript" src="/build/frostflake.concat.js"></script> -->
 
         <script>
 
@@ -249,16 +249,19 @@
                     // collide with other objects
                     for(let j = i; j > -1; j--) {
                         let obj2 = this.objects[j];
-
                         if(obj != obj2) {
-                            obj.collision.collideWith(obj2.collision, RepositionType.Bounce, 0.5, 0.5, 1);
+                            if(obj.collision.collideWith(obj2.collision, RepositionType.Bounce, 0.5, 0.5, 1) == true) {
+                                obj.velocity.rotation = MathUtil.randomInRange(-3, 3);
+                            }
                         }
                     }
 
                     // collide with walls
                     for(let k = this.walls.length - 1; k > -1; k--) {
                         let wall = this.walls[k];
-                        obj.collision.collideWith(wall.collision, RepositionType.Bounce, 0, 1, 1);
+                        if(obj.collision.collideWith(wall.collision, RepositionType.Bounce, 0, 1, 1) == true) {
+                            obj.velocity.rotation = MathUtil.randomInRange(-3, 3);
+                        }
                     }
                 }
             }
