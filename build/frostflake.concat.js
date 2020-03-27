@@ -1213,6 +1213,12 @@ class Input {
     }
 
     stopPropagation(e) {
+        // HACK: browsers require a user interaction
+        // before they can play audio. When we stop
+        // event propagation, we also make sure audio
+        // is enabled
+        FrostFlake.Game.audio.enable();
+
         if(this.cursor.isInFrame) {
             e.preventDefault();
         }
@@ -1259,6 +1265,92 @@ class Input {
         this.stopPropagation(e);
     }
 }
+class Audio {
+    context;
+
+    #audioCache = {};
+
+    constructor() {
+        this.context = new AudioContext();
+    }
+
+    enable() {
+        if(this.context.state === 'suspended') {
+            this.context.resume();
+        }
+    }
+
+    playSound(url) {
+        // TODO: cache created buffers for reuse?
+        if(this.audioLoaded(url)) {
+            let src = this.context.createBufferSource();
+            src.buffer = this.#audioCache[url];
+            src.connect(this.context.destination);
+            src.start(0);
+            return src;
+        }
+        else {
+            FrostFlake.Log.warn(`Audio not loaded ${url}, attempting to load now.`);
+            this.loadSound(url);
+            return null;
+        }
+    }
+
+    audioLoaded(url) {
+        if(url !== null && 
+            url !== '' &&
+            url in this.#audioCache && 
+            this.#audioCache[url] instanceof AudioBuffer) {
+                return true;
+            }
+        return false;
+    }
+
+    loadSound(url, success = null) {
+        let xhr = new XMLHttpRequest();
+        let me = this;
+
+        // EARLY OUT: bad URL, audio context, or loading in progress
+        if(url == '' || 
+            url == null || 
+            url in this.#audioCache ||
+            this.context.state != 'running') {
+            return;
+        }
+
+        // insert placeholder so audio isn't loaded multiple times
+        // if load requests fire quickly
+        me.#audioCache[url] = "...";
+
+        xhr.addEventListener('readystatechange', () => {
+            if(xhr.readyState == XMLHttpRequest.DONE) {
+                if(xhr.status === 200) {
+                    if(xhr.response instanceof ArrayBuffer) {
+                        me.context.decodeAudioData(xhr.response,
+                            // decode succeeded
+                            function(decoded) {
+                                me.#audioCache[url] = decoded;
+                            },
+                            // failed to decode
+                            function() {
+                                FrostFlake.Log.error(`Failed to decode audio for: ${url}`);
+                            });
+                    }
+                    else {
+                        FrostFlake.Log.error(`Response was not an ArrayBuffer: ${url}`);
+                    }
+                }
+                else {
+                    FrostFlake.Log.error(`Failed to load ${url} with response ${xhr.status}`);
+                }
+            }
+        });
+
+        xhr.responseType = 'arraybuffer';
+        xhr.open('GET', url, true);
+        xhr.send();
+    }
+}
 class FrostFlake {
 
     static Game;
@@ -1273,6 +1365,7 @@ class FrostFlake {
     view;
     background;
     input;
+    audio;
     showDebug = false;
 
     constructor(canvas, fps = 30, background = "rgb(0,0,0)") {
@@ -1284,6 +1377,7 @@ class FrostFlake {
         this.background = background;
         this.input = new Input();
         this.view = new View();
+        this.audio = new Audio();
 
         FrostFlake.Log.info("FrostFlake instance created...");
     }
@@ -1304,8 +1398,14 @@ class FrostFlake {
     update() {
         this.time.update();
         this.camera.update();
-        this.input.update();
         this.view.update();
+
+        // Note: input must be updated after the view
+        // this is because an input could come in and
+        // be cleared before the view is updated and
+        // can respond in the game loop
+        this.input.update();
+
         this.renderer.draw(this.view.children, this.camera, this.canvas, this.background);
     }
 

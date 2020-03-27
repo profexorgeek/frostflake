@@ -39,6 +39,7 @@ concat([
     './src/Input/Keys.js',
     './src/Input/Mouse.js',
     './src/Input/Input.js',
+    './src/Audio/Audio.js',
     './src/FrostFlake.js',
 ])
 .then(result => {
