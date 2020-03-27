@@ -25,6 +25,7 @@
         <script type='text/javascript' src='/src/Input/Keys.js'></script>
         <script type='text/javascript' src='/src/Input/Mouse.js'></script>
         <script type='text/javascript' src='/src/Input/Input.js'></script>
+        <script type='text/javascript' src='/src/Audio/Audio.js'></script>
         <script type='text/javascript' src='/src/FrostFlake.js'></script>
 
         <!-- PROD: include built file-->
@@ -55,7 +56,7 @@
                 super();
 
                 for (var i = 0; i < 2000; i++) {
-                    var s = new Sprite('Content/frostflake.png');
+                    var s = new Sprite('content/frostflake.png');
                     s.x = MathUtil.randomInRange(-300, 300);
                     s.y = MathUtil.randomInRange(-200, 200);
                     s.alpha = MathUtil.randomInRange(0.2, 0.85);
@@ -74,18 +75,18 @@
                 super();
 
                 // create a parent sprite and add it to the View sprites
-                this.parentFlake = new Sprite('Content/frostflake.png');
+                this.parentFlake = new Sprite('content/frostflake.png');
                 this.parentFlake.velocity.rotation = 3;
                 this.addChild(this.parentFlake);
 
                 // create and attach a child sprite
-                this.childFlake1 = new Sprite('Content/frostflake.png');
+                this.childFlake1 = new Sprite('content/frostflake.png');
                 this.childFlake1.x = -40;
                 this.childFlake1.velocity.rotation = -5;
                 this.parentFlake.addChild(this.childFlake1);
 
                 // create and attach a child sprite
-                this.childFlake2 = new Sprite('Content/frostflake.png');
+                this.childFlake2 = new Sprite('content/frostflake.png');
                 this.childFlake2.x = 40;
                 this.childFlake2.velocity.rotation = 5;
                 this.parentFlake.addChild(this.childFlake2);
@@ -101,7 +102,7 @@
 
                 // create some sprites so camera movement is visible
                 for (var i = 0; i < 10; i++) {
-                    var s = new Sprite('Content/frostflake.png');
+                    var s = new Sprite('content/frostflake.png');
                     s.x = MathUtil.randomInRange(-300, 300);
                     s.y = MathUtil.randomInRange(-200, 200);
                     s.alpha = MathUtil.randomInRange(0.2, 0.85);
@@ -110,9 +111,12 @@
                 }
 
                 // create a sprite based on part of a sprite sheet and add it to the View
-                this.cursorSprite = new Sprite('Content/spritesheet.png');
+                this.cursorSprite = new Sprite('content/spritesheet.png');
                 this.cursorSprite.frame = new Frame(32, 0, 32, 32);
                 this.addChild(this.cursorSprite);
+
+                // load the audio
+                FrostFlake.Game.audio.loadSound('content/laser.wav');
             }
 
             update() {
@@ -146,12 +150,9 @@
                 this.cursorSprite.x = cursor.worldX;
                 this.cursorSprite.y = cursor.worldY;
 
-                // make cursor rotate when clicked
-                if (input.buttonDown(Mouse.Left)) {
-                    this.cursorSprite.velocity.rotation = -5;
-                }
-                else {
-                    this.cursorSprite.velocity.rotation = 0;
+                // play sound when clicked
+                if (input.buttonPushed(Mouse.Left)) {
+                    FrostFlake.Game.audio.playSound('content/laser.wav');
                 }
             }
         }
@@ -165,7 +166,7 @@
 
                 // create an animation with three, one-second frames
                 this.runCycle = new Animation();
-                this.runCycle.texture = 'Content/spritesheet.png';
+                this.runCycle.texture = 'content/spritesheet.png';
                 this.runCycle.frames = [];
 
                 // use a loop to add 8 frames in a row from the spritesheet
@@ -193,7 +194,7 @@
 
                 // make some walls from sprites
                 for(let x = 0; x < 20; x++) {
-                    var w1 = new Sprite('Content/spritesheet.png');
+                    var w1 = new Sprite('content/spritesheet.png');
                     w1.collision = new Rectangle(32, 32);
                     w1.frame = new Frame(7 * 32, 1 * 32, 32, 32);
                     w1.x = -320 + (x * 32) + 16;
@@ -201,7 +202,7 @@
                     this.walls.push(w1);
                     this.addChild(w1);
 
-                    var w2 = new Sprite('Content/spritesheet.png');
+                    var w2 = new Sprite('content/spritesheet.png');
                     w2.collision = new Rectangle(32, 32);
                     w2.frame = new Frame(7 * 32, 1 * 32, 32, 32);
                     w2.x = -320 + (x * 32) + 16;
@@ -211,7 +212,7 @@
                 }
 
                 for(let y = 0; y < 14; y++) {
-                    var w1 = new Sprite('Content/spritesheet.png');
+                    var w1 = new Sprite('content/spritesheet.png');
                     w1.collision = new Rectangle(32, 32);
                     w1.frame = new Frame(7 * 32, 1 * 32, 32, 32);
                     w1.x = -320 + 16;
@@ -219,7 +220,7 @@
                     this.walls.push(w1);
                     this.addChild(w1);
 
-                    var w2 = new Sprite('Content/spritesheet.png');
+                    var w2 = new Sprite('content/spritesheet.png');
                     w2.collision = new Rectangle(32, 32);
                     w2.frame = new Frame(7 * 32, 1 * 32, 32, 32);
                     w2.x = 320 - 16;
@@ -230,7 +231,7 @@
 
                 // make some things to collide
                 for(let i = 0; i < 25; i++) {
-                    var s = new Sprite('Content/frostflake.png');
+                    var s = new Sprite('content/frostflake.png');
                     s.position.x = MathUtil.randomInRange(-200, 200);
                     s.position.y = MathUtil.randomInRange(-200, 200);
                     s.velocity.x = MathUtil.randomInRange(-300, 300);
