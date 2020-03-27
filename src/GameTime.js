@@ -5,7 +5,7 @@ class GameTime {
     // to zero. Prevents runaway game behavior if major
     // hiccups happen
     static MAX_FRAME_DELTA = 500;
-    static FPS_SAMPLES = 60;
+    static FPS_SAMPLES = 120;
 
     startTime;
     lastFrameTime;
