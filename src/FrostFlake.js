@@ -43,8 +43,14 @@ class FrostFlake {
     update() {
         this.time.update();
         this.camera.update();
-        this.input.update();
         this.view.update();
+
+        // Note: input must be updated after the view
+        // this is because an input could come in and
+        // be cleared before the view is updated and
+        // can respond in the game loop
+        this.input.update();
+
         this.renderer.draw(this.view.children, this.camera, this.canvas, this.background);
     }
 
