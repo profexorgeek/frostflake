@@ -5,7 +5,7 @@ class Data {
         xhr.addEventListener('readystatechange', () => {
             if(xhr.readyState === XMLHttpRequest.DONE) {
                 if(xhr.status === 200) {
-                    FrostFlake.Log.info(`Successfully loaded ${url}.`);
+                    FrostFlake.Log.info(`Successfully loaded: ${url}.`);
 
                     if(success) {
                         success(xhr.response);
@@ -31,9 +31,8 @@ class Data {
         Data.load(url, 'json',
             // success
             function(response) {
-                let obj = JSON.parse(response);
                 if(success) {
-                    success(obj);
+                    success(response);
                 }
             },
             fail);
