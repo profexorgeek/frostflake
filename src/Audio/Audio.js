@@ -40,7 +40,6 @@ class Audio {
     }
 
     loadSound(url, success = null) {
-        let xhr = new XMLHttpRequest();
         let me = this;
 
         // EARLY OUT: bad URL, audio context, or loading in progress
@@ -55,32 +54,27 @@ class Audio {
         // if load requests fire quickly
         me.#audioCache[url] = "...";
 
-        xhr.addEventListener('readystatechange', () => {
-            if(xhr.readyState == XMLHttpRequest.DONE) {
-                if(xhr.status === 200) {
-                    if(xhr.response instanceof ArrayBuffer) {
-                        me.context.decodeAudioData(xhr.response,
-                            // decode succeeded
-                            function(decoded) {
-                                me.#audioCache[url] = decoded;
-                            },
-                            // failed to decode
-                            function() {
-                                FrostFlake.Log.error(`Failed to decode audio for: ${url}`);
-                            });
-                    }
-                    else {
-                        FrostFlake.Log.error(`Response was not an ArrayBuffer: ${url}`);
-                    }
+        Data.load(url, 'arraybuffer',
+            // success
+            function(response) {
+                if(response instanceof ArrayBuffer) {
+                    me.context.decodeAudioData(response,
+                        // decode succeeded
+                        function(decoded) {
+                            me.#audioCache[url] = decoded;
+                        },
+                        // failed to decode
+                        function() {
+                            FrostFlake.Log.error(`Failed to decode audio for: ${url}`);
+                        });
                 }
                 else {
-                    FrostFlake.Log.error(`Failed to load ${url} with response ${xhr.status}`);
+                    FrostFlake.Log.error(`Response was not an ArrayBuffer: ${url}`);
                 }
-            }
-        });
-
-        xhr.responseType = 'arraybuffer';
-        xhr.open('GET', url, true);
-        xhr.send();
+            },
+            // fail
+            function(response) {
+                FrostFlake.Log.error(`Failed to load ${url} with response ${xhr.status}`);
+            });
     }
 }

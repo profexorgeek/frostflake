@@ -158,10 +158,10 @@ class CanvasRenderer {
     }
 
     loadTexture(url, success = null) {
-        let xhr = new XMLHttpRequest();
+        
         let me = this;
 
-        // return on bad URL or loading in progress
+        // EARLY OUT: bad URL or loading in progress
         if(url == '' || url == null || url in this.#textureCache) {
             return;
         }
@@ -169,22 +169,17 @@ class CanvasRenderer {
         // insert placeholder so images aren't loaded
         // multiple times if load requests are fired quickly
         me.#textureCache[url] = "...";
-        
-        xhr.addEventListener('readystatechange', () => {
-            if(xhr.readyState === XMLHttpRequest.DONE) {
-                if(xhr.status === 200) {
-                    let img = document.createElement('img');
-                    img.src = URL.createObjectURL(xhr.response);
-                    me.#textureCache[url] = img;
-                }
-                else {
-                    throw `Failed to load ${url}`;
-                }
-            }
-        });
 
-        xhr.responseType = 'blob';
-        xhr.open('GET', url, true);
-        xhr.send();
+        Data.load(url, 'blob',
+            // success
+            function(response) {
+                let img = document.createElement('img');
+                img.src = URL.createObjectURL(response);
+                me.#textureCache[url] = img;
+            },
+            // fail
+            function(response) {
+                FrostFlake.Log.error(`Failed to load image ${url}`);
+            });
     }
 }
