@@ -55,6 +55,12 @@ class Input {
     }
 
     stopPropagation(e) {
+        // HACK: browsers require a user interaction
+        // before they can play audio. When we stop
+        // event propagation, we also make sure audio
+        // is enabled
+        FrostFlake.Game.audio.enable();
+
         if(this.cursor.isInFrame) {
             e.preventDefault();
         }

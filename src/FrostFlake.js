@@ -12,6 +12,7 @@ class FrostFlake {
     view;
     background;
     input;
+    audio;
     showDebug = false;
 
     constructor(canvas, fps = 30, background = "rgb(0,0,0)") {
@@ -23,6 +24,7 @@ class FrostFlake {
         this.background = background;
         this.input = new Input();
         this.view = new View();
+        this.audio = new Audio();
 
         FrostFlake.Log.info("FrostFlake instance created...");
     }
