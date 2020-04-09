@@ -37,16 +37,6 @@ class TilemapView extends View {
             this.tilemapLoaded == false) {
                 this.createTiles();
         }
-
-        if(this.tilemapLoaded) {
-            for(let i = this.collidables.length - 1; i > -1; i--) {
-                let tile = this.collidables[i];
-                this.testBall.collision.collideWith(tile.collision, RepositionType.Bounce, 0, 1);
-            }
-
-            FrostFlake.Game.camera.x = this.testBall.x;
-            FrostFlake.Game.camera.y = this.testBall.y;
-        }
     }
 
     createTiles() {
@@ -105,6 +95,7 @@ class TilemapView extends View {
                         frameY * set.tileheight,
                         set.tilewidth,
                         set.tileheight);
+                    sprite.layer = i;
                     sprite.collision = new Rectangle(0, 0);
                     sprite.position.x = Math.floor(j % layer.height) * set.tileheight + startX;
                     sprite.position.y = Math.floor(j / layer.width) * -set.tilewidth + startY;
