@@ -6,7 +6,14 @@
     <body>
         <canvas id="frostFlake" width="640" height="480"></canvas>
 
-        <!-- DEV: include all files -->
+        <button id="Empty">Empty View</button>
+        <button id="ManySpritesDemo">2,000 Sprite Demo</button>
+        <button id="InputDemo">Input Demo</button>
+        <button id="ParentChildDemo">Parent Child Demo</button>
+        <button id="AnimationDemo">Animation Demo</button>
+        <button id="CollisionDemo">Collision Demo</button>
+
+        <!-- FrostFlake Source: include all files for each debugging -->
         <script type='text/javascript' src='/src/GameTime.js'></script>
         <script type='text/javascript' src='/src/Data/Data.js'></script>
         <script type='text/javascript' src='/src/Utility/MathUtil.js'></script>
@@ -30,258 +37,43 @@
         <script type='text/javascript' src='/src/Audio/Audio.js'></script>
         <script type='text/javascript' src='/src/FrostFlake.js'></script>
 
-        <!-- PROD: include built file-->
-        <!-- <script type="text/javascript" src="/build/frostflake.concat.js"></script> -->
+        <!-- Demo: Each of these files demonstrates how to FrostFlake features -->
+        <script type='text/javascript' src='/demo/js/ManySpritesDemo.js'></script>
+        <script type='text/javascript' src='/demo/js/InputDemo.js'></script>
+        <script type='text/javascript' src='/demo/js/ParentChildDemo.js'></script>
+        <script type='text/javascript' src='/demo/js/AnimationDemo.js'></script>
+        <script type='text/javascript' src='/demo/js/CollisionDemo.js'></script>
 
         <script>
 
         // get a reference to the canvas element
         let canvas = document.getElementById('frostFlake');
 
-        // initialize frostflake with a reference to the canvas
-        // and a target framerate
+        // initialize frostflake with a reference to the canvas and target FPS
         let ff = new FrostFlake(canvas, 60);
 
         // turn debug visualizations on or off
         ff.showDebug = false;
 
-        // start running the game
+        // start the game engine
         ff.start();
 
-        // Each of the following demo classes shows how
-        // to use basic engine features. Load one of these
-        // demo classes by typing the following command
-        // in your browser's JavaScript console:
-        // ff.view = new DemoClassName();
-        class ManySpriteDemo extends View {
-            constructor() {
-                super();
 
-                for (var i = 0; i < 2000; i++) {
-                    var s = new Sprite('content/frostflake.png');
-                    s.x = MathUtil.randomInRange(-300, 300);
-                    s.y = MathUtil.randomInRange(-200, 200);
-                    s.alpha = MathUtil.randomInRange(0.2, 0.85);
-                    s.velocity.rotation = MathUtil.randomInRange(-3, 3);
-                    this.addChild(s);
+        // make button clicks switch demo views
+        let buttons = document.getElementsByTagName('button');
+        for(let i = 0; i < buttons.length; i++) {
+            let view = buttons[i].id;
+            buttons[i].addEventListener('click', evt => {
+                console.clear();
+                ff.camera.reset();
+                if(view == "Empty") {
+                    ff.view = new View();
                 }
-            }
+                else {
+                    ff.view = eval(`new ${view}`);
+                }
+            });
         }
-
-        class ParentChildDemo extends View {
-            parentFlake;
-            childFlake1;
-            childFlake2;
-
-            constructor() {
-                super();
-
-                // create a parent sprite and add it to the View sprites
-                this.parentFlake = new Sprite('content/frostflake.png');
-                this.parentFlake.velocity.rotation = 3;
-                this.addChild(this.parentFlake);
-
-                // create and attach a child sprite
-                this.childFlake1 = new Sprite('content/frostflake.png');
-                this.childFlake1.x = -40;
-                this.childFlake1.velocity.rotation = -5;
-                this.parentFlake.addChild(this.childFlake1);
-
-                // create and attach a child sprite
-                this.childFlake2 = new Sprite('content/frostflake.png');
-                this.childFlake2.x = 40;
-                this.childFlake2.velocity.rotation = 5;
-                this.parentFlake.addChild(this.childFlake2);
-            }
-        }
-
-        class InputDemo extends View {
-
-            cursorSprite;
-
-            constructor() {
-                super();
-
-                // create some sprites so camera movement is visible
-                for (var i = 0; i < 10; i++) {
-                    var s = new Sprite('content/frostflake.png');
-                    s.x = MathUtil.randomInRange(-300, 300);
-                    s.y = MathUtil.randomInRange(-200, 200);
-                    s.alpha = MathUtil.randomInRange(0.2, 0.85);
-                    s.velocity.rotation = MathUtil.randomInRange(-3, 3);
-                    this.addChild(s);
-                }
-
-                // create a sprite based on part of a sprite sheet and add it to the View
-                this.cursorSprite = new Sprite('content/spritesheet.png');
-                this.cursorSprite.frame = new Frame(32, 0, 32, 32);
-                this.addChild(this.cursorSprite);
-
-                // load the audio
-                FrostFlake.Game.audio.loadSound('content/laser.wav');
-            }
-
-            update() {
-                super.update();
-
-                // shortcuts
-                let input = FrostFlake.Game.input;
-                let cursor = input.cursor;
-                let cam = FrostFlake.Game.camera;
-
-                // give the camera drag so it slows down when
-                // no buttons are pushed.
-                cam.drag = 3;
-
-                // move the camera when WASD pushed
-                if (input.keyDown(Keys.W)) {
-                    cam.velocity.y = 100;
-                }
-                else if (input.keyDown(Keys.S)) {
-                    cam.velocity.y = -100;
-                }
-
-                if (input.keyDown(Keys.A)) {
-                    cam.velocity.x = -100;
-                }
-                else if (input.keyDown(Keys.D)) {
-                    cam.velocity.x = 100;
-                }
-
-                // make cursorSprite follow hardware cursor
-                this.cursorSprite.x = cursor.worldX;
-                this.cursorSprite.y = cursor.worldY;
-
-                // play sound when clicked
-                if (input.buttonPushed(Mouse.Left)) {
-                    FrostFlake.Game.audio.playSound('content/laser.wav');
-                }
-            }
-        }
-
-        class AnimationDemo extends View {
-            runCycle;
-            sprite;
-
-            constructor() {
-                super();
-
-                // create an animation with three, one-second frames
-                this.runCycle = new Animation();
-                this.runCycle.texture = 'content/spritesheet.png';
-                this.runCycle.frames = [];
-
-                // use a loop to add 8 frames in a row from the spritesheet
-                for(let i = 0; i < 8; i++) {
-                    this.runCycle.frames.push(new Frame(i * 16, 160, 16, 16, 0.1));
-                }
-
-                // create a sprite and set the animation
-                // the sprite is really small so turn up its scale
-                this.sprite = new Sprite();
-                this.sprite.scale = 3;
-                this.sprite.animation = this.runCycle;
-
-                this.addChild(this.sprite);
-            }
-        }
-
-        class CollisionDemo extends View {
-
-            walls = [];
-            objects = [];
-
-            constructor() {
-                super();
-
-                // make some walls from sprites
-                for(let x = 0; x < 20; x++) {
-                    var w1 = new Sprite('content/spritesheet.png');
-                    w1.collision = new Rectangle(32, 32);
-                    w1.frame = new Frame(7 * 32, 1 * 32, 32, 32);
-                    w1.x = -320 + (x * 32) + 16;
-                    w1.y = 240 - 16;
-                    this.walls.push(w1);
-                    this.addChild(w1);
-
-                    var w2 = new Sprite('content/spritesheet.png');
-                    w2.collision = new Rectangle(32, 32);
-                    w2.frame = new Frame(7 * 32, 1 * 32, 32, 32);
-                    w2.x = -320 + (x * 32) + 16;
-                    w2.y = -240 + 16;
-                    this.walls.push(w2);
-                    this.addChild(w2);
-                }
-
-                for(let y = 0; y < 14; y++) {
-                    var w1 = new Sprite('content/spritesheet.png');
-                    w1.collision = new Rectangle(32, 32);
-                    w1.frame = new Frame(7 * 32, 1 * 32, 32, 32);
-                    w1.x = -320 + 16;
-                    w1.y = -240 + (y * 32) + 16;
-                    this.walls.push(w1);
-                    this.addChild(w1);
-
-                    var w2 = new Sprite('content/spritesheet.png');
-                    w2.collision = new Rectangle(32, 32);
-                    w2.frame = new Frame(7 * 32, 1 * 32, 32, 32);
-                    w2.x = 320 - 16;
-                    w2.y = -240 + (y * 32) + 16;
-                    this.walls.push(w2);
-                    this.addChild(w2);
-                }
-
-                // make some things to collide
-                for(let i = 0; i < 25; i++) {
-                    var s = new Sprite('content/frostflake.png');
-                    s.position.x = MathUtil.randomInRange(-200, 200);
-                    s.position.y = MathUtil.randomInRange(-200, 200);
-                    s.velocity.x = MathUtil.randomInRange(-300, 300);
-                    s.velocity.y = MathUtil.randomInRange(-300, 300);
-                    this.objects.push(s);
-                    this.addChild(s);
-                }
-            }
-
-            update() {
-                super.update();
-
-                for(let i = this.objects.length - 1; i > -1; i--) {
-                    let obj = this.objects[i];
-
-                    // collide with other objects
-                    for(let j = i; j > -1; j--) {
-                        let obj2 = this.objects[j];
-                        if(obj != obj2) {
-                            if(obj.collision.collideWith(obj2.collision, RepositionType.Bounce, 0.5, 0.5, 1) == true) {
-                                obj.velocity.rotation = MathUtil.randomInRange(-3, 3);
-                            }
-                        }
-                    }
-
-                    // collide with walls
-                    for(let k = this.walls.length - 1; k > -1; k--) {
-                        let wall = this.walls[k];
-                        if(obj.collision.collideWith(wall.collision, RepositionType.Bounce, 0, 1, 1) == true) {
-                            obj.velocity.rotation = MathUtil.randomInRange(-3, 3);
-                        }
-                    }
-                }
-            }
-        }
-    
-        class TilemapDemo extends TilemapView {
-            constructor() {
-                super('content/tileset.json', 'content/tilemap.json');
-            }
-
-            update() {
-                super.update();
-            }
-        }
-
-        ff.view = new TilemapDemo();
-        ff.showDebug = true;
     </script>
 </body>
 
