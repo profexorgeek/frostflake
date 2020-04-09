@@ -10,15 +10,6 @@ class View {
         }
     }
 
-    renderToTexture(width, height) {
-        let camera = new Camera();
-        let target = document.createElement('canvas');
-        target.width = width;
-        target.height = height;
-        FrostFlake.Game.renderer.draw(this.children, camera, target, "rgba(0,0,0,0)");
-        return target.toDataURL();
-    }
-
     addChild(positionable) {
         if(this.children.indexOf(positionable) > -1) {
             throw "positionable has already been added to view."

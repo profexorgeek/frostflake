@@ -29,10 +29,27 @@ class CanvasRenderer {
 
         return preloaded;
     }
+
+    renderToTexture(textureName, positionables, width, height, success = null, background = "rgba(0,0,0,0)") {
+        // cache background color and context
+        let contextCache = this.context;
+        let bgCache = this.background;
+        
+        let camera = new Camera();
+        let cvs = document.createElement('canvas');
+        cvs.height = height;
+        cvs.width = width;
+        this.context = cvs.getContext('2d');
+        this.background = background;
+        this.draw(positionables, camera);
+        this.loadTexture(cvs.toDataURL(), success, textureName);
+
+        // restore the background and context
+        this.context = contextCache;
+        this.background = bgCache;
+    }
     
     draw(positionables, camera) {
-        this.context;
-        this.background;
         let scale = 1 / camera.resolution;
         let transX = MathUtil.invert(camera.x) + (this.context.canvas.width / 2) * camera.resolution;
         let transY = camera.y + (this.context.canvas.height / 2) * camera.resolution;
@@ -157,29 +174,36 @@ class CanvasRenderer {
         return false;
     }
 
-    loadTexture(url, success = null) {
+    loadTexture(url, success = null, keyName = null) {
         
         let me = this;
 
+        keyName = (keyName == null) ? url : keyName;
+
         // EARLY OUT: bad URL or loading in progress
-        if(url == '' || url == null || url in this.#textureCache) {
+        if(keyName == '' || keyName == null || keyName in this.#textureCache) {
             return;
         }
 
         // insert placeholder so images aren't loaded
         // multiple times if load requests are fired quickly
-        me.#textureCache[url] = "...";
+        me.#textureCache[keyName] = "...";
 
         Data.load(url, 'blob',
             // success
             function(response) {
                 let img = document.createElement('img');
+                img.onload = () => {
+                    me.#textureCache[keyName] = img;
+                    if(success) {
+                        success(keyName);
+                    }
+                }
                 img.src = URL.createObjectURL(response);
-                me.#textureCache[url] = img;
             },
             // fail
             function(response) {
-                FrostFlake.Log.error(`Failed to load image ${url}`);
+                FrostFlake.Log.error(`Failed to load image ${keyName}`);
             });
     }
 }
