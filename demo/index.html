@@ -1,50 +1,54 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>FrostFlake Demo</title>
-    </head>
-    <body>
-        <canvas id="frostFlake" width="640" height="480"></canvas>
 
-        <button id="Empty">Empty View</button>
-        <button id="ManySpritesDemo">2,000 Sprite Demo</button>
-        <button id="InputDemo">Input Demo</button>
-        <button id="ParentChildDemo">Parent Child Demo</button>
-        <button id="AnimationDemo">Animation Demo</button>
-        <button id="CollisionDemo">Collision Demo</button>
+<head>
+    <title>FrostFlake Demo</title>
+</head>
 
-        <!-- FrostFlake Source: include all files for each debugging -->
-        <script type='text/javascript' src='/src/GameTime.js'></script>
-        <script type='text/javascript' src='/src/Data/Data.js'></script>
-        <script type='text/javascript' src='/src/Utility/MathUtil.js'></script>
-        <script type='text/javascript' src='/src/Positionables/RepositionType.js'></script>
-        <script type='text/javascript' src='/src/Positionables/Positionable.js'></script>
-        <script type='text/javascript' src='/src/Positionables/Sprite.js'></script>
-        <script type='text/javascript' src='/src/Positionables/Shape.js'></script>
-        <script type='text/javascript' src='/src/Positionables/Circle.js'></script>
-        <script type='text/javascript' src='/src/Positionables/Rectangle.js'></script>
-        <script type='text/javascript' src='/src/Drawing/CanvasRenderer.js'></script>
-        <script type='text/javascript' src='/src/Positionables/Camera.js'></script>
-        <script type='text/javascript' src='/src/Drawing/Frame.js'></script>
-        <script type='text/javascript' src='/src/Drawing/Animation.js'></script>
-        <script type='text/javascript' src='/src/Views/View.js'></script>
-        <script type='text/javascript' src='/src/Views/TilemapView.js'></script>
-        <script type='text/javascript' src='/src/Logging/Log.js'></script>
-        <script type='text/javascript' src='/src/Input/Cursor.js'></script>
-        <script type='text/javascript' src='/src/Input/Keys.js'></script>
-        <script type='text/javascript' src='/src/Input/Mouse.js'></script>
-        <script type='text/javascript' src='/src/Input/Input.js'></script>
-        <script type='text/javascript' src='/src/Audio/Audio.js'></script>
-        <script type='text/javascript' src='/src/FrostFlake.js'></script>
+<body>
+    <canvas id="frostFlake" width="640" height="480"></canvas>
 
-        <!-- Demo: Each of these files demonstrates how to FrostFlake features -->
-        <script type='text/javascript' src='/demo/js/ManySpritesDemo.js'></script>
-        <script type='text/javascript' src='/demo/js/InputDemo.js'></script>
-        <script type='text/javascript' src='/demo/js/ParentChildDemo.js'></script>
-        <script type='text/javascript' src='/demo/js/AnimationDemo.js'></script>
-        <script type='text/javascript' src='/demo/js/CollisionDemo.js'></script>
+    <ul>
+        <li><button id="Empty">Empty View</button></li>
+        <li><button id="ManySpritesDemo">2,000 Sprite Demo</button></li>
+        <li><button id="InputDemo">Input Demo</button></li>
+        <li><button id="ParentChildDemo">Parent Child Demo</button></li>
+        <li><button id="AnimationDemo">Animation Demo</button></li>
+        <li><button id="CollisionDemo">Collision Demo</button></li>
+    </ul>
 
-        <script>
+    <!-- FrostFlake Source: include all files for each debugging -->
+    <script type='text/javascript' src='/src/GameTime.js'></script>
+    <script type='text/javascript' src='/src/Data/Data.js'></script>
+    <script type='text/javascript' src='/src/Utility/MathUtil.js'></script>
+    <script type='text/javascript' src='/src/Positionables/RepositionType.js'></script>
+    <script type='text/javascript' src='/src/Positionables/Positionable.js'></script>
+    <script type='text/javascript' src='/src/Positionables/Sprite.js'></script>
+    <script type='text/javascript' src='/src/Positionables/Shape.js'></script>
+    <script type='text/javascript' src='/src/Positionables/Circle.js'></script>
+    <script type='text/javascript' src='/src/Positionables/Rectangle.js'></script>
+    <script type='text/javascript' src='/src/Drawing/CanvasRenderer.js'></script>
+    <script type='text/javascript' src='/src/Positionables/Camera.js'></script>
+    <script type='text/javascript' src='/src/Drawing/Frame.js'></script>
+    <script type='text/javascript' src='/src/Drawing/Animation.js'></script>
+    <script type='text/javascript' src='/src/Views/View.js'></script>
+    <script type='text/javascript' src='/src/Views/TilemapView.js'></script>
+    <script type='text/javascript' src='/src/Logging/Log.js'></script>
+    <script type='text/javascript' src='/src/Input/Cursor.js'></script>
+    <script type='text/javascript' src='/src/Input/Keys.js'></script>
+    <script type='text/javascript' src='/src/Input/Mouse.js'></script>
+    <script type='text/javascript' src='/src/Input/Input.js'></script>
+    <script type='text/javascript' src='/src/Audio/Audio.js'></script>
+    <script type='text/javascript' src='/src/FrostFlake.js'></script>
+
+    <!-- Demo: Each of these files demonstrates how to FrostFlake features -->
+    <script type='text/javascript' src='/demo/js/ManySpritesDemo.js'></script>
+    <script type='text/javascript' src='/demo/js/InputDemo.js'></script>
+    <script type='text/javascript' src='/demo/js/ParentChildDemo.js'></script>
+    <script type='text/javascript' src='/demo/js/AnimationDemo.js'></script>
+    <script type='text/javascript' src='/demo/js/CollisionDemo.js'></script>
+
+    <script>
 
         // get a reference to the canvas element
         let canvas = document.getElementById('frostFlake');
@@ -61,12 +65,12 @@
 
         // make button clicks switch demo views
         let buttons = document.getElementsByTagName('button');
-        for(let i = 0; i < buttons.length; i++) {
+        for (let i = 0; i < buttons.length; i++) {
             let view = buttons[i].id;
             buttons[i].addEventListener('click', evt => {
                 console.clear();
                 ff.camera.reset();
-                if(view == "Empty") {
+                if (view == "Empty") {
                     ff.view = new View();
                 }
                 else {
