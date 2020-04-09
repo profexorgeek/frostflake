@@ -1,9 +1,9 @@
+// NOTE: this is still very experimental. It's not very efficient
+// and only supports a small subset of Tiled features.
 class TilemapView extends View {
     tileset;
     tilemap;
     collidables = [];
-
-    testBall;
 
     tilesetJsonLoaded = false;
     tilemapJsonLoaded = false;
@@ -42,6 +42,9 @@ class TilemapView extends View {
                 let tile = this.collidables[i];
                 this.testBall.collision.collideWith(tile.collision, RepositionType.Bounce, 0, 1);
             }
+
+            FrostFlake.Game.camera.x = this.testBall.x;
+            FrostFlake.Game.camera.y = this.testBall.y;
         }
     }
 
@@ -61,7 +64,8 @@ class TilemapView extends View {
         }
 
         // NOTE: tiles with a "collides = true" property go in a special collision array
-        // build array of collideable tiles for faster finding in the deeper loop below
+        // build array of collideable tiles for faster finding in the deeper loop below.
+        // TODO: this needs to be rethought into a more efficient system
         let collideableTiles = []
         for(let i = 0; i < set.tiles.length; i++) {
             for(let j = 0; j < set.tiles[i].properties.length; j++) {
@@ -79,6 +83,7 @@ class TilemapView extends View {
                 FrostFlake.Log.error(`Bad layer size, expected ${tilesPerLayer} but got ${layer.data.length}`);
             }
 
+            // NOTE: no support yet for other layer types!
             if(layer.type == 'tilelayer') {
                 for(let j = 0; j < layer.data.length; j++) {
                     const gid = layer.data[j];
@@ -90,7 +95,7 @@ class TilemapView extends View {
                     const frameX = tileId % set.columns;
                     const frameY = Math.floor(tileId / set.columns);
 
-                    // TODO: spacing, margin, offsets and many other features are not
+                    // TODO: spacing, margin, offsets, rotation, and many other features are not
                     // yet supported
                     
                     let sprite = new Sprite(spritePath);
@@ -105,7 +110,9 @@ class TilemapView extends View {
                     sprite.alpha = layer.visible ? layer.opacity : 0;
 
                     // NOTE: look for "collides = true" on tile id
-                    // and create collision
+                    // and create collision. This is a convention
+                    // that the TMX will have to adhere for. This
+                    // could be improved to be more flexible
                     if(collideableTiles.indexOf(tileId) > -1) {
                         sprite.collision = new Rectangle(set.tilewidth, set.tileheight);
                         this.collidables.push(sprite);
@@ -115,11 +122,6 @@ class TilemapView extends View {
                 }
             }
         }
-
-        this.testBall = new Sprite('content/frostflake.png');
-        this.testBall.velocity.x = MathUtil.randomInRange(-100, 100);
-        this.testBall.velocity.y = MathUtil.randomInRange(-100, 100);
-        this.addChild(this.testBall);
     
         FrostFlake.Log.info("Tilemap loaded fired correctly!");
         this.tilemapLoaded = true;
