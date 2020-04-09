@@ -1,0 +1,24 @@
+{ "columns":32,
+ "image":"spritesheet.png",
+ "imageheight":512,
+ "imagewidth":512,
+ "margin":0,
+ "name":"spritesheet",
+ "spacing":0,
+ "tilecount":1024,
+ "tiledversion":"1.2.5",
+ "tileheight":16,
+ "tiles":[
+        {
+         "id":386,
+         "properties":[
+                {
+                 "name":"collides",
+                 "type":"bool",
+                 "value":true
+                }]
+        }],
+ "tilewidth":16,
+ "type":"tileset",
+ "version":1.2
+}

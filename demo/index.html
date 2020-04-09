@@ -21,6 +21,7 @@
         <script type='text/javascript' src='/src/Drawing/Frame.js'></script>
         <script type='text/javascript' src='/src/Drawing/Animation.js'></script>
         <script type='text/javascript' src='/src/Views/View.js'></script>
+        <script type='text/javascript' src='/src/Views/TilemapView.js'></script>
         <script type='text/javascript' src='/src/Logging/Log.js'></script>
         <script type='text/javascript' src='/src/Input/Cursor.js'></script>
         <script type='text/javascript' src='/src/Input/Keys.js'></script>
@@ -268,6 +269,19 @@
                 }
             }
         }
+    
+        class TilemapDemo extends TilemapView {
+            constructor() {
+                super('content/tileset.json', 'content/tilemap.json');
+            }
+
+            update() {
+                super.update();
+            }
+        }
+
+        ff.view = new TilemapDemo();
+        ff.showDebug = true;
     </script>
 </body>
 
