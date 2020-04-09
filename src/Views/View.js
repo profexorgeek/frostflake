@@ -25,6 +25,10 @@ class View {
         }
 
         this.children.push(positionable);
+
+        this.children.sort((a, b) => {
+            return a.layer - b.layer;
+        });
     }
 
     removeChild(positionable) {
