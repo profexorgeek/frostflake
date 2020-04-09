@@ -5,15 +5,20 @@ class TilemapView extends View {
     tileset;
     tilemap;
     collidables = [];
+    layerSprites = [];
 
     tilesetJsonLoaded = false;
     tilemapJsonLoaded = false;
+    tilemapSpriteLoaded = false;
     tilemapLoaded = false;
     rootPath = '';
 
     constructor(tilesetUrl, tilemapUrl) {
         super();
         let me = this;
+        
+
+        // TODO: rewrite this section to do all preloading and have better readability
         Data.loadJson(tilesetUrl, function (set) {
             me.tileset = set;
             me.tilesetJsonLoaded = true;
@@ -32,11 +37,24 @@ class TilemapView extends View {
     update() {
         super.update();
 
+        // TODO: move this out of the gameloop into promises or callbacks
         if(this.tilesetJsonLoaded == true &&
             this.tilemapJsonLoaded == true &&
             this.tilemapLoaded == false) {
                 this.createTiles();
         }
+    }
+
+    getTileSets() {
+        // TODO: get all tile sets from map
+    }
+
+    getAllSpritePaths() {
+        // TODO: preload all sprites in tilesets
+    }
+
+    getCollideableTiles() {
+        // TODO: move collidable tile logic to this method
     }
 
     createTiles() {
@@ -76,7 +94,12 @@ class TilemapView extends View {
 
             // NOTE: no support yet for other layer types!
             if(layer.type == 'tilelayer') {
+                
+                // container to hold layer sprites to be rendered to a single image
+                let sprites = [];
+
                 for(let j = 0; j < layer.data.length; j++) {
+                    
                     const gid = layer.data[j];
 
                     // TODO: this is hardcoded, the "1" is actually the tileset
@@ -105,13 +128,21 @@ class TilemapView extends View {
                     // and create collision. This is a convention
                     // that the TMX will have to adhere for. This
                     // could be improved to be more flexible
+
+                    // TODO: render targets break this, needs fixed
                     if(collideableTiles.indexOf(tileId) > -1) {
                         sprite.collision = new Rectangle(set.tilewidth, set.tileheight);
                         this.collidables.push(sprite);
                     }
 
-                    this.addChild(sprite);
+                    sprites.push(sprite);
                 }
+
+                // now render all of the sprites to a single layer sprite and add that sprite
+                let layerTexture = FrostFlake.Game.renderer.renderToTexture(sprites, map.width * set.tilewidth, map.height * set.tileheight);
+                let layerSprite = new Sprite(layerTexture);
+                layerSprite.layer = i;
+                this.addChild(layerSprite);
             }
         }
     

@@ -8,8 +8,8 @@ class TilemapDemo extends TilemapView {
         super('/demo/content/tileset.json', '/demo/content/tilemap.json');
 
         this.ball = new Sprite('/demo/content/frostflake.png');
-        this.ball.velocity.x = 35;
-        this.ball.velocity.y = 50;
+        // this.ball.velocity.x = 35;
+        // this.ball.velocity.y = 50;
         this.ball.velocity.rotation = MathUtil.randomInRange(-3, 3);
         this.ball.scale = 0.75;
         this.ball.collision.radius = 8;
@@ -33,6 +33,6 @@ class TilemapDemo extends TilemapView {
             FrostFlake.Game.camera.y = this.ball.y;
         }
 
-        FrostFlake.Log.info(`FPS: ${FrostFlake.Game.time.aveFps()}`);
+        //FrostFlake.Log.info(`FPS: ${FrostFlake.Game.time.aveFps()}`);
     }
 }
