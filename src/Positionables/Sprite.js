@@ -22,7 +22,6 @@ class Sprite extends Positionable{
 
     constructor(texture = null) {
         super();
-        let me = this;
         this.texture = texture;
         this.collision = new Circle();
     }
