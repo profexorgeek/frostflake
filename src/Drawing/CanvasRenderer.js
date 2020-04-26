@@ -61,10 +61,16 @@ class CanvasRenderer {
 
         for(let i = 0; i < positionables.length; i++) {
 
+            if(!positionables[i].visible) {
+                continue;
+            }
+
             // draw sprites
             if(positionables[i] instanceof Sprite) {
                 this.drawSprite(positionables[i], this.context);
             }
+
+            // TODO: draw shapes
         }
         this.context.restore();
     }
