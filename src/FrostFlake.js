@@ -25,6 +25,9 @@ class FrostFlake {
         this.input = new Input();
         this.view = new View();
         this.audio = new Audio();
+        this.camera = new Camera(this.canvas.width, this.canvas.height);
+        this.camera.background = background;
+        this.renderer = new CanvasRenderer(this.canvas);
 
         FrostFlake.Log.info("FrostFlake instance created...");
     }
@@ -33,8 +36,6 @@ class FrostFlake {
         FrostFlake.Log.info("Starting FrostFlake...");
 
         this.time = new GameTime();
-        this.camera = new Camera(this.canvas.width, this.canvas.height);
-        this.renderer = new CanvasRenderer(this.canvas);
 
         let me = this;
         this.#timer = window.setInterval( function () {

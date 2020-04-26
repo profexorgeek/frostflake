@@ -2,7 +2,6 @@ class CanvasRenderer {
 
     #textureCache = {};
     context;
-    background = "rgb(0,0,0)";
 
     // TODO: what about clearing texture cache
     // and images added to the DOM?
@@ -31,11 +30,11 @@ class CanvasRenderer {
     }
 
     renderToTexture(textureName, positionables, width, height, success = null, background = "rgba(0,0,0,0)") {
-        // cache background color and context
+        // cache context
         let contextCache = this.context;
-        let bgCache = this.background;
-        
+
         let camera = new Camera();
+        camera.background = background;
         let cvs = document.createElement('canvas');
         cvs.height = height;
         cvs.width = width;
@@ -44,9 +43,8 @@ class CanvasRenderer {
         this.draw(positionables, camera);
         this.loadTexture(cvs.toDataURL(), success, textureName);
 
-        // restore the background and context
+        // restore context
         this.context = contextCache;
-        this.background = bgCache;
     }
     
     draw(positionables, camera) {
@@ -56,7 +54,7 @@ class CanvasRenderer {
 
         this.context.save();
         this.context.imageSmoothingEnabled = camera.antialias;
-        this.context.fillStyle = this.background;
+        this.context.fillStyle = camera.background;
         this.context.fillRect(0, 0, this.context.canvas.width, this.context.canvas.height);
         this.context.scale(scale, scale);
         this.context.translate(transX, transY);
