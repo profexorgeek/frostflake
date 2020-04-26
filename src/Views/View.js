@@ -11,7 +11,7 @@ class View {
     }
 
     addChild(positionable) {
-        if(this.children.indexOf(positionable) > -1) {
+        if (this.children.indexOf(positionable) > -1) {
             throw "positionable has already been added to view."
         }
 
@@ -23,12 +23,12 @@ class View {
     }
 
     removeChild(positionable) {
-        this.removeItem(positionable, this.children);
+        this.tryRemoveItem(positionable, this.children);
     }
 
-    removeItem(item, list) {
+    tryRemoveItem(item, list) {
         let i = list.indexOf(item);
-        if(i > -1) {
+        if (i > -1) {
             list.splice(i, 1);
         }
     }
@@ -43,7 +43,7 @@ class View {
     }
 
     destroy() {
-        for(let i = this.children.length - 1; i > -1; i--) {
+        for (let i = this.children.length - 1; i > -1; i--) {
             this.destroyChild(this.children[i]);
         }
     }
