@@ -6,6 +6,7 @@ class Positionable {
     layer = 0;
     parent = null;
     children = [];
+    destroyed = false;
     
     get x() {
         return this.position.x;
@@ -130,4 +131,9 @@ class Positionable {
 
     // this method is intentionally empty so devs can inject custom logic into the update cycle
     preUpdate() {}
+
+    destroy() {
+        this.detach();
+        this.destroyed = true;
+    }
 }
