@@ -1,4 +1,8 @@
 class Positionable {
+
+    // NOTE: this is only used for debug drawing
+    color = "red";
+
     position = {x: 0, y: 0, rotation: 0}
     velocity = {x: 0, y: 0, rotation: 0}
     acceleration = {x: 0, y: 0, rotation: 0}

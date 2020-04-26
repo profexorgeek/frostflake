@@ -107,7 +107,7 @@ class CanvasRenderer {
             if(FrostFlake.Game.showDebug) {
                 
                 // draw sprite bounds
-                this.context.strokeStyle = "rgba(255, 255, 255, 0.3)";
+                this.context.strokeStyle = sprite.color;
                 this.context.strokeRect(
                     -sprite.frame.width / 2 * sprite.scale,
                     -sprite.frame.height / 2 * sprite.scale,
@@ -125,7 +125,7 @@ class CanvasRenderer {
 
         // draw collision shapes
         if(FrostFlake.Game.showDebug) {
-            this.context.strokeStyle = "Red";
+            this.context.strokeStyle = sprite.collision.color;
             if(sprite.collision instanceof Circle) {
                 this.context.beginPath();
                 this.context.arc(
@@ -139,7 +139,7 @@ class CanvasRenderer {
             }
             else if(sprite.collision instanceof Rectangle) {
                 this.context.save();
-                this.strokeStyle = "Red";
+                this.strokeStyle = sprite.collision.color;
                 this.context.rotate(sprite.collision.absolutePosition.rotation);
                 this.context.strokeRect(
                     -sprite.collision.width / 2,

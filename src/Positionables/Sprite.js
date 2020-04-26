@@ -24,6 +24,9 @@ class Sprite extends Positionable{
         super();
         this.texture = texture;
         this.collision = new Circle();
+
+        // set sprite outlines to faint color
+        this.color = "rgba(255, 255, 255, 0.2)";
     }
 
     getAbsolutePosition() {
