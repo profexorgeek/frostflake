@@ -1,10 +1,20 @@
 class View {
     children = [];
+    sortNeeded = false;
 
     constructor() {
     }
 
     update() {
+
+        if(this.sortNeeded) {
+            this.children.sort((a, b) => {
+                return a.layer - b.layer;
+            });
+
+            this.sortNeeded = false;
+        }
+
         for (let i = 0; i < this.children.length; i++) {
             this.children[i].update();
         }
@@ -17,9 +27,10 @@ class View {
 
         this.children.push(positionable);
 
-        this.children.sort((a, b) => {
-            return a.layer - b.layer;
-        });
+        // We can't sort the list here because we could be
+        // in the middle of updating, make sure the list is
+        // sorted before the next frame
+        this.sortNeeded = true;
     }
 
     removeChild(positionable) {
