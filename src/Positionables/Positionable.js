@@ -12,6 +12,7 @@ class Positionable {
     parent = null;
     children = [];
     destroyed = false;
+    applyRotationAccelerationAndDrag = false;
     
     get x() {
         return this.position.x;
@@ -124,7 +125,10 @@ class Positionable {
 
         this.velocity.x += (this.acceleration.x * delta) - (this.drag * this.velocity.x * delta);
         this.velocity.y += (this.acceleration.y * delta) - (this.drag * this.velocity.y * delta);
-        this.velocity.rotation += (this.acceleration.rotation * delta) - (this.drag * this.velocity.rotation * delta);
+
+        if(this.applyRotationAccelerationAndDrag) {
+            this.velocity.rotation += (this.acceleration.rotation * delta) - (this.drag * this.velocity.rotation * delta);
+        }
 
         this.position.rotation = MathUtil.normalizeAngle(this.position.rotation);
 
