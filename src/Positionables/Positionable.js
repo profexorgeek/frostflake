@@ -6,6 +6,7 @@ class Positionable {
     position = {x: 0, y: 0, rotation: 0}
     velocity = {x: 0, y: 0, rotation: 0}
     acceleration = {x: 0, y: 0, rotation: 0}
+    visible = true;
     drag = 0;
     layer = 0;
     parent = null;
@@ -138,6 +139,15 @@ class Positionable {
 
     destroy() {
         this.detach();
+
+        // cascade destroy to children
+        if(this.children.length > 0) {
+            for(let i = this.children.length - 1; i > -1; i--) {
+                this.children[i].destroy();
+                this.children.splice(i, 1);
+            }
+        }
+
         this.destroyed = true;
     }
 }
