@@ -61,21 +61,68 @@ class CanvasRenderer {
 
         for(let i = 0; i < positionables.length; i++) {
 
-            if(!positionables[i].visible) {
-                continue;
-            }
-
-            // draw sprites
-            if(positionables[i] instanceof Sprite) {
-                this.drawSprite(positionables[i], this.context);
-            }
-
-            // TODO: draw shapes
+            this.drawPositionable(positionables[i]);
         }
         this.context.restore();
     }
 
-    drawSprite(sprite, context) {
+    drawPositionable(positionable) {
+        if(positionable instanceof Positionable && positionable.visible) {
+            if(positionable instanceof Sprite) {
+                this.drawSprite(positionable);
+            }
+
+            else if(positionable instanceof Circle) {
+                this.drawCircle(positionable);
+            }
+
+            else if(positionable instanceof Rectangle) {
+                this.drawRect(positionable);
+            }
+        }
+    }
+
+    drawCircle(circle) {
+        let transX = circle.x;
+        let transY = MathUtil.invert(circle.y);
+        this.context.save();
+        this.context.translate(transX, transY);
+
+        this.context.strokeStyle = circle.color;
+        this.context.beginPath();
+                this.context.arc(
+                    0,
+                    0,
+                    circle.radius,
+                    0,
+                    Math.PI * 2
+                );
+                this.context.stroke();
+        this.context.restore();
+    }
+
+    drawRect(rect, axisAligned = true) {
+        let transX = rect.x;
+        let transY = MathUtil.invert(rect.y);
+
+        this.context.save();
+        this.context.translate(transX, transY);
+
+        if(axisAligned) {
+            this.context.rotate(rect.absolutePosition.rotation);
+        }
+
+        this.context.strokeStyle = rect.color;
+        this.context.strokeRect(
+            -rect.width / 2,
+            -rect.height / 2,
+            rect.width,
+            rect.height);
+
+        this.context.restore();
+    }
+
+    drawSprite(sprite) {
         let transX = sprite.x;
         let transY = MathUtil.invert(sprite.y);
         let transRot = -sprite.rotation;
@@ -111,7 +158,6 @@ class CanvasRenderer {
 
             // draw debug visualizations
             if(FrostFlake.Game.showDebug) {
-                
                 // draw sprite bounds
                 this.context.strokeStyle = sprite.color;
                 this.context.strokeRect(
@@ -131,36 +177,13 @@ class CanvasRenderer {
 
         // draw collision shapes
         if(FrostFlake.Game.showDebug) {
-            this.context.strokeStyle = sprite.collision.color;
-            if(sprite.collision instanceof Circle) {
-                this.context.beginPath();
-                this.context.arc(
-                    0,
-                    0,
-                    sprite.collision.radius,
-                    0,
-                    Math.PI * 2
-                );
-                this.context.stroke();
-            }
-            else if(sprite.collision instanceof Rectangle) {
-                this.context.save();
-                this.strokeStyle = sprite.collision.color;
-                this.context.rotate(sprite.collision.absolutePosition.rotation);
-                this.context.strokeRect(
-                    -sprite.collision.width / 2,
-                    -sprite.collision.height / 2,
-                    sprite.collision.width,
-                    sprite.collision.height
-                )
-                this.context.restore();
-            }
+            this.drawPositionable(sprite.collision);
         }
 
         // recurse on children
         if(sprite.children.length > 0) {
             for(let i = 0; i < sprite.children.length; i++) {
-                this.drawSprite(sprite.children[i], this.context);
+                this.drawPositionable(sprite.children[i], this.context);
             }
         }
 
