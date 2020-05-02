@@ -1,4 +1,6 @@
-class Circle extends Shape {
+import {Shape} from './Shape';
+
+export class Circle extends Shape {
     radius;
 
     constructor(radius = 16) {

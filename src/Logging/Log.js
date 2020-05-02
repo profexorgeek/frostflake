@@ -1,4 +1,4 @@
-class Log {
+export class Log {
     #level;
 
     #levels = {

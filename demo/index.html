@@ -19,66 +19,45 @@
     </ul>
 
     <!-- FrostFlake Source: include all files for each debugging -->
-    <script type='text/javascript' src='/src/GameTime.js'></script>
-    <script type='text/javascript' src='/src/Data/Data.js'></script>
-    <script type='text/javascript' src='/src/Utility/MathUtil.js'></script>
-    <script type='text/javascript' src='/src/Positionables/RepositionType.js'></script>
-    <script type='text/javascript' src='/src/Positionables/Positionable.js'></script>
-    <script type='text/javascript' src='/src/Positionables/Sprite.js'></script>
-    <script type='text/javascript' src='/src/Positionables/Shape.js'></script>
-    <script type='text/javascript' src='/src/Positionables/Circle.js'></script>
-    <script type='text/javascript' src='/src/Positionables/Rectangle.js'></script>
-    <script type='text/javascript' src='/src/Drawing/CanvasRenderer.js'></script>
-    <script type='text/javascript' src='/src/Positionables/Camera.js'></script>
-    <script type='text/javascript' src='/src/Drawing/Frame.js'></script>
-    <script type='text/javascript' src='/src/Drawing/Animation.js'></script>
-    <script type='text/javascript' src='/src/Views/View.js'></script>
-    <script type='text/javascript' src='/src/Views/TilemapView.js'></script>
-    <script type='text/javascript' src='/src/Logging/Log.js'></script>
-    <script type='text/javascript' src='/src/Input/Cursor.js'></script>
-    <script type='text/javascript' src='/src/Input/Keys.js'></script>
-    <script type='text/javascript' src='/src/Input/Mouse.js'></script>
-    <script type='text/javascript' src='/src/Input/Input.js'></script>
-    <script type='text/javascript' src='/src/Audio/Audio.js'></script>
-    <script type='text/javascript' src='/src/FrostFlake.js'></script>
+    <script type="text/javascript" src="/demo/dist/ff.min.js"></script>
 
     <!-- Demo: Each of these files demonstrates how to FrostFlake features -->
-    <script type='text/javascript' src='/demo/js/ManySpritesDemo.js'></script>
+    <!-- <script type='text/javascript' src='/demo/js/ManySpritesDemo.js'></script>
     <script type='text/javascript' src='/demo/js/InputDemo.js'></script>
     <script type='text/javascript' src='/demo/js/ParentChildDemo.js'></script>
     <script type='text/javascript' src='/demo/js/AnimationDemo.js'></script>
     <script type='text/javascript' src='/demo/js/CollisionDemo.js'></script>
-    <script type='text/javascript' src='/demo/js/RenderTargetDemo.js'></script>
+    <script type='text/javascript' src='/demo/js/RenderTargetDemo.js'></script> -->
 
     <script>
 
-        // get a reference to the canvas element
-        let canvas = document.getElementById('frostFlake');
+        // // get a reference to the canvas element
+        // let canvas = document.getElementById('frostFlake');
 
-        // initialize frostflake with a reference to the canvas and target FPS
-        let ff = new FrostFlake(canvas, 60);
+        // // initialize frostflake with a reference to the canvas and target FPS
+        // let ff = new FrostFlake(canvas, 60);
 
-        // turn debug visualizations on or off
-        ff.showDebug = false;
+        // // turn debug visualizations on or off
+        // ff.showDebug = false;
 
-        // start the game engine
-        ff.start();
+        // // start the game engine
+        // ff.start();
 
-        // make button clicks switch demo views
-        let buttons = document.getElementsByTagName('button');
-        for (let i = 0; i < buttons.length; i++) {
-            let view = buttons[i].id;
-            buttons[i].addEventListener('click', evt => {
-                console.clear();
-                ff.camera.reset();
-                if (view == "Empty") {
-                    ff.view = new View();
-                }
-                else {
-                    ff.view = eval(`new ${view}`);
-                }
-            });
-        }
+        // // make button clicks switch demo views
+        // let buttons = document.getElementsByTagName('button');
+        // for (let i = 0; i < buttons.length; i++) {
+        //     let view = buttons[i].id;
+        //     buttons[i].addEventListener('click', evt => {
+        //         console.clear();
+        //         ff.camera.reset();
+        //         if (view == "Empty") {
+        //             ff.view = new View();
+        //         }
+        //         else {
+        //             ff.view = eval(`new ${view}`);
+        //         }
+        //     });
+        // }
     </script>
 </body>
 

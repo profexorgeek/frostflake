@@ -1,4 +1,7 @@
-class Positionable {
+import {FrostFlake} from '../FrostFlake';
+import {MathUtil} from '../Utility/MathUtil';
+
+export class Positionable {
 
     // NOTE: this is only used for debug drawing
     color = "red";

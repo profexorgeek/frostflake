@@ -1,4 +1,7 @@
-class Audio {
+import {FrostFlake} from '../FrostFlake';
+import {Data} from '../Data/Data';
+
+export class Audio {
     context;
 
     #audioCache = {};

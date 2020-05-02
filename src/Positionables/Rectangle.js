@@ -1,4 +1,7 @@
-class Rectangle extends Shape {
+import {Shape} from './Shape';
+import {Circle} from './Circle';
+
+export class Rectangle extends Shape {
     width;
     height;
 

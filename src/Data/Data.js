@@ -1,4 +1,6 @@
-class Data {
+import {FrostFlake} from '../FrostFlake';
+
+export class Data {
 
     static load(url, responseType = 'json', success = null, fail = null) {
         let xhr = new XMLHttpRequest();

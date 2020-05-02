@@ -1,4 +1,8 @@
-class Sprite extends Positionable{
+import {Positionable} from './Positionable';
+import {MathUtil} from '../Utility/MathUtil';
+import {Circle} from './Circle';
+
+export class Sprite extends Positionable {
 
     alpha = 1;
     frame = null;

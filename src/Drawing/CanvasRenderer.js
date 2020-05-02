@@ -1,4 +1,13 @@
-class CanvasRenderer {
+import {FrostFlake} from '../FrostFlake';
+import {MathUtil} from '../Utility/MathUtil';
+import {Positionable} from '../Positionables/Positionable';
+import {Sprite} from '../Positionables/Sprite';
+import {Circle} from '../Positionables/Circle';
+import {Camera} from '../Positionables/Camera';
+import {Frame} from '../Drawing/Frame';
+import {Data} from '../Data/Data';
+
+export class CanvasRenderer {
 
     #textureCache = {};
     context;

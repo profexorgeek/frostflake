@@ -1,4 +1,6 @@
-class Camera extends Rectangle{
+import {Rectangle} from './Rectangle';
+
+export class Camera extends Rectangle{
     resolution = 1;
     antialias = false;
     lastPosition = {x: 0, y: 0, rotation: 0}

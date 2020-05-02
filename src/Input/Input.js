@@ -1,4 +1,9 @@
-class Input {
+import {FrostFlake} from '../FrostFlake';
+import {Cursor} from './Cursor';
+import {Keys} from './Keys';
+import {Mouse} from './Mouse';
+
+export class Input {
 
     cursor;
 

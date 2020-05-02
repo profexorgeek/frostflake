@@ -1,4 +1,12 @@
-class FrostFlake {
+import {Log} from './Logging/Log';
+import {Input} from './Input/Input';
+import {View} from './Views/View';
+import {Audio} from './Audio/Audio';
+import {Camera} from './Positionables/Camera';
+import {CanvasRenderer} from './Drawing/CanvasRenderer';
+import {GameTime} from './GameTime';
+
+export class FrostFlake {
 
     static Game;
     static Log;

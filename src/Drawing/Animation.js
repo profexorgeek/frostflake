@@ -1,4 +1,6 @@
-class Animation {
+import {FrostFlake} from '../FrostFlake';
+
+export class Animation {
     name = '';
     frames = [];
     texture = '';

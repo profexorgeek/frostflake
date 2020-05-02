@@ -1,4 +1,4 @@
-class GameTime {
+export class GameTime {
 
     // number of milliseconds that can elapse between
     // frames before the GameTime will reset the delta

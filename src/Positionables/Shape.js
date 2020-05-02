@@ -1,4 +1,7 @@
-class Shape extends Positionable {
+import {Positionable} from './Positionable';
+import {MathUtil} from '../Utility/MathUtil';
+
+export class Shape extends Positionable {
 
     constructor() {
         super();

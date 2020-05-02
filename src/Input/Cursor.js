@@ -1,4 +1,7 @@
-class Cursor {
+import {FrostFlake} from '../FrostFlake';
+import {MathUtil} from '../Utility/MathUtil';
+
+export class Cursor {
     x = 0;
     y = 0;
     changeX = 0;
