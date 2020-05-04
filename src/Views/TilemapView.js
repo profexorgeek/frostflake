@@ -1,7 +1,8 @@
+import View from './View.js';
+
 // NOTE: this is still very experimental. It's not very efficient
 // and only supports a small subset of Tiled features.
-
-class TilemapView extends View {
+export default class TilemapView extends View {
     tileset;
     tilemap;
     collidables = [];

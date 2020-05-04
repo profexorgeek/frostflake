@@ -1,4 +1,7 @@
-class Sprite extends Positionable{
+import Positionable from './Positionable.js';
+import Circle from './Circle.js';
+
+export default class Sprite extends Positionable{
 
     alpha = 1;
     frame = null;

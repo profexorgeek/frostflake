@@ -1,4 +1,9 @@
-class Input {
+import FrostFlake from '../FrostFlake.js';
+import Cursor from './Cursor.js'
+import Mouse from './Mouse.js';
+import Keys from './Keys.js';
+
+export default class Input {
 
     cursor;
 

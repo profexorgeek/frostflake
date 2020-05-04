@@ -1,4 +1,4 @@
-class Keys {
+export default class Keys {
     static Backspace = 8;
     static Tab = 9;
     static Enter = 13;

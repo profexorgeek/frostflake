@@ -1,4 +1,4 @@
-class View {
+export default class View {
     children = [];
     sortNeeded = false;
 

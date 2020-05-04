@@ -1,4 +1,7 @@
-class Positionable {
+import FrostFlake from '../FrostFlake.js';
+import MathUtil from '../Utility/MathUtil.js';
+
+export default class Positionable {
 
     // NOTE: this is only used for debug drawing
     color = "red";
@@ -58,7 +61,7 @@ class Positionable {
     }
 
     get root() {
-        var obj = this;
+        let obj = this;
         while(obj.parent instanceof Positionable) {
             obj = obj.parent;
         }
@@ -98,7 +101,7 @@ class Positionable {
     }
 
     moveRootX(amt) {
-        var obj = this;
+        let obj = this;
         while(obj.parent instanceof Positionable) {
             obj = obj.parent;
         }
@@ -106,7 +109,7 @@ class Positionable {
     }
 
     moveRootY(amt) {
-        var obj = this;
+        let obj = this;
         while(obj.parent instanceof Positionable) {
             obj = obj.parent;
         }

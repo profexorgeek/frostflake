@@ -1,4 +1,9 @@
-class TilemapDemo extends TilemapView {
+import FrostFlake from '../../src/FrostFlake.js';
+import Sprite from '../../src/Positionables/Sprite.js';
+import TilemapView from '../../src/Views/TilemapView.js';
+import MathUtil from '../../src/Utility/MathUtil.js';
+
+export default class TilemapDemo extends TilemapView {
 
     ball;
     

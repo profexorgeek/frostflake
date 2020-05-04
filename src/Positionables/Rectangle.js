@@ -1,4 +1,7 @@
-class Rectangle extends Shape {
+import Shape from './Shape.js';
+import Circle from './Circle.js';
+
+export default class Rectangle extends Shape {
     width;
     height;
 

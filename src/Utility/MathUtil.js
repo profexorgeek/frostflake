@@ -1,4 +1,4 @@
-class MathUtil {
+export default class MathUtil {
 
     static invert(num) {
         return 0 - num;

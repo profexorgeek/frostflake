@@ -1,4 +1,4 @@
-class Audio {
+export default class Audio {
     context;
 
     #audioCache = {};

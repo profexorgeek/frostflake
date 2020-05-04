@@ -1,8 +1,16 @@
+import FrostFlake from '../../src/FrostFlake.js';
+import Sprite from '../../src/Positionables/Sprite.js';
+import View from '../../src/Views/View.js';
+import MathUtil from '../../src/Utility/MathUtil.js';
+import Frame from '../../src/Drawing/Frame.js';
+import Mouse from '../../src/Input/Mouse.js';
+import Keys from '../../src/Input/Keys.js';
+
 // This class demonstrates how to get input state
 // from the mouse and keyboard. It also demonstrates
 // how to put velocity and drag on the game camera
 
-class InputDemo extends View {
+export default class InputDemo extends View {
 
     cursorSprite;
 
@@ -10,8 +18,8 @@ class InputDemo extends View {
         super();
 
         // create some random sprites so camera movement is visible
-        for (var i = 0; i < 10; i++) {
-            var s = new Sprite('content/frostflake.png');
+        for (let i = 0; i < 10; i++) {
+            let s = new Sprite('content/frostflake.png');
             s.x = MathUtil.randomInRange(-300, 300);
             s.y = MathUtil.randomInRange(-200, 200);
             s.alpha = MathUtil.randomInRange(0.2, 0.85);

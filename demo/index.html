@@ -18,39 +18,18 @@
         <li><button id="RenderTargetDemo">Render Target Demo</button></li>
     </ul>
 
-    <!-- FrostFlake Source: include all files for each debugging -->
-    <script type='text/javascript' src='/src/GameTime.js'></script>
-    <script type='text/javascript' src='/src/Data/Data.js'></script>
-    <script type='text/javascript' src='/src/Utility/MathUtil.js'></script>
-    <script type='text/javascript' src='/src/Positionables/RepositionType.js'></script>
-    <script type='text/javascript' src='/src/Positionables/Positionable.js'></script>
-    <script type='text/javascript' src='/src/Positionables/Sprite.js'></script>
-    <script type='text/javascript' src='/src/Positionables/Shape.js'></script>
-    <script type='text/javascript' src='/src/Positionables/Circle.js'></script>
-    <script type='text/javascript' src='/src/Positionables/Rectangle.js'></script>
-    <script type='text/javascript' src='/src/Drawing/CanvasRenderer.js'></script>
-    <script type='text/javascript' src='/src/Positionables/Camera.js'></script>
-    <script type='text/javascript' src='/src/Drawing/Frame.js'></script>
-    <script type='text/javascript' src='/src/Drawing/Animation.js'></script>
-    <script type='text/javascript' src='/src/Views/View.js'></script>
-    <script type='text/javascript' src='/src/Views/TilemapView.js'></script>
-    <script type='text/javascript' src='/src/Logging/Log.js'></script>
-    <script type='text/javascript' src='/src/Input/Cursor.js'></script>
-    <script type='text/javascript' src='/src/Input/Keys.js'></script>
-    <script type='text/javascript' src='/src/Input/Mouse.js'></script>
-    <script type='text/javascript' src='/src/Input/Input.js'></script>
-    <script type='text/javascript' src='/src/Audio/Audio.js'></script>
-    <script type='text/javascript' src='/src/FrostFlake.js'></script>
+    <script type="module">
+        import FrostFlake from '../../src/FrostFlake.js';
 
-    <!-- Demo: Each of these files demonstrates how to FrostFlake features -->
-    <script type='text/javascript' src='/demo/js/ManySpritesDemo.js'></script>
-    <script type='text/javascript' src='/demo/js/InputDemo.js'></script>
-    <script type='text/javascript' src='/demo/js/ParentChildDemo.js'></script>
-    <script type='text/javascript' src='/demo/js/AnimationDemo.js'></script>
-    <script type='text/javascript' src='/demo/js/CollisionDemo.js'></script>
-    <script type='text/javascript' src='/demo/js/RenderTargetDemo.js'></script>
-
-    <script>
+        // must import these because they are used dynamically
+        // by the buttons
+        import View from '../../src/Views/View.js';
+        import ManySpritesDemo from './js/ManySpritesDemo.js';
+        import InputDemo from './js/InputDemo.js';
+        import ParentChildDemo from './js/ParentChildDemo.js';
+        import AnimationDemo from './js/AnimationDemo.js';
+        import CollisionDemo from './js/CollisionDemo.js';
+        import RenderTargetDemo from './js/RenderTargetDemo.js';
 
         // get a reference to the canvas element
         let canvas = document.getElementById('frostFlake');
@@ -79,6 +58,12 @@
                 }
             });
         }
+
+        // this is a hack to make the game engine available at global
+        // scope so beginners can hack on it in the browser. This should
+        // generally not be done in production
+        window.ff = ff;
+
     </script>
 </body>
 

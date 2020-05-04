@@ -1,4 +1,8 @@
-class Shape extends Positionable {
+import RepositionType from './RepositionType.js';
+import Positionable from './Positionable.js';
+import MathUtil from '../Utility/MathUtil.js';
+
+export default class Shape extends Positionable {
 
     constructor() {
         super();

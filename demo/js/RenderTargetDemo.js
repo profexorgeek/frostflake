@@ -1,4 +1,9 @@
-class RenderTargetDemo extends View {
+import FrostFlake from '../../src/FrostFlake.js';
+import Sprite from '../../src/Positionables/Sprite.js';
+import View from '../../src/Views/View.js';
+import MathUtil from '../../src/Utility/MathUtil.js';
+
+export default class RenderTargetDemo extends View {
 
     static TEXTURE = '/demo/content/frostflake.png';
     static TARGETNAME = 'renderTarget';
@@ -6,8 +11,11 @@ class RenderTargetDemo extends View {
     constructor() {
         super();
 
+        FrostFlake.Log.info("Starting render target demo...");
+
         // First ensure any textures required 
         FrostFlake.Game.renderer.loadTexture(RenderTargetDemo.TEXTURE, () => {
+            FrostFlake.Log.info("Texture loaded, rendering");
             this.createSpriteTexture();
         });
     }
@@ -16,11 +24,14 @@ class RenderTargetDemo extends View {
 
         // array to hold all of our sprites
         let sprites = [];
+        let spriteCount = 100000;
+
+        FrostFlake.Log.info(`Adding ${spriteCount} sprites for one-time render`);
 
         // create a lot of sprites, this is too many to
         // render every frame
-        for (var i = 0; i < 100000; i++) {
-            var s = new Sprite(RenderTargetDemo.TEXTURE);
+        for (let i = 0; i < spriteCount; i++) {
+            let s = new Sprite(RenderTargetDemo.TEXTURE);
             s.x = MathUtil.randomInRange(-300, 300);
             s.y = MathUtil.randomInRange(-200, 200);
             s.alpha = MathUtil.randomInRange(0.2, 0.85);
@@ -33,8 +44,10 @@ class RenderTargetDemo extends View {
 
         // render all sprites a single time to a new texture
         // this texture must be given a name
+        FrostFlake.Log.info("Rendering...");
         FrostFlake.Game.renderer.renderToTexture(RenderTargetDemo.TARGETNAME, sprites, 640, 480);
 
+        FrostFlake.Log.info("Rendered. Now setting render target as new sprite texture.");
         // create a new sprite referencing the one-time render target by name (instead of URL)
         let renderedSprite = new Sprite(RenderTargetDemo.TARGETNAME);
 

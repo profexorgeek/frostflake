@@ -1,4 +1,14 @@
-class CanvasRenderer {
+import FrostFlake from '../FrostFlake.js';
+import Sprite from '../Positionables/Sprite.js';
+import Positionable from '../Positionables/Positionable.js';
+import Circle from '../Positionables/Circle.js';
+import Rectangle from '../Positionables/Rectangle.js';
+import Camera from '../Positionables/Camera.js';
+import Frame from './Frame.js'
+import MathUtil from '../Utility/MathUtil.js';
+import Data from '../Data/Data.js';
+
+export default class CanvasRenderer {
 
     #textureCache = {};
     context;
