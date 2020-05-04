@@ -207,8 +207,17 @@ class CanvasRenderer {
 
         keyName = (keyName == null) ? url : keyName;
 
-        // EARLY OUT: bad URL or loading in progress
-        if(keyName == '' || keyName == null || keyName in this.#textureCache) {
+        // EARLY OUT: bad key name URL or loading in progress
+        if(keyName == '' || keyName == null) {
+            return;
+        }
+
+        // EARLY OUT: already loaded, call success right away
+        // and return
+        if(me.textureLoaded(keyName)) {
+            if(success) {
+                success(keyName);
+            }
             return;
         }
 
