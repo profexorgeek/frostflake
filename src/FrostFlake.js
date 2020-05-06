@@ -1,13 +1,12 @@
-import {Log} from './Logging/Log';
-import {Input} from './Input/Input';
-import {View} from './Views/View';
-import {Audio} from './Audio/Audio';
-import {Camera} from './Positionables/Camera';
-import {CanvasRenderer} from './Drawing/CanvasRenderer';
-import {GameTime} from './GameTime';
+import Input from './Input/Input.js';
+import View from './Views/View.js';
+import Audio from './Audio/Audio.js';
+import Camera from './Positionables/Camera.js';
+import CanvasRenderer from './Drawing/CanvasRenderer.js';
+import Log from './Logging/Log.js';
+import GameTime from './GameTime.js';
 
-export class FrostFlake {
-
+export default class FrostFlake {
     static Game;
     static Log;
 
@@ -64,5 +63,4 @@ export class FrostFlake {
 
         this.renderer.draw(this.view.children, this.camera, this.canvas, this.background);
     }
-
 }

@@ -1,10 +1,14 @@
+import FrostFlake from '../../src/FrostFlake.js';
+import Sprite from '../../src/Positionables/Sprite.js';
+import View from '../../src/Views/View.js';
+
 // This class demonstrates how the FrostFlake
 // scene graph works. Every Postionable object
 // (including Sprite) can have a parent and children.
 // When an object has a parent, it's coordinates and
 // rotation become relative to the parent.
 
-class ParentChildDemo extends View {
+export default class ParentChildDemo extends View {
     parentFlake;
     childFlake1;
     childFlake2;

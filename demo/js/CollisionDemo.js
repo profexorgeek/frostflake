@@ -1,8 +1,15 @@
+import View from '../../src/Views/View.js';
+import RepositionType from '../../src/Positionables/RepositionType.js';
+import Sprite from '../../src/Positionables/Sprite.js';
+import Rectangle from '../../src/Positionables/Rectangle.js';
+import Frame from '../../src/Drawing/Frame.js';
+import MathUtil from '../../src/Utility/MathUtil.js';
+
 // This class demonstrates how to define collision shapes
 // on a sprite and how to perform collision using
 // FrostFlake's simple built-in physics
 
-class CollisionDemo extends View {
+export default class CollisionDemo extends View {
 
     walls = [];
     balls = [];

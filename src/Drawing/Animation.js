@@ -1,6 +1,6 @@
-import {FrostFlake} from '../FrostFlake';
+import FrostFlake from '../FrostFlake.js';
 
-export class Animation {
+export default class Animation {
     name = '';
     frames = [];
     texture = '';

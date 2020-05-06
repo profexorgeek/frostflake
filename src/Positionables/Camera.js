@@ -1,6 +1,6 @@
-import {Rectangle} from './Rectangle';
+import Rectangle from './Rectangle.js'
 
-export class Camera extends Rectangle{
+export default class Camera extends Rectangle{
     resolution = 1;
     antialias = false;
     lastPosition = {x: 0, y: 0, rotation: 0}

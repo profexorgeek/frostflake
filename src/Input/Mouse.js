@@ -1,4 +1,4 @@
-export class Mouse {
+export default class Mouse {
     static Left = 1;
     static Middle = 2;
     static Right = 3;

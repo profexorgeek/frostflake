@@ -22,13 +22,7 @@ If you use this, I'd love to know how you're using it and what you think.
 
 Clone the repository. Serve the directory using any webserver (so the browser can load assets). The easiest way to do this is probably to install Node.js and use `http-server`. However, LAMP, WAMP, MAMP or IIS can also handle this.
 
-Load the **/demo/index.html** in your browser and open the browser dev tools (F12 in many browsers). Try loading the premade demo `View`s by typing one of these commands in your JavaScript console:
-
-- `ff.view = new ManySpriteDemo();`
-- `ff.view = new ParentChildDemo();`
-- `ff.view = new InputDemo();`
-- `ff.view = new AnimationDemo();`
-- `ff.view = new CollisionDemo();`
+Load the **/demo/index.html** in your browser and click the buttons to see various demonstrations of engine capabilities.
 
 The source code for the demos is in the **/demo/index.html** file. Try creating and loading your own custom `View`!
 
@@ -50,12 +44,14 @@ To build the engine:
 Here are features I'd like to add. This is a good place to start if you want to contribute. Keep in mind that the point of this engine is simplicity for beginners so please reach out if you plan to PR a new feature!
 
 - [ ] Improved build system (source map generation is not working correctly)
-- [ ] [TMX Tilemap](https://mapeditor.org) loading
 - [ ] Improve asset loading and texture buffering
-- [ ] Render target demo
-- [ ] Add color property to shapes and use it when rendering debug outlines
+- [ ] Change callback-based loading system to use Promises
 - [ ] Touch input system (currently only Mouse and Keyboard are supported)
 - [ ] Text rendering system
+- [ ] Improve [TMX Tilemap](https://mapeditor.org) loading/rendering
+- [x] Use ES6 modules
+- [x] Add color property to shapes and use it when rendering debug outlines
+- [x] Render target demo
 - [x] Audio playing system
 - [x] Circle vs circle collision with basic physics
 - [x] AAR vs AAR collision with basic physics

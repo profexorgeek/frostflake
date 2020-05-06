@@ -1,4 +1,4 @@
-export class Frame {
+export default class Frame {
     top = 0;
     left = 0;
     width = 0;

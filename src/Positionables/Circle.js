@@ -1,6 +1,7 @@
-import {Shape} from './Shape';
+import Shape from './Shape.js';
+import Rectangle from './Rectangle.js';
 
-export class Circle extends Shape {
+export default class Circle extends Shape {
     radius;
 
     constructor(radius = 16) {

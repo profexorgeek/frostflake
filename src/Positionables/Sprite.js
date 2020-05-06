@@ -1,8 +1,7 @@
-import {Positionable} from './Positionable';
-import {MathUtil} from '../Utility/MathUtil';
-import {Circle} from './Circle';
+import Positionable from './Positionable.js';
+import Circle from './Circle.js';
 
-export class Sprite extends Positionable {
+export default class Sprite extends Positionable{
 
     alpha = 1;
     frame = null;

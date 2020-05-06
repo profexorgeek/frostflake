@@ -1,12 +1,12 @@
+import View from '../../src/Views/View.js';
+import Sprite from '../../src/Positionables/Sprite.js';
+import Frame from '../../src/Drawing/Frame.js';
+import Animation from '../../src/Drawing/Animation.js';
+
 // This class demonstrates frame-based animation.
 // The animation class stores a series of frames and
 // frame timings. Setting an animation on a sprite
 // overrides any existing frame or texture data.
-import {View} from '../../src/Views/View';
-import {Frame} from '../../src/Drawing/Frame';
-import {Sprite} from '../../src/Positionables/Sprite';
-import {Animation} from '../../src/Drawing/Animation';
-
 
 export default class AnimationDemo extends View {
     constructor() {

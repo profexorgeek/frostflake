@@ -1,13 +1,14 @@
-import {FrostFlake} from '../FrostFlake';
-import {MathUtil} from '../Utility/MathUtil';
-import {Positionable} from '../Positionables/Positionable';
-import {Sprite} from '../Positionables/Sprite';
-import {Circle} from '../Positionables/Circle';
-import {Camera} from '../Positionables/Camera';
-import {Frame} from '../Drawing/Frame';
-import {Data} from '../Data/Data';
+import FrostFlake from '../FrostFlake.js';
+import Sprite from '../Positionables/Sprite.js';
+import Positionable from '../Positionables/Positionable.js';
+import Circle from '../Positionables/Circle.js';
+import Rectangle from '../Positionables/Rectangle.js';
+import Camera from '../Positionables/Camera.js';
+import Frame from './Frame.js'
+import MathUtil from '../Utility/MathUtil.js';
+import Data from '../Data/Data.js';
 
-export class CanvasRenderer {
+export default class CanvasRenderer {
 
     #textureCache = {};
     context;
@@ -216,8 +217,21 @@ export class CanvasRenderer {
 
         keyName = (keyName == null) ? url : keyName;
 
-        // EARLY OUT: bad URL or loading in progress
-        if(keyName == '' || keyName == null || keyName in this.#textureCache) {
+        // EARLY OUT: bad key name
+        if(keyName == '' || keyName == null) {
+            return;
+        }
+
+        // EARLY OUT: loading already in progress
+        if(keyName in this.#textureCache && this.#textureCache[keyName] == '...') {
+            return;
+        }
+
+        // EARLY OUT: already loaded
+        if(me.textureLoaded(keyName)) {
+            if(success) {
+                success(keyName);
+            }
             return;
         }
 
