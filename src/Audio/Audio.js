@@ -1,3 +1,5 @@
+import Data from "../Data/Data.js";
+
 export default class Audio {
     context;
 
