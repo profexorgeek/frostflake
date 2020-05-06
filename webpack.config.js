@@ -7,6 +7,7 @@ module.exports = {
         filename: 'ff.min.js',
         path: path.resolve(__dirname, 'dist')
     },
+    devtool: 'source-map',
     module: {
         rules: [
             {
