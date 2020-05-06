@@ -1,7 +1,7 @@
-import View from '../../src/Views/View.js';
-import Sprite from '../../src/Positionables/Sprite.js';
-import Frame from '../../src/Drawing/Frame.js';
-import Animation from '../../src/Drawing/Animation.js';
+import View from '../src/Views/View.js';
+import Sprite from '../src/Positionables/Sprite.js';
+import Frame from '../src/Drawing/Frame.js';
+import Animation from '../src/Drawing/Animation.js';
 
 // This class demonstrates frame-based animation.
 // The animation class stores a series of frames and
@@ -14,7 +14,7 @@ export default class AnimationDemo extends View {
 
         // create an animation object with 8, 0.1 second frames
         let runCycle = new Animation();
-        runCycle.texture = '/demo/content/spritesheet.png';
+        runCycle.texture = '/content/spritesheet.png';
         runCycle.frames = [
             new Frame(0, 160, 16, 16, 0.1),
             new Frame(16, 160, 16, 16, 0.1),

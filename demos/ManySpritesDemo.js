@@ -1,7 +1,7 @@
-import FrostFlake from '../../src/FrostFlake.js';
-import Sprite from '../../src/Positionables/Sprite.js';
-import View from '../../src/Views/View.js';
-import MathUtil from '../../src/Utility/MathUtil.js';
+import FrostFlake from '../src/FrostFlake.js';
+import Sprite from '../src/Positionables/Sprite.js';
+import View from '../src/Views/View.js';
+import MathUtil from '../src/Utility/MathUtil.js';
 
 // This class demonstrates how to create sprites,
 // add the sprites to the current view,
@@ -17,7 +17,7 @@ export default class ManySpritesDemo extends View {
         for (let i = 0; i < 2000; i++) {
 
             // create a new sprite, passing a path to an image file
-            let s = new Sprite('/demo/content/frostflake.png');
+            let s = new Sprite('/content/frostflake.png');
 
             // randomize the sprite's position
             s.x = MathUtil.randomInRange(-300, 300);

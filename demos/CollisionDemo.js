@@ -1,9 +1,9 @@
-import View from '../../src/Views/View.js';
-import RepositionType from '../../src/Positionables/RepositionType.js';
-import Sprite from '../../src/Positionables/Sprite.js';
-import Rectangle from '../../src/Positionables/Rectangle.js';
-import Frame from '../../src/Drawing/Frame.js';
-import MathUtil from '../../src/Utility/MathUtil.js';
+import View from '../src/Views/View.js';
+import RepositionType from '../src/Positionables/RepositionType.js';
+import Sprite from '../src/Positionables/Sprite.js';
+import Rectangle from '../src/Positionables/Rectangle.js';
+import Frame from '../src/Drawing/Frame.js';
+import MathUtil from '../src/Utility/MathUtil.js';
 
 // This class demonstrates how to define collision shapes
 // on a sprite and how to perform collision using
@@ -75,7 +75,7 @@ export default class CollisionDemo extends View {
 
         // create floor and ceiling sprites
         for(let x = 0; x < 20; x++) {
-            let w1 = new Sprite('/demo/content/spritesheet.png');
+            let w1 = new Sprite('/content/spritesheet.png');
             w1.collision = new Rectangle(32, 32);
             w1.frame = new Frame(7 * 32, 1 * 32, 32, 32);
             w1.x = -320 + (x * 32) + 16;
@@ -83,7 +83,7 @@ export default class CollisionDemo extends View {
             this.walls.push(w1);
             this.addChild(w1);
 
-            let w2 = new Sprite('/demo/content/spritesheet.png');
+            let w2 = new Sprite('/content/spritesheet.png');
             w2.collision = new Rectangle(32, 32);
             w2.frame = new Frame(7 * 32, 1 * 32, 32, 32);
             w2.x = -320 + (x * 32) + 16;
@@ -94,7 +94,7 @@ export default class CollisionDemo extends View {
 
         // create walls
         for(let y = 0; y < 14; y++) {
-            let w1 = new Sprite('/demo/content/spritesheet.png');
+            let w1 = new Sprite('/content/spritesheet.png');
             w1.collision = new Rectangle(32, 32);
             w1.frame = new Frame(7 * 32, 1 * 32, 32, 32);
             w1.x = -320 + 16;
@@ -102,7 +102,7 @@ export default class CollisionDemo extends View {
             this.walls.push(w1);
             this.addChild(w1);
 
-            let w2 = new Sprite('/demo/content/spritesheet.png');
+            let w2 = new Sprite('/content/spritesheet.png');
             w2.collision = new Rectangle(32, 32);
             w2.frame = new Frame(7 * 32, 1 * 32, 32, 32);
             w2.x = 320 - 16;
@@ -120,7 +120,7 @@ export default class CollisionDemo extends View {
     createBalls() {
         // make some things to collide
         for(let i = 0; i < 25; i++) {
-            let s = new Sprite('/demo/content/frostflake.png');
+            let s = new Sprite('/content/frostflake.png');
             s.position.x = MathUtil.randomInRange(-200, 200);
             s.position.y = MathUtil.randomInRange(-200, 200);
             s.velocity.x = MathUtil.randomInRange(-300, 300);

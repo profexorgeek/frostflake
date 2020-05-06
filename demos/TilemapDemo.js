@@ -1,7 +1,7 @@
-import FrostFlake from '../../src/FrostFlake.js';
-import Sprite from '../../src/Positionables/Sprite.js';
-import TilemapView from '../../src/Views/TilemapView.js';
-import MathUtil from '../../src/Utility/MathUtil.js';
+import FrostFlake from '../src/FrostFlake.js';
+import Sprite from '../src/Positionables/Sprite.js';
+import TilemapView from '../src/Views/TilemapView.js';
+import MathUtil from '../src/Utility/MathUtil.js';
 
 export default class TilemapDemo extends TilemapView {
 
@@ -10,9 +10,9 @@ export default class TilemapDemo extends TilemapView {
     static BALL_SPEED_MAX = 100;
 
     constructor() {
-        super('/demo/content/tileset.json', '/demo/content/tilemap.json');
+        super('/content/tileset.json', '/content/tilemap.json');
 
-        this.ball = new Sprite('/demo/content/frostflake.png');
+        this.ball = new Sprite('/content/frostflake.png');
         // this.ball.velocity.x = 35;
         // this.ball.velocity.y = 50;
         this.ball.velocity.rotation = MathUtil.randomInRange(-3, 3);

@@ -22,9 +22,9 @@ If you use this, I'd love to know how you're using it and what you think.
 
 Clone the repository. Serve the directory using any webserver (so the browser can load assets). The easiest way to do this is probably to install Node.js and use `http-server`. However, LAMP, WAMP, MAMP or IIS can also handle this.
 
-Load the **/demo/index.html** in your browser and click the buttons to see various demonstrations of engine capabilities.
+Load the **/index.html** in your browser and click the buttons to see various demonstrations of engine capabilities.
 
-The source code for the demos is in the **/demo/index.html** file. Try creating and loading your own custom `View`!
+The source code for the demos is in the **src/index.js** file. Try creating and loading your own custom `View`!
 
 ## Build
 

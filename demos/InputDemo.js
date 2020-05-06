@@ -1,10 +1,10 @@
-import FrostFlake from '../../src/FrostFlake.js';
-import Sprite from '../../src/Positionables/Sprite.js';
-import View from '../../src/Views/View.js';
-import MathUtil from '../../src/Utility/MathUtil.js';
-import Frame from '../../src/Drawing/Frame.js';
-import Mouse from '../../src/Input/Mouse.js';
-import Keys from '../../src/Input/Keys.js';
+import FrostFlake from '../src/FrostFlake.js';
+import Sprite from '../src/Positionables/Sprite.js';
+import View from '../src/Views/View.js';
+import MathUtil from '../src/Utility/MathUtil.js';
+import Frame from '../src/Drawing/Frame.js';
+import Mouse from '../src/Input/Mouse.js';
+import Keys from '../src/Input/Keys.js';
 
 // This class demonstrates how to get input state
 // from the mouse and keyboard. It also demonstrates
@@ -19,7 +19,7 @@ export default class InputDemo extends View {
 
         // create some random sprites so camera movement is visible
         for (let i = 0; i < 10; i++) {
-            let s = new Sprite('content/frostflake.png');
+            let s = new Sprite('/content/frostflake.png');
             s.x = MathUtil.randomInRange(-300, 300);
             s.y = MathUtil.randomInRange(-200, 200);
             s.alpha = MathUtil.randomInRange(0.2, 0.85);
@@ -29,7 +29,7 @@ export default class InputDemo extends View {
 
         // create a sprite based on part of a sprite sheet and add it to the View
         // The frame defines the part of the spritesheet rendered by this sprite
-        this.cursorSprite = new Sprite('content/spritesheet.png');
+        this.cursorSprite = new Sprite('/content/spritesheet.png');
         this.cursorSprite.frame = new Frame(32, 0, 32, 32);
         this.addChild(this.cursorSprite);
 

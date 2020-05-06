@@ -1,11 +1,11 @@
-import FrostFlake from '../../src/FrostFlake.js';
-import Sprite from '../../src/Positionables/Sprite.js';
-import View from '../../src/Views/View.js';
-import MathUtil from '../../src/Utility/MathUtil.js';
+import FrostFlake from '../src/FrostFlake.js';
+import Sprite from '../src/Positionables/Sprite.js';
+import View from '../src/Views/View.js';
+import MathUtil from '../src/Utility/MathUtil.js';
 
 export default class RenderTargetDemo extends View {
 
-    static TEXTURE = '/demo/content/frostflake.png';
+    static TEXTURE = '/content/frostflake.png';
     static TARGETNAME = 'renderTarget';
 
     constructor() {
