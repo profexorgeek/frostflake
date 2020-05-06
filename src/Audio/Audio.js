@@ -1,9 +1,9 @@
-import Data from "../Data/Data.js";
+import FrostFlake from '../FrostFlake.js';
+import Data from '../Data/Data.js';
 
 export default class Audio {
     context;
-
-    #audioCache = {};
+    #cache = {};
 
     constructor() {
         this.context = new AudioContext();
@@ -15,68 +15,55 @@ export default class Audio {
         }
     }
 
-    playSound(url) {
-        // TODO: cache created buffers for reuse?
-        if(this.audioLoaded(url)) {
-            let src = this.context.createBufferSource();
-            src.buffer = this.#audioCache[url];
-            src.connect(this.context.destination);
-            src.start(0);
-            return src;
+    playSound(src) {
+        if(src in this.#cache == false || this.#cache[src] == null) {
+            const msg = `Tried to play sound that hasn't been loaded: ${url}`;
+            FrostFlake.Log.error(msg);
+            throw Error(msg);
         }
-        else {
-            FrostFlake.Log.warn(`Audio not loaded ${url}, attempting to load now.`);
-            this.loadSound(url);
-            return null;
-        }
-    }
 
-    audioLoaded(url) {
-        if(url !== null && 
-            url !== '' &&
-            url in this.#audioCache && 
-            this.#audioCache[url] instanceof AudioBuffer) {
-                return true;
-            }
-        return false;
-    }
-
-    loadSound(url, success = null) {
-        let me = this;
-
-        // EARLY OUT: bad URL, audio context, or loading in progress
-        if(url == '' || 
-            url == null || 
-            url in this.#audioCache ||
-            this.context.state != 'running') {
+        // EARLY OUT: can't play audio because the context isn't running
+        if(this.context.state !== 'running') {
+            FrostFlake.Log.warn('Cannot play sounds: audio context is not running');
             return;
         }
+        
+        let sound = this.context.createBufferSource();
+        sound.buffer = this.#cache[src];
+        sound.connect(this.context.destination);
+        sound.start(0);
+        return sound;
+    }
 
-        // insert placeholder so audio isn't loaded multiple times
-        // if load requests fire quickly
-        me.#audioCache[url] = "...";
+    async loadSound(src) {
+        // EARLY OUT: sound already loaded
+        if(src in this.#cache) {
+            return this.#cache[src];
+        }
 
-        Data.load(url, 'arraybuffer',
-            // success
-            function(response) {
-                if(response instanceof ArrayBuffer) {
-                    me.context.decodeAudioData(response,
-                        // decode succeeded
-                        function(decoded) {
-                            me.#audioCache[url] = decoded;
-                        },
-                        // failed to decode
-                        function() {
-                            FrostFlake.Log.error(`Failed to decode audio for: ${url}`);
-                        });
-                }
-                else {
-                    FrostFlake.Log.error(`Response was not an ArrayBuffer: ${url}`);
-                }
-            },
-            // fail
-            function(response) {
-                FrostFlake.Log.error(`Failed to load ${url} with response ${xhr.status}`);
+        if(this.context.state !== 'running') {
+            const msg = `Couldn't load ${src} because AudioContext is not running.`;
+            FrostFlake.Log.error(msg);
+            throw Error(msg);
+        }
+
+        let buffer = await Data.loadAudio(src);
+        if(buffer instanceof ArrayBuffer !== true) {
+            const msg = `Audio source ${src} was not a valid audio buffer`;
+            FrostFlake.Log.error(msg);
+            throw Error(msg);
+        }
+        const promise = new Promise((resolve, reject) => {
+            this.context.decodeAudioData(buffer, (decoded) => {
+                this.#cache[src] = decoded;
+                resolve(decoded);
+            }, (err) => {
+                FrostFlake.Log.error(`Failed to decode audio from ${src}.`);
+                reject(err);
             });
+        });
+
+        let sound = await promise;
+        return sound;
     }
 }

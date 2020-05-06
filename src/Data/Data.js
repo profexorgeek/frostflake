@@ -11,6 +11,8 @@ export default class Data {
             FrostFlake.Log.error(msg)
             throw new Error(msg);
         }
+
+        return response;
     }
 
     static async loadImage(src, key = null, skipCache = false) {
@@ -44,7 +46,8 @@ export default class Data {
 
     static async loadAudio(src) {
         const response = await Data.loadResponse(src);
-        return response.arrayBuffer();
+        let buffer = response.arrayBuffer();
+        return buffer;
     }
     
     

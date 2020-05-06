@@ -11,6 +11,7 @@ import InputDemo from '../demos/InputDemo.js';
 import ManySpritesDemo from '../demos/ManySpritesDemo.js';
 import ParentChildDemo from '../demos/ParentChildDemo.js';
 import RenderTargetDemo from '../demos/RenderTargetDemo.js';
+import AudioDemo from '../demos/AudioDemo.js';
 
 const canvas = document.getElementById('frostFlake');
 const ff = new FrostFlake(canvas, 60);
@@ -39,3 +40,4 @@ window.InputDemo = InputDemo;
 window.ManySpritesDemo = ManySpritesDemo;
 window.ParentChildDemo = ParentChildDemo;
 window.RenderTargetDemo = RenderTargetDemo;
+window.AudioDemo = AudioDemo;
