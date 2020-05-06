@@ -1,11 +1,11 @@
 const path = require('path');
 
 module.exports = {
-    mode: 'development',
-    entry: './demo/js/Demos.js',
+    mode: 'production',
+    entry: './src/index.js',
     output: {
         filename: 'ff.min.js',
-        path: path.resolve(__dirname, 'demo/dist')
+        path: path.resolve(__dirname, 'dist')
     },
     module: {
         rules: [
