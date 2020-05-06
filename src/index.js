@@ -3,14 +3,14 @@
  * Overwite the contents of this file and run `npm run build` in the terminal to see your changes.
  */
 
-import FrostFlake from './FrostFlake';
-import View from './Views/View';
-import AnimationDemo from '../demos/AnimationDemo';
-import CollisionDemo from '../demos/CollisionDemo';
-import InputDemo from '../demos/InputDemo';
-import ManySpritesDemo from '../demos/ManySpritesDemo';
-import ParentChildDemo from '../demos/ParentChildDemo';
-import RenderTargetDemo from '../demos/RenderTargetDemo';
+import FrostFlake from './FrostFlake.js';
+import View from './Views/View.js';
+import AnimationDemo from '../demos/AnimationDemo.js';
+import CollisionDemo from '../demos/CollisionDemo.js';
+import InputDemo from '../demos/InputDemo.js';
+import ManySpritesDemo from '../demos/ManySpritesDemo.js';
+import ParentChildDemo from '../demos/ParentChildDemo.js';
+import RenderTargetDemo from '../demos/RenderTargetDemo.js';
 
 const canvas = document.getElementById('frostFlake');
 const ff = new FrostFlake(canvas, 60);
