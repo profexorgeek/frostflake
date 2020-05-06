@@ -9,37 +9,14 @@ import MathUtil from '../Utility/MathUtil.js';
 import Data from '../Data/Data.js';
 
 export default class CanvasRenderer {
-
-    #textureCache = {};
     context;
-
-    // TODO: what about clearing texture cache
-    // and images added to the DOM?
 
     constructor(canvas, background) {
         this.context = canvas.getContext("2d");
         this.background = background;
     }
 
-    checkAndPreloadPositionables(positionables) {
-        let preloaded = true;
-        for(let i = 0; i < positionables.length; i++) {
-            if(!this.textureLoaded(positionables[i].texture)) {
-                preloaded = false;
-            }
-
-            if(positionables[i].children.length > 0) {
-                let childrenLoaded = this.checkAndPreloadPositionables(positionables[i].children);
-                if(childrenLoaded === false) {
-                    preloaded = false;
-                }
-            }
-        }
-
-        return preloaded;
-    }
-
-    renderToTexture(textureName, positionables, width, height, success = null, background = "rgba(0,0,0,0)") {
+    async renderCustomImage(imageName, positionables, width, height, background = "rgba(0,0,0,0)") {
         // cache context
         let contextCache = this.context;
 
@@ -51,10 +28,11 @@ export default class CanvasRenderer {
         this.context = cvs.getContext('2d');
         this.background = background;
         this.draw(positionables, camera);
-        this.loadTexture(cvs.toDataURL(), success, textureName);
 
         // restore context
         this.context = contextCache;
+
+        await Data.loadImage(cvs.toDataURL(), imageName);
     }
     
     draw(positionables, camera) {
@@ -70,7 +48,6 @@ export default class CanvasRenderer {
         this.context.translate(transX, transY);
 
         for(let i = 0; i < positionables.length; i++) {
-
             this.drawPositionable(positionables[i]);
         }
         this.context.restore();
@@ -143,43 +120,42 @@ export default class CanvasRenderer {
         this.context.rotate(transRot);
         this.context.globalAlpha = alpha;
 
-        // draw texture
-        if(this.textureLoaded(sprite.texture)) {
-            let tex = this.#textureCache[sprite.texture];
-
-            // if null frame, force sprite to have a frame matching its width
-            if(sprite.frame == null) {
-                sprite.frame = new Frame();
-                sprite.frame.width = tex.width;
-                sprite.frame.height = tex.height;
-            }
-
-            this.context.drawImage(
-                tex,
-                sprite.frame.left,
-                sprite.frame.top,
-                sprite.frame.width,
-                sprite.frame.height,
-                sprite.frame.width / -2 * sprite.scale,
-                sprite.frame.height / -2 * sprite.scale,
-                sprite.frame.width * sprite.scale,
-                sprite.frame.height * sprite.scale
-            );
-
-            // draw debug visualizations
-            if(FrostFlake.Game.showDebug) {
-                // draw sprite bounds
-                this.context.strokeStyle = sprite.color;
-                this.context.strokeRect(
-                    -sprite.frame.width / 2 * sprite.scale,
-                    -sprite.frame.height / 2 * sprite.scale,
-                    sprite.frame.width * sprite.scale,
-                    sprite.frame.height * sprite.scale);
-            }
+        let tex = Data.getItem(sprite.texture);
+        if(tex == null) {
+            const msg = `Tried to render bad texture: ${sprite.texture}. ` +
+                `Sprite wasn't given a texture or texture wasn't preloaded`;
+            FrostFlake.Log.error(msg);
+            throw Error(msg);
         }
-        // texture hasn't been loaded, load it now
-        else {
-            this.loadTexture(sprite.texture);
+
+        // if null frame, force sprite to have a frame matching its width
+        if(sprite.frame == null) {
+            sprite.frame = new Frame();
+            sprite.frame.width = tex.width;
+            sprite.frame.height = tex.height;
+        }
+
+        this.context.drawImage(
+            tex,
+            sprite.frame.left,
+            sprite.frame.top,
+            sprite.frame.width,
+            sprite.frame.height,
+            sprite.frame.width / -2 * sprite.scale,
+            sprite.frame.height / -2 * sprite.scale,
+            sprite.frame.width * sprite.scale,
+            sprite.frame.height * sprite.scale
+        );
+
+        // draw debug visualizations
+        if(FrostFlake.Game.showDebug) {
+            // draw sprite bounds
+            this.context.strokeStyle = sprite.color;
+            this.context.strokeRect(
+                -sprite.frame.width / 2 * sprite.scale,
+                -sprite.frame.height / 2 * sprite.scale,
+                sprite.frame.width * sprite.scale,
+                sprite.frame.height * sprite.scale);
         }
 
         // reset alpha
@@ -199,61 +175,5 @@ export default class CanvasRenderer {
 
         // restore context
         this.context.restore();
-    }
-
-    textureLoaded(url) {
-        if(url !== null &&
-            url in this.#textureCache &&
-            this.#textureCache[url] instanceof HTMLImageElement === true &&
-            this.#textureCache[url].complete === true) {
-                return true;
-            }
-        return false;
-    }
-
-    loadTexture(url, success = null, keyName = null) {
-        
-        let me = this;
-
-        keyName = (keyName == null) ? url : keyName;
-
-        // EARLY OUT: bad key name
-        if(keyName == '' || keyName == null) {
-            return;
-        }
-
-        // EARLY OUT: loading already in progress
-        if(keyName in this.#textureCache && this.#textureCache[keyName] == '...') {
-            return;
-        }
-
-        // EARLY OUT: already loaded
-        if(me.textureLoaded(keyName)) {
-            if(success) {
-                success(keyName);
-            }
-            return;
-        }
-
-        // insert placeholder so images aren't loaded
-        // multiple times if load requests are fired quickly
-        me.#textureCache[keyName] = "...";
-
-        Data.load(url, 'blob',
-            // success
-            function(response) {
-                let img = document.createElement('img');
-                img.onload = () => {
-                    me.#textureCache[keyName] = img;
-                    if(success) {
-                        success(keyName);
-                    }
-                }
-                img.src = URL.createObjectURL(response);
-            },
-            // fail
-            function(response) {
-                FrostFlake.Log.error(`Failed to load image ${keyName}`);
-            });
     }
 }
