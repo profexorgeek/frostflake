@@ -11,11 +11,10 @@ import InputDemo from '../demos/InputDemo';
 import ManySpritesDemo from '../demos/ManySpritesDemo';
 import ParentChildDemo from '../demos/ParentChildDemo';
 import RenderTargetDemo from '../demos/RenderTargetDemo';
-import TilemapDemo from '../demos/TilemapDemo';
 
 const canvas = document.getElementById('frostFlake');
 const ff = new FrostFlake(canvas, 60);
-ff.showDebug = true;
+ff.showDebug = false;
 ff.start();
 
 const buttons = document.getElementsByTagName('button');
@@ -40,4 +39,3 @@ window.InputDemo = InputDemo;
 window.ManySpritesDemo = ManySpritesDemo;
 window.ParentChildDemo = ParentChildDemo;
 window.RenderTargetDemo = RenderTargetDemo;
-window.TilemapDemo = TilemapDemo;
