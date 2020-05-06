@@ -11,16 +11,26 @@ export default class FrostFlake {
     static Log;
 
     #timer;
+    #view;
+
     time;
     fps;
     camera;
     canvas;
     renderer;
-    view;
     background;
     input;
     audio;
     showDebug = false;
+
+    set view(newView) {
+        newView.start();
+        this.#view = newView;
+    }
+
+    get view() {
+        return this.#view;
+    }
 
     constructor(canvas, fps = 30, background = "rgb(0,0,0)") {
         FrostFlake.Game = this;
@@ -29,8 +39,8 @@ export default class FrostFlake {
         this.canvas = canvas;
         this.fps = fps;
         this.background = background;
-        this.input = new Input();
         this.view = new View();
+        this.input = new Input();
         this.audio = new Audio();
         this.camera = new Camera(this.canvas.width, this.canvas.height);
         this.camera.background = background;
@@ -53,7 +63,10 @@ export default class FrostFlake {
     update() {
         this.time.update();
         this.camera.update();
-        this.view.update();
+
+        if(this.view.initialized) {
+            this.view.update();
+        }
 
         // Note: input must be updated after the view
         // this is because an input could come in and
@@ -61,6 +74,11 @@ export default class FrostFlake {
         // can respond in the game loop
         this.input.update();
 
-        this.renderer.draw(this.view.children, this.camera, this.canvas, this.background);
+        if(this.view.initialized) {
+            this.renderer.draw(this.view.children, this.camera, this.canvas, this.background);
+        }
+        else {
+            // TODO: draw loading icon?
+        }
     }
 }
