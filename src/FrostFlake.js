@@ -5,6 +5,9 @@ import Camera from './Positionables/Camera.js';
 import CanvasRenderer from './Drawing/CanvasRenderer.js';
 import Log from './Logging/Log.js';
 import GameTime from './GameTime.js';
+import Sprite from './Positionables/Sprite.js';
+import Data from './Data/Data.js';
+import EmbeddedImages from './Drawing/EmbeddedImages.js';
 
 export default class FrostFlake {
     static Game;
@@ -22,6 +25,7 @@ export default class FrostFlake {
     input;
     audio;
     showDebug = false;
+    defaultLoadingSprite;
 
     set view(newView) {
         newView.start();
@@ -46,18 +50,23 @@ export default class FrostFlake {
         this.camera.background = background;
         this.renderer = new CanvasRenderer(this.canvas);
 
+
         FrostFlake.Log.info("FrostFlake instance created...");
     }
 
     start() {
         FrostFlake.Log.info("Starting FrostFlake...");
 
-        this.time = new GameTime();
+        (async () => {
+            await Data.loadImage(EmbeddedImages.Loading, "loadImage");
+            this.defaultLoadingSprite = new Sprite("loadImage");
 
-        let me = this;
-        this.#timer = window.setInterval( function () {
-            me.update();
-        }, 1000 / this.fps);
+            this.time = new GameTime();
+            let me = this;
+            this.#timer = window.setInterval( function () {
+                me.update();
+            }, 1000 / this.fps);
+        })();
     }
 
     update() {
@@ -66,6 +75,9 @@ export default class FrostFlake {
 
         if(this.view.initialized) {
             this.view.update();
+        }
+        else {
+            this.defaultLoadingSprite.alpha = (Math.sin(this.time.gameTimeSeconds) + 1) / 2;
         }
 
         // Note: input must be updated after the view
@@ -78,7 +90,7 @@ export default class FrostFlake {
             this.renderer.draw(this.view.children, this.camera, this.canvas, this.background);
         }
         else {
-            // TODO: draw loading icon?
+            this.renderer.draw([this.defaultLoadingSprite], this.camera, this.canvas, this.background);
         }
     }
 }
