@@ -1,12 +1,23 @@
 export default class View {
     children = [];
     sortNeeded = false;
+    initialized = false;
 
     constructor() {
+        this.initialized = false;
+    }
+
+    async initialize() {
+    }
+
+    start() {
+        (async () => {
+            await this.initialize();
+            this.initialized = true;
+        })();
     }
 
     update() {
-
         if(this.sortNeeded) {
             this.children.sort((a, b) => {
                 return a.layer - b.layer;
@@ -57,5 +68,7 @@ export default class View {
         for (let i = this.children.length - 1; i > -1; i--) {
             this.destroyChild(this.children[i]);
         }
+
+        // TODO: clear texture cache?
     }
 }
