@@ -2,6 +2,7 @@ import View from '../src/Views/View.js';
 import Sprite from '../src/Positionables/Sprite.js';
 import Frame from '../src/Drawing/Frame.js';
 import Animation from '../src/Drawing/Animation.js';
+import Data from '../src/Data/Data.js';
 
 // This class demonstrates frame-based animation.
 // The animation class stores a series of frames and
@@ -9,8 +10,12 @@ import Animation from '../src/Drawing/Animation.js';
 // overrides any existing frame or texture data.
 
 export default class AnimationDemo extends View {
-    constructor() {
-        super();
+
+    async initialize() {
+        await super.initialize();
+
+        // load content used by this view
+        await Data.loadImage('/content/spritesheet.png');
 
         // create an animation object with 8, 0.1 second frames
         let runCycle = new Animation();

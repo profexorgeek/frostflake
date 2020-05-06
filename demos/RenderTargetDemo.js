@@ -2,34 +2,25 @@ import FrostFlake from '../src/FrostFlake.js';
 import Sprite from '../src/Positionables/Sprite.js';
 import View from '../src/Views/View.js';
 import MathUtil from '../src/Utility/MathUtil.js';
+import Data from '../src/Data/Data.js';
 
 export default class RenderTargetDemo extends View {
 
     static TEXTURE = '/content/frostflake.png';
     static TARGETNAME = 'renderTarget';
 
-    constructor() {
-        super();
-
-        FrostFlake.Log.info("Starting render target demo...");
-
-        // First ensure any textures required 
-        FrostFlake.Game.renderer.loadTexture(RenderTargetDemo.TEXTURE, () => {
-            FrostFlake.Log.info("Texture loaded, rendering");
-            this.createSpriteTexture();
-        });
-    }
-
-    createSpriteTexture() {
+    async initialize() {
+        super.initialize();
 
         // array to hold all of our sprites
         let sprites = [];
         let spriteCount = 100000;
 
-        FrostFlake.Log.info(`Adding ${spriteCount} sprites for one-time render`);
+        // load the image we use for rendering our one-time texture
+        await Data.loadImage(RenderTargetDemo.TEXTURE);
 
-        // create a lot of sprites, this is too many to
-        // render every frame
+        // add a ton of sprites
+        FrostFlake.Log.info(`Adding ${spriteCount} sprites for one-time render`);
         for (let i = 0; i < spriteCount; i++) {
             let s = new Sprite(RenderTargetDemo.TEXTURE);
             s.x = MathUtil.randomInRange(-300, 300);
@@ -42,18 +33,12 @@ export default class RenderTargetDemo extends View {
             sprites.push(s);
         }
 
-        // render all sprites a single time to a new texture
-        // this texture must be given a name
-        FrostFlake.Log.info("Rendering...");
-        FrostFlake.Game.renderer.renderToTexture(RenderTargetDemo.TARGETNAME, sprites, 640, 480);
+        // now render all of the sprites to a new custom image
+        await FrostFlake.Game.renderer.renderCustomImage(RenderTargetDemo.TARGETNAME, sprites, 640, 480);
 
-        FrostFlake.Log.info("Rendered. Now setting render target as new sprite texture.");
-        // create a new sprite referencing the one-time render target by name (instead of URL)
+        // finally create a sprite that uses the custom image
         let renderedSprite = new Sprite(RenderTargetDemo.TARGETNAME);
-
-        // give it rotation velocity so you can see all sprites moving as one texture
         renderedSprite.velocity.rotation = MathUtil.randomInRange(-3, 3);
-
         this.addChild(renderedSprite);
     }
 

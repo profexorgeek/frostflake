@@ -2,6 +2,7 @@ import FrostFlake from '../src/FrostFlake.js';
 import Sprite from '../src/Positionables/Sprite.js';
 import View from '../src/Views/View.js';
 import MathUtil from '../src/Utility/MathUtil.js';
+import Data from '../src/Data/Data.js';
 
 // This class demonstrates how to create sprites,
 // add the sprites to the current view,
@@ -10,10 +11,13 @@ import MathUtil from '../src/Utility/MathUtil.js';
 
 export default class ManySpritesDemo extends View {
 
-    constructor() {
-        super();
+    async initialize() {
+        await super.initialize();
 
-        // Create 2000 sprites in a loop
+        // load data required by this view
+        await Data.loadImage('/content/frostflake.png');
+
+        // Create 2000 sprites
         for (let i = 0; i < 2000; i++) {
 
             // create a new sprite, passing a path to an image file
@@ -32,7 +36,6 @@ export default class ManySpritesDemo extends View {
             // add the sprite to this view so it is updated and rendered
             this.addChild(s);
         }
-
     }
 
     update() {

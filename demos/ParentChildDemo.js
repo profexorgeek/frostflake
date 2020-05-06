@@ -1,6 +1,7 @@
 import FrostFlake from '../src/FrostFlake.js';
 import Sprite from '../src/Positionables/Sprite.js';
 import View from '../src/Views/View.js';
+import Data from '../src/Data/Data.js';
 
 // This class demonstrates how the FrostFlake
 // scene graph works. Every Postionable object
@@ -13,8 +14,11 @@ export default class ParentChildDemo extends View {
     childFlake1;
     childFlake2;
 
-    constructor() {
-        super();
+    async initialize() {
+        await super.initialize();
+
+        // load data required by this view
+        await Data.loadImage('/content/frostflake.png');
 
         // create a parent sprite and add it to the View sprites
         this.parentFlake = new Sprite('/content/frostflake.png');

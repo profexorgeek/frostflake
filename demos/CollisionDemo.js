@@ -4,6 +4,7 @@ import Sprite from '../src/Positionables/Sprite.js';
 import Rectangle from '../src/Positionables/Rectangle.js';
 import Frame from '../src/Drawing/Frame.js';
 import MathUtil from '../src/Utility/MathUtil.js';
+import Data from '../src/Data/Data.js';
 
 // This class demonstrates how to define collision shapes
 // on a sprite and how to perform collision using
@@ -14,9 +15,14 @@ export default class CollisionDemo extends View {
     walls = [];
     balls = [];
 
-    constructor() {
-        super();
+    async initialize() {
+        await super.initialize();
 
+        // load content required by this view
+        await Data.loadImage('/content/spritesheet.png');
+        await Data.loadImage('/content/frostflake.png');
+
+        // create balls and walls
         this.createWalls();
         this.createBalls();
     }

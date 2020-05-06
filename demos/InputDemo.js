@@ -5,6 +5,7 @@ import MathUtil from '../src/Utility/MathUtil.js';
 import Frame from '../src/Drawing/Frame.js';
 import Mouse from '../src/Input/Mouse.js';
 import Keys from '../src/Input/Keys.js';
+import Data from '../src/Data/Data.js';
 
 // This class demonstrates how to get input state
 // from the mouse and keyboard. It also demonstrates
@@ -14,8 +15,12 @@ export default class InputDemo extends View {
 
     cursorSprite;
 
-    constructor() {
-        super();
+    async initialize() {
+        await super.initialize();
+
+        // load data required by this view
+        await Data.loadImage('/content/frostflake.png');
+        await Data.loadImage('/content/spritesheet.png');
 
         // create some random sprites so camera movement is visible
         for (let i = 0; i < 10; i++) {
