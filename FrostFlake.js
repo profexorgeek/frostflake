@@ -4,7 +4,7 @@ import Audio from './Audio/Audio.js';
 import Camera from './Positionables/Camera.js';
 import CanvasRenderer from './Drawing/CanvasRenderer.js';
 import Log from './Logging/Log.js';
-import GameTime from './GameTime.js';
+import GameTime from './Utility/GameTime.js';
 import Sprite from './Positionables/Sprite.js';
 import Data from './Data/Data.js';
 import EmbeddedImages from './Drawing/EmbeddedImages.js';
