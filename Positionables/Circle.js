@@ -1,5 +1,6 @@
 import Shape from './Shape.js';
 import Rectangle from './Rectangle.js';
+import RepositionType from './RepositionType.js';
 
 export default class Circle extends Shape {
     radius;
