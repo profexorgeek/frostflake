@@ -1,6 +1,6 @@
 {
   "name": "frostflake",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "FrostFlake is a canvas-rendering game engine written in JavaScript ES6. I originally started FrostFlake in 2014 as a way to have fun while learning the deeper aspects of JavaScript. The goal was to build a simple game engine with the fewest dependencies possible. I rewrote the engine in TypeScript in 2017, and again in ES6 in 2020.",
   "main": "FrostFlake.js",
   "scripts": {},
