@@ -1,4 +1,4 @@
-import Rectangle from './Rectangle.js'
+import Rectangle from './Rectangle.js';
 
 export default class Camera extends Rectangle{
     resolution = 1;
