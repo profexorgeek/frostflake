@@ -30,6 +30,10 @@ export default class MathUtil {
         return val + min;
     }
 
+    static randomIntInRange(min, max) {
+        return Math.floor(MathUtil.randomInRange(min, max));
+    }
+
     static vectorSubtract(v1, v2) {
         if(typeof v2 === "number") {
             return {
