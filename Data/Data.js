@@ -25,7 +25,10 @@ export default class Data {
         const promise = new Promise((resolve, reject) => {
             const img = new Image();
             img.addEventListener('load', () => resolve(img));
-            img.addEventListener('error', () => reject(err));
+            img.addEventListener('error', (err) => {
+                FrostFlake.Log.error(`Error loading ${src}...`);
+                reject(err)
+            });
             img.src = src;
         });
 
