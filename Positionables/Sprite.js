@@ -1,5 +1,6 @@
 import Positionable from './Positionable.js';
 import Circle from './Circle.js';
+import FrostFlake from '../FrostFlake.js';
 
 export default class Sprite extends Positionable{
 
@@ -9,6 +10,7 @@ export default class Sprite extends Positionable{
     animation = null;
     scale = 1;
     #collisionShape = null;
+    parallax = 1;
 
     get collision() {
         return this.#collisionShape;
@@ -60,5 +62,11 @@ export default class Sprite extends Positionable{
             this.texture = this.animation.texture;
             this.frame = this.animation.currentFrame;
         }
+
+        // do parallax
+        let cam = FrostFlake.Game.camera;
+        let movePercent = 1 - this.parallax;
+        this.x += movePercent * (cam.position.x - cam.lastPosition.x);
+        this.y += movePercent * (cam.position.y - cam.lastPosition.y);
     }
 }
