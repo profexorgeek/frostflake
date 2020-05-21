@@ -45,7 +45,7 @@ export default class Log {
     }
 
     write(level, msg) {
-        if(this.#levels[this.#level] < level) {
+        if(this.#levels[this.#level] <= level) {
             let levelName = this.#reverseLevels[level];
             console.log(`${levelName}: ${msg}`);
         }
