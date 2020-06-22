@@ -1,4 +1,5 @@
 import FrostFlake from '../FrostFlake.js';
+import Text from '../Positionables/Text.js';
 import Sprite from '../Positionables/Sprite.js';
 import Positionable from '../Positionables/Positionable.js';
 import Circle from '../Positionables/Circle.js';
@@ -66,7 +67,34 @@ export default class CanvasRenderer {
             else if(positionable instanceof Rectangle) {
                 this.drawRect(positionable);
             }
+
+            else if(positionable instanceof Text) {
+                this.drawText(positionable);
+            }
         }
+    }
+
+    drawText(text) {
+        this.context.save();
+        this.context.translate(text.x, MathUtil.invert(text.y));
+
+        if(text.ignoreRotation) {
+            this.context.rotate(text.absolutePosition.rotation);
+        }
+        else {
+            this.context.rotate(-text.rotation);
+        }
+        
+        this.context.font = text.font;
+        this.context.fillStyle = text.fillStyle;
+        this.context.strokeStyle = text.strokeStyle;
+        this.context.lineWidth = text.strokeWeight;
+        this.context.textAlign = text.textAlign;
+        this.context.textBaseline = text.textBaseline;
+        this.context.direction = text.textDirection;
+        this.context.fillText(text.content, 0, 0);
+        this.context.strokeText(text.content, 0, 0);
+        this.context.restore();
     }
 
     drawCircle(circle) {
