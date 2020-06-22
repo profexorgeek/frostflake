@@ -3,7 +3,6 @@ import MathUtil from '../Utility/MathUtil.js';
 
 export default class Positionable {
 
-    // NOTE: this is only used for debug drawing
     color = "red";
 
     position = {x: 0, y: 0, rotation: 0}
