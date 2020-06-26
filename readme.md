@@ -38,8 +38,8 @@ The easiest way to start contributing is to use the [frostflake-template project
 Here are features I'd like to add. This is a good place to start if you want to contribute. Keep in mind that the point of this engine is simplicity for beginners so please reach out if you plan to PR a new feature!
 
 - [ ] Touch input system (currently only Mouse and Keyboard are supported)
-- [ ] Text rendering system
 - [ ] Improve [TMX Tilemap](https://mapeditor.org) loading/rendering
+- [x] Text rendering system
 - [x] Improve asset loading and texture buffering
 - [x] Change callback-based loading system to use Promises
 - [x] Improved build system (source map generation is not working correctly)
