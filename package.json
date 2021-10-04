@@ -1,6 +1,6 @@
 {
   "name": "frostflake",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "FrostFlake is a canvas-rendering game engine written in JavaScript ES6. I originally started FrostFlake in 2014 as a way to have fun while learning the deeper aspects of JavaScript. The goal was to build a simple game engine with the fewest dependencies possible. I rewrote the engine in TypeScript in 2017, and again in ES6 in 2020.",
   "main": "FrostFlake.js",
   "scripts": {
@@ -19,16 +19,16 @@
   },
   "homepage": "https://github.com/profexorgeek/frostflake#readme",
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/plugin-proposal-private-methods": "^7.8.3",
-    "@babel/plugin-transform-runtime": "^7.9.6",
-    "@babel/preset-env": "^7.9.6",
-    "babel-loader": "^8.1.0",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11"
+    "@babel/core": "^7.15.5",
+    "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@babel/plugin-proposal-private-methods": "^7.14.5",
+    "@babel/plugin-transform-runtime": "^7.15.0",
+    "@babel/preset-env": "^7.15.6",
+    "babel-loader": "^8.2.2",
+    "webpack": "^4.46.0",
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "@babel/runtime": "^7.9.6"
+    "@babel/runtime": "^7.15.4"
   }
 }
