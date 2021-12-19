@@ -2,13 +2,13 @@ const path = require('path');
 
 module.exports = {
     mode: 'production',
-    entry: './src/FrostFlake.js',
+    entry: './src/FrostFlake.ts',
     output: {
-        filename: './dist/frostflake.min.js'
+        filename: './frostflake.min.js'
     },
     devtool: 'source-map',
     resolve: {
-        extensions: [".ts", ".js"]
+        extensions: [".ts"]
     },
     watch: false,
     watchOptions: {
@@ -18,22 +18,15 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.ts$/,
+                loader: "ts-loader"
+            },{
                 test: /\.js$/,
                 exclude:[
                     (/node_modules/),
                     path.resolve(__dirname, 'dist')
                 ],
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['@babel/preset-env'],
-                        plugins: [
-                            '@babel/plugin-proposal-class-properties',
-                            '@babel/plugin-proposal-private-methods',
-                            '@babel/plugin-transform-runtime'
-                        ]
-                    }   
-                }
+                loader: "source-map-loader"
             }
         ]
     }

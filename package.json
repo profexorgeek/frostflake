@@ -4,7 +4,7 @@
   "description": "FrostFlake is a canvas-rendering game engine written in JavaScript ES6. I originally started FrostFlake in 2014 as a way to have fun while learning the deeper aspects of JavaScript. The goal was to build a simple game engine with the fewest dependencies possible. I rewrote the engine in TypeScript in 2017, and again in ES6 in 2020.",
   "main": "FrostFlake.js",
   "scripts": {
-    "build": "tsc",
+    "build": "webpack",
     "prepare": "npm run build"
   },
   "repository": {
@@ -20,19 +20,10 @@
   },
   "homepage": "https://github.com/profexorgeek/frostflake#readme",
   "devDependencies": {
-    "@babel/core": "^7.15.5",
-    "@babel/plugin-proposal-class-properties": "^7.14.5",
-    "@babel/plugin-proposal-private-methods": "^7.14.5",
-    "@babel/plugin-transform-runtime": "^7.15.0",
-    "@babel/preset-env": "^7.15.6",
-    "babel-loader": "^8.2.2",
     "source-map-loader": "^3.0.0",
     "ts-loader": "^9.2.6",
     "typescript": "^4.5.4",
     "webpack": "^5.56.0",
     "webpack-cli": "^4.9.1"
-  },
-  "dependencies": {
-    "@babel/runtime": "^7.15.4"
   }
 }
