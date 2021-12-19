@@ -1,16 +1,16 @@
-import FrostFlake from '../FrostFlake.js';
-import Cursor from './Cursor.js'
-import Mouse from './Mouse.js';
-import Keys from './Keys.js';
+import FrostFlake from '../FrostFlake';
+import Cursor from './Cursor'
+import Mouse from './Mouse';
+import Keys from './Keys';
 
 export default class Input {
 
     cursor;
 
-    #keysDown = {};
-    #keysPushed = {};
-    #buttonsDown = {};
-    #buttonsPushed = {};
+    private _keysDown = {};
+    private _keysPushed = {};
+    private _buttonsDown = {};
+    private _buttonsPushed = {};
 
     constructor() {
         this.cursor = new Cursor();
@@ -29,34 +29,34 @@ export default class Input {
         this.cursor.update();
 
         // clear pushed keys
-        for(let key in this.#keysPushed) {
-            this.#keysPushed[key] = false;
+        for(let key in this._keysPushed) {
+            this._keysPushed[key] = false;
         }
 
         // clear buttons pushed array
-        for(let btn in this.#buttonsPushed) {
-            this.#buttonsPushed[btn] = false;
+        for(let btn in this._buttonsPushed) {
+            this._buttonsPushed[btn] = false;
         }
     }
 
     keyDown(charCode) {
         let keyName = Keys["char" + charCode];
-        return this.#keysDown[keyName] === true;
+        return this._keysDown[keyName] === true;
     }
 
     keyPushed(charCode) {
         let keyName = Keys["char" + charCode];
-        return this.#keysPushed[keyName] === true;
+        return this._keysPushed[keyName] === true;
     }
 
     buttonDown(btnCode) {
         let btnName = Mouse["button" + btnCode];
-        return this.#buttonsDown[btnName] === true;
+        return this._buttonsDown[btnName] === true;
     }
 
     buttonPushed(btnCode) {
         let btnName = Mouse["button" + btnCode];
-        return this.#buttonsPushed[btnName] === true;
+        return this._buttonsPushed[btnName] === true;
     }
 
     stopPropagation(e) {
@@ -87,28 +87,28 @@ export default class Input {
 
     onMouseDown(e) {
         let btnName = Mouse["button" + e.which];
-        this.#buttonsDown[btnName] = true;
+        this._buttonsDown[btnName] = true;
         this.stopPropagation(e);
     }
 
     onMouseUp(e) {
         let btnName = Mouse["button" + e.which];
-        this.#buttonsDown[btnName] = false;
-        this.#buttonsPushed[btnName] = true;
+        this._buttonsDown[btnName] = false;
+        this._buttonsPushed[btnName] = true;
         this.stopPropagation(e);
     }
 
 
     onKeyDown(e) {
         let keyName = Keys["char" + e.keyCode];
-        this.#keysDown[keyName] = true;
+        this._keysDown[keyName] = true;
         this.stopPropagation(e);
     }
 
     onKeyUp(e) {
         let keyName = Keys["char" + e.keyCode];
-        this.#keysDown[keyName] = false;
-        this.#keysPushed[keyName] = true;
+        this._keysDown[keyName] = false;
+        this._keysPushed[keyName] = true;
         this.stopPropagation(e);
     }
 }

@@ -1,5 +1,5 @@
-import FrostFlake from '../FrostFlake.js';
-import MathUtil from '../Utility/MathUtil.js';
+import FrostFlake from '../FrostFlake';
+import MathUtil from '../Utility/MathUtil';
 
 export default class Positionable {
 
@@ -11,7 +11,7 @@ export default class Positionable {
     visible = true;
     drag = 0;
     layer = 0;
-    parent = null;
+    parent: Positionable = null;
     children = [];
     destroyed = false;
     applyRotationAccelerationAndDrag = false;
@@ -45,7 +45,7 @@ export default class Positionable {
 
         if(this.parent != null) {
             let parentAbsPos = this.parent.absolutePosition;
-            let magnitude = MathUtil.length(this.x, this.y);
+            let magnitude = MathUtil.vectorLength(this);
             absPos.x = Math.cos(parentAbsPos.rotation) * magnitude + parentAbsPos.x;
             absPos.y = Math.sin(parentAbsPos.rotation) * magnitude + parentAbsPos.y;
             absPos.rotation = parentAbsPos.rotation + this.rotation;
@@ -60,7 +60,7 @@ export default class Positionable {
     }
 
     get root() {
-        let obj = this;
+        let obj: Positionable = this;
         while(obj.parent instanceof Positionable) {
             obj = obj.parent;
         }
@@ -100,7 +100,7 @@ export default class Positionable {
     }
 
     moveRootX(amt) {
-        let obj = this;
+        let obj: Positionable = this;
         while(obj.parent instanceof Positionable) {
             obj = obj.parent;
         }
@@ -108,7 +108,7 @@ export default class Positionable {
     }
 
     moveRootY(amt) {
-        let obj = this;
+        let obj: Positionable = this;
         while(obj.parent instanceof Positionable) {
             obj = obj.parent;
         }

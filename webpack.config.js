@@ -2,12 +2,14 @@ const path = require('path');
 
 module.exports = {
     mode: 'production',
-    entry: './FrostFlake.js',
+    entry: './src/FrostFlake.js',
     output: {
-        filename: 'frostflake.min.js',
-        path: path.resolve(__dirname, 'dist')
+        filename: './dist/frostflake.min.js'
     },
     devtool: 'source-map',
+    resolve: {
+        extensions: [".ts", ".js"]
+    },
     watch: false,
     watchOptions: {
         aggregateTimeout: 200,

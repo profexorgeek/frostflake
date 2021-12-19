@@ -1,6 +1,6 @@
-import Shape from './Shape.js';
-import Circle from './Circle.js';
-import RepositionType from './RepositionType.js';
+import Shape from './Shape';
+import Circle from './Circle';
+import RepositionType from './RepositionType';
 
 export default class Rectangle extends Shape {
     width;

@@ -1,20 +1,20 @@
-import Input from './Input/Input.js';
-import View from './Views/View.js';
-import Audio from './Audio/Audio.js';
-import Camera from './Positionables/Camera.js';
-import CanvasRenderer from './Drawing/CanvasRenderer.js';
-import Log from './Logging/Log.js';
-import GameTime from './Utility/GameTime.js';
-import Sprite from './Positionables/Sprite.js';
-import Data from './Data/Data.js';
-import EmbeddedImages from './Drawing/EmbeddedImages.js';
+import Input from './Input/Input';
+import View from './Views/View';
+import Audio from './Audio/Audio';
+import Camera from './Positionables/Camera';
+import CanvasRenderer from './Drawing/CanvasRenderer';
+import Log from './Logging/Log';
+import GameTime from './Utility/GameTime';
+import Sprite from './Positionables/Sprite';
+import Data from './Data/Data';
+import EmbeddedImages from './Drawing/EmbeddedImages';
 
 export default class FrostFlake {
     static Game;
     static Log;
 
-    #timer;
-    #view;
+    private _timer;
+    private _view;
 
     time;
     fps;
@@ -29,16 +29,16 @@ export default class FrostFlake {
 
     set view(newView) {
         newView.start();
-        this.#view = newView;
+        this._view = newView;
     }
 
     get view() {
-        return this.#view;
+        return this._view;
     }
 
     constructor(canvas, fps = 30, background = "rgb(0,0,0)") {
         FrostFlake.Game = this;
-        FrostFlake.Log = new Log();
+        FrostFlake.Log = Log;
 
         this.canvas = canvas;
         this.fps = fps;
@@ -48,7 +48,7 @@ export default class FrostFlake {
         this.audio = new Audio();
         this.camera = new Camera(this.canvas.width, this.canvas.height);
         this.camera.background = background;
-        this.renderer = new CanvasRenderer(this.canvas);
+        this.renderer = new CanvasRenderer(this.canvas, background);
 
 
         FrostFlake.Log.info("FrostFlake instance created...");
@@ -63,7 +63,7 @@ export default class FrostFlake {
 
             this.time = new GameTime();
             let me = this;
-            this.#timer = window.setInterval( function () {
+            this._timer = window.setInterval( function () {
                 me.update();
             }, 1000 / this.fps);
         })();

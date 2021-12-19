@@ -1,9 +1,9 @@
-import FrostFlake from '../FrostFlake.js';
-import Data from '../Data/Data.js';
+import FrostFlake from '../FrostFlake';
+import Data from '../Data/Data';
 
 export default class Audio {
     context;
-    #cache = {};
+    private _cache = {};
 
     constructor() {
         this.context = new AudioContext();
@@ -16,8 +16,8 @@ export default class Audio {
     }
 
     playSound(src) {
-        if(src in this.#cache == false || this.#cache[src] == null) {
-            const msg = `Tried to play sound that hasn't been loaded: ${url}`;
+        if(src in this._cache == false || this._cache[src] == null) {
+            const msg = `Tried to play sound that hasn't been loaded: ${src}`;
             FrostFlake.Log.error(msg);
             throw Error(msg);
         }
@@ -29,7 +29,7 @@ export default class Audio {
         }
         
         let sound = this.context.createBufferSource();
-        sound.buffer = this.#cache[src];
+        sound.buffer = this._cache[src];
         sound.connect(this.context.destination);
         sound.start(0);
         return sound;
@@ -37,8 +37,8 @@ export default class Audio {
 
     async loadSound(src) {
         // EARLY OUT: sound already loaded
-        if(src in this.#cache) {
-            return this.#cache[src];
+        if(src in this._cache) {
+            return this._cache[src];
         }
 
         if(this.context.state !== 'running') {
@@ -55,7 +55,7 @@ export default class Audio {
         }
         const promise = new Promise((resolve, reject) => {
             this.context.decodeAudioData(buffer, (decoded) => {
-                this.#cache[src] = decoded;
+                this._cache[src] = decoded;
                 resolve(decoded);
             }, (err) => {
                 FrostFlake.Log.error(`Failed to decode audio from ${src}.`);

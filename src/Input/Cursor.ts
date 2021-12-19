@@ -1,5 +1,5 @@
-import FrostFlake from '../FrostFlake.js';
-import MathUtil from '../Utility/MathUtil.js';
+import FrostFlake from '../FrostFlake';
+import MathUtil from '../Utility/MathUtil';
 
 export default class Cursor {
     x = 0;

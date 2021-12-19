@@ -74,11 +74,7 @@ export default class MathUtil {
     }
 
     static vectorLength(v1) {
-        return MathUtil.length(v1.x, v1.y);
-    }
-
-    static length(x, y) {
-        let len = Math.pow(x, 2) + Math.pow(y, 2);
+        let len = Math.pow(v1.x, 2) + Math.pow(v1.y, 2);
         return Math.abs(Math.sqrt(len));
     }
 
