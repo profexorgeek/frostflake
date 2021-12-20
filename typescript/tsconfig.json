@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "module": "system",
+        "noImplicitAny": true,
+        "outFile": "./dist/frostflake.js",
+        "sourceMap": true
+    },
+    "include": ["./**/*.ts"]
+}
