@@ -1,7 +1,7 @@
 import Positionable from './Positionable';
 import Circle from './Circle';
 import FrostFlake from '../FrostFlake';
-import MathUtil from '../Utility/MathUtil';
+import { length } from '../Utility/MathUtil';
 
 export default class Sprite extends Positionable{
 
@@ -40,7 +40,7 @@ export default class Sprite extends Positionable{
 
         if(this.parent != null) {
             let parentAbsPos = this.parent.absolutePosition;
-            let magnitude = MathUtil.vectorLength(this);
+            let magnitude = length(this.x, this.y);
             absPos.x = Math.cos(parentAbsPos.rotation) * magnitude + parentAbsPos.x;
             absPos.y = Math.sin(parentAbsPos.rotation) * magnitude + parentAbsPos.y;
             absPos.rotation = parentAbsPos.rotation + this.rotation;

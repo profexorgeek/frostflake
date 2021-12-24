@@ -1,5 +1,5 @@
 import FrostFlake from '../FrostFlake';
-import MathUtil from '../Utility/MathUtil';
+import { length, normalizeAngle } from '../Utility/MathUtil';
 
 export default class Positionable {
 
@@ -45,7 +45,7 @@ export default class Positionable {
 
         if(this.parent != null) {
             let parentAbsPos = this.parent.absolutePosition;
-            let magnitude = MathUtil.vectorLength(this);
+            let magnitude = length(this.x, this.y);
             absPos.x = Math.cos(parentAbsPos.rotation) * magnitude + parentAbsPos.x;
             absPos.y = Math.sin(parentAbsPos.rotation) * magnitude + parentAbsPos.y;
             absPos.rotation = parentAbsPos.rotation + this.rotation;
@@ -132,7 +132,7 @@ export default class Positionable {
             this.velocity.rotation += (this.acceleration.rotation * delta) - (this.drag * this.velocity.rotation * delta);
         }
 
-        this.position.rotation = MathUtil.normalizeAngle(this.position.rotation);
+        this.position.rotation = normalizeAngle(this.position.rotation);
 
         // update children
         for(let i = 0; i < this.children.length; i++) {
