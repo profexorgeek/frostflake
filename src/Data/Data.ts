@@ -1,8 +1,8 @@
-import FrostFlake from '../FrostFlake.js';
+import FrostFlake from '../FrostFlake';
 
 export default class Data {
 
-    static #cache = {};
+    private static _cache = {};
 
     static async loadResponse(src) {
         const response = await fetch(src);
@@ -18,8 +18,8 @@ export default class Data {
     static async loadImage(src, key = null, skipCache = false) {
 
         // EARLY OUT: return from cache
-        if(src in this.#cache && !skipCache) {
-            return this.#cache[src];
+        if(src in this._cache && !skipCache) {
+            return this._cache[src];
         }
 
         const promise = new Promise((resolve, reject) => {
@@ -44,7 +44,7 @@ export default class Data {
 
     static async loadJson(src) {
         const response = await Data.loadResponse(src);
-        return response.json();
+        return await response.json();
     }
 
     static async loadAudio(src) {
@@ -55,11 +55,11 @@ export default class Data {
     
     
     static clearCache() {
-        Data.#cache = {};
+        Data._cache = {};
     }
 
     static itemExists(key) {
-        if(key in Data.#cache && Data.#cache[key] !== null) {
+        if(key in Data._cache && Data._cache[key] !== null) {
             return true;
         }
         return false;
@@ -69,18 +69,18 @@ export default class Data {
         if(Data.itemExists(key)) {
             FrostFlake.Log.warn(`Item already exists for ${key}, overwriting.`);
         }
-        Data.#cache[key] = item;
+        Data._cache[key] = item;
     }
 
     static removeItem(key) {
         if(Data.itemExists(key)) {
-            delete Data.#cache[key];
+            delete Data._cache[key];
         }
     }
 
     static getItem(key) {
         if(Data.itemExists(key)) {
-            return Data.#cache[key];
+            return Data._cache[key];
         }
         else {
             FrostFlake.Log.warn(`Bad key requested from cache: ${key}`);

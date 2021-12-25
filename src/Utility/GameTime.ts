@@ -23,7 +23,7 @@ export default class GameTime {
     update() {
         let lastFrame = this.lastFrameTime.getTime();
         let currentFrame = new Date();
-        let frameDelta = currentFrame - lastFrame;
+        let frameDelta = currentFrame.getTime() - lastFrame;
 
         if(frameDelta < GameTime.MAX_FRAME_DELTA) {
 

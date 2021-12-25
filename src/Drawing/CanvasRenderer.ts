@@ -1,16 +1,17 @@
-import FrostFlake from '../FrostFlake.js';
-import Text from '../Positionables/Text.js';
-import Sprite from '../Positionables/Sprite.js';
-import Positionable from '../Positionables/Positionable.js';
-import Circle from '../Positionables/Circle.js';
-import Rectangle from '../Positionables/Rectangle.js';
-import Camera from '../Positionables/Camera.js';
-import Frame from './Frame.js'
-import MathUtil from '../Utility/MathUtil.js';
-import Data from '../Data/Data.js';
+import FrostFlake from '../FrostFlake';
+import Text from '../Positionables/Text';
+import Sprite from '../Positionables/Sprite';
+import Positionable from '../Positionables/Positionable';
+import Circle from '../Positionables/Circle';
+import Rectangle from '../Positionables/Rectangle';
+import Camera from '../Positionables/Camera';
+import Frame from './Frame'
+import MathUtil from '../Utility/MathUtil';
+import Data from '../Data/Data';
 
 export default class CanvasRenderer {
     context;
+    background;
 
     constructor(canvas, background) {
         this.context = canvas.getContext("2d");
@@ -21,8 +22,8 @@ export default class CanvasRenderer {
         // cache context
         let contextCache = this.context;
 
-        let camera = new Camera();
-        camera.background = background;
+        let camera = new Camera(width, height);
+        // camera.background = background;
         let cvs = document.createElement('canvas');
         cvs.height = height;
         cvs.width = width;
@@ -197,7 +198,7 @@ export default class CanvasRenderer {
         // recurse on children
         if(sprite.children.length > 0) {
             for(let i = 0; i < sprite.children.length; i++) {
-                this.drawPositionable(sprite.children[i], this.context);
+                this.drawPositionable(sprite.children[i]);
             }
         }
 

@@ -1,4 +1,10 @@
-import View from './View.js';
+import Data from '../Data/Data';
+import Frame from '../Drawing/Frame';
+import FrostFlake from '../FrostFlake';
+import Log from '../Logging/Log';
+import Rectangle from '../Positionables/Rectangle';
+import Sprite from '../Positionables/Sprite';
+import View from './View';
 
 // NOTE: this is still very experimental. It's not very efficient
 // and only supports a small subset of Tiled features.
@@ -18,17 +24,16 @@ export default class TilemapView extends View {
         super();
         let me = this;
         
-
-        // TODO: rewrite this section to do all preloading and have better readability
-        Data.loadJson(tilesetUrl, function (set) {
+        (async () => {
+            //TODO: introduce some error handling here - JMH
+            const set = await Data.loadJson(tilesetUrl);
             me.tileset = set;
             me.tilesetJsonLoaded = true;
-        });
 
-        Data.loadJson(tilemapUrl, function (map) {
+            const map = await Data.loadJson(tilemapUrl);
             me.tilemap = map;
             me.tilemapJsonLoaded = true;
-        });
+        })()
 
         let pathElements = tilesetUrl.split('/');
         pathElements.pop();
@@ -68,7 +73,7 @@ export default class TilemapView extends View {
 
         // EARLY OUT: multiple tilesets is too complex for first pass
         if(map.tilesets.length > 1) {
-            FrostFlake.Log.error("FrostFlake cannot handle maps with more than one tileset yet!");
+            Log.error("FrostFlake cannot handle maps with more than one tileset yet!");
             this.tilemapLoaded = true;
             return;
         }
@@ -90,7 +95,7 @@ export default class TilemapView extends View {
             const layer = map.layers[i];
 
             if(layer.data.length != tilesPerLayer) {
-                FrostFlake.Log.error(`Bad layer size, expected ${tilesPerLayer} but got ${layer.data.length}`);
+                Log.error(`Bad layer size, expected ${tilesPerLayer} but got ${layer.data.length}`);
             }
 
             // NOTE: no support yet for other layer types!
@@ -147,7 +152,7 @@ export default class TilemapView extends View {
             }
         }
     
-        FrostFlake.Log.info("Tilemap loaded fired correctly!");
+        Log.info("Tilemap loaded fired correctly!");
         this.tilemapLoaded = true;
     }
 }

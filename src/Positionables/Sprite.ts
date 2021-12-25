@@ -1,6 +1,7 @@
-import Positionable from './Positionable.js';
-import Circle from './Circle.js';
-import FrostFlake from '../FrostFlake.js';
+import Positionable from './Positionable';
+import Circle from './Circle';
+import FrostFlake from '../FrostFlake';
+import { length } from '../Utility/MathUtil';
 
 export default class Sprite extends Positionable{
 
@@ -9,20 +10,20 @@ export default class Sprite extends Positionable{
     texture = null;
     animation = null;
     scale = 1;
-    #collisionShape = null;
+    private _collisionShape = null;
     parallax = 1;
 
     get collision() {
-        return this.#collisionShape;
+        return this._collisionShape;
     }
 
     set collision(shape) {
-        if(this.#collisionShape) {
-            this.#collisionShape.parent = null;
+        if(this._collisionShape) {
+            this._collisionShape.parent = null;
         }
 
-        this.#collisionShape = shape;
-        this.#collisionShape.parent = this;
+        this._collisionShape = shape;
+        this._collisionShape.parent = this;
     }
 
     constructor(texture = null) {
@@ -38,8 +39,8 @@ export default class Sprite extends Positionable{
         let absPos = {x: 0, y: 0, rotation: 0};
 
         if(this.parent != null) {
-            let parentAbsPos = this.parent.getAbsolutePosition();
-            let magnitude = MathUtil.length(this.x, this.y);
+            let parentAbsPos = this.parent.absolutePosition;
+            let magnitude = length(this.x, this.y);
             absPos.x = Math.cos(parentAbsPos.rotation) * magnitude + parentAbsPos.x;
             absPos.y = Math.sin(parentAbsPos.rotation) * magnitude + parentAbsPos.y;
             absPos.rotation = parentAbsPos.rotation + this.rotation;

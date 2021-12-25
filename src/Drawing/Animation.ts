@@ -1,4 +1,4 @@
-import FrostFlake from '../FrostFlake.js';
+import FrostFlake from '../FrostFlake';
 
 export default class Animation {
     name = '';
@@ -8,7 +8,7 @@ export default class Animation {
     looping = true;
 
     frameIndex = -1;
-    #secondsLeftInFrame = 0;
+    private _secondsLeftInFrame = 0;
 
     get currentFrame() {
         return this.frames[this.frameIndex];
@@ -27,16 +27,16 @@ export default class Animation {
 
     restart() {
         this.frameIndex = 0;
-        this.#secondsLeftInFrame = this.currentFrame.seconds;
+        this._secondsLeftInFrame = this.currentFrame.seconds;
         this.playing = true;
     }
 
     update() {
         let delta = FrostFlake.Game.time.frameSeconds;
         if(this.playing && this.frames && this.frames.length > 1) {
-            this.#secondsLeftInFrame -= delta;
+            this._secondsLeftInFrame -= delta;
 
-            while(this.#secondsLeftInFrame <= 0) {
+            while(this._secondsLeftInFrame <= 0) {
                 if(this.frameIndex < this.frames.length - 1) {
                     this.frameIndex += 1;
                 }
@@ -46,11 +46,11 @@ export default class Animation {
                     }
                 }
 
-                this.#secondsLeftInFrame += this.currentFrame.seconds;
+                this._secondsLeftInFrame += this.currentFrame.seconds;
 
                 // we can never exit this loop because this frame is zero seconds long
                 // force exit
-                if(this.#secondsLeftInFrame < 0 && this.currentFrame.seconds <= 0) {
+                if(this._secondsLeftInFrame < 0 && this.currentFrame.seconds <= 0) {
                     break;
                 }
             }

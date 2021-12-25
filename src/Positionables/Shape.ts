@@ -1,6 +1,6 @@
-import RepositionType from './RepositionType.js';
-import Positionable from './Positionable.js';
-import MathUtil from '../Utility/MathUtil.js';
+import RepositionType from './RepositionType';
+import Positionable from './Positionable';
+import MathUtil from '../Utility/MathUtil';
 
 export default class Shape extends Positionable {
 
@@ -13,7 +13,7 @@ export default class Shape extends Positionable {
 
         if(this.parent != null) {
             let parentAbsPos = this.parent.absolutePosition;
-            let magnitude = MathUtil.length(this.x, this.y);
+            let magnitude = MathUtil.vectorLength(this);
             absPos.x = Math.cos(parentAbsPos.rotation) * magnitude + parentAbsPos.x;
             absPos.y = Math.sin(parentAbsPos.rotation) * magnitude + parentAbsPos.y;
             absPos.rotation = parentAbsPos.rotation + this.rotation;
@@ -31,7 +31,7 @@ export default class Shape extends Positionable {
         // figure out if we're overlapping by calculating
         // if the distance apart is less than the sum of the radii
         let delta = MathUtil.vectorSubtract(circle2.absolutePosition, circle1.absolutePosition);
-        let distApart = MathUtil.length(delta.x, delta.y);
+        let distApart = MathUtil.vectorLength(delta);
         let collideDist = circle1.radius + circle2.radius;
         let overlap = collideDist - distApart;
         let didCollide = overlap > 0;
