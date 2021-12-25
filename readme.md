@@ -1,10 +1,26 @@
-# FrostFlake.js
+# FrostFlake
 
-I originally started FrostFlake in 2014 as a way to have fun while learning the deeper aspects of JavaScript. I wanted to build a game engine with a lean, but functional, feature set and few dependencies. I rewrote the original engine in TypeScript in 2017, and again in ES6 in 2020.
+I originally started FrostFlake in 2014 as a way to have fun while learning the deeper aspects of JavaScript. I wanted to build a game engine with a lean, but functional, feature set and few dependencies so I wrote it in ES5. I rewrote the original engine in TypeScript in 2017 but then converted it to ES6 because I hoped to have zero dependencies. ES6 support was a mess and creating a build system that worked required tons of dependencies. So, we converted the engine _back_ to TypeScript as a community effort.
 
-This iteration of the engine has zero dependencies. It uses a canvas renderer, not WebGL. The goal was to make it as simple as possible for a beginner to start playing with the engine.
+This iteration of the engine has no dependencies outside of TypeScript itself. It uses a canvas renderer, not WebGL. The goal was to make it as simple as possible for a beginner to start playing with the engine.
 
 If you use this, I'd love to know how you're using it and what you think.
+
+## Repository Pattern
+
+The `master` branch is currently where all new work happens. PRs should target the `master` branch.
+
+A "release" for FrostFlake means a new package uploaded to NPM. Releases should branch from main and be tagged with semantic versioning.
+
+### Semantic Versioning
+
+`A.B.C.D`
+
+- **A** - Major version. This will probably be "1" forever.
+- **B** - Minor version. Releases that add new features increment this number
+- **C** - Revision. Fixes to a minor version should increment this number
+- **D** - Build. This is not in use. If we get to an automated build system, this number should be incremented by CI/CD
+
 
 ## Features
 
@@ -21,24 +37,22 @@ If you use this, I'd love to know how you're using it and what you think.
 
 ## Start using
 
-The easiest way to get started with FrostFlake is to fork the [frostflake-template project](https://github.com/profexorgeek/frostflake-template). The template project demonstrates main engine features and comes with some basic build configuration.
+ We are in the process of refactoring and testing this engine in TypeScript. We'll update this section as soon as we have implemented and tested a recommended path to get started!
 
 ## Start contributing
 
-The easiest way to start contributing is to use the [frostflake-template project](https://github.com/profexorgeek/frostflake-template) as a starting point. This repo has pre-made `View`s that make it easy to test engine features. Follow these steps:
-
-1. Fork and clone this repository
-1. Fork and clone the [frostflake-template project](https://github.com/profexorgeek/frostflake-template).
-1. Modify the template project to reference this repo source instead of the npm package
-1. That will give you a basic project with some existing `View`s to make sure you have everything wired up correctly
-1. Add features or fix bugs and submit pull requests from your fork!
+We are in the process of refacotring and testing this engine. Once that is complete, we'll file issues and label issues that are good for new contributors!
 
 ## Todo list
 
 Here are features I'd like to add. This is a good place to start if you want to contribute. Keep in mind that the point of this engine is simplicity for beginners so please reach out if you plan to PR a new feature!
 
+- [ ] Define docs pattern, docs should be in a `docs` folder and should be GitHub markdown
+- [ ] Complete TypeScript conversion: annotate variables and method arguments with Types
+- [ ] Improve [TMX Tilemap](https://mapeditor.org) map support
+- [ ] Implement [LDtk](https://ldtk.io/) map support
+- [ ] Test building with Electron and document
 - [ ] Touch input system (currently only Mouse and Keyboard are supported)
-- [ ] Improve [TMX Tilemap](https://mapeditor.org) loading/rendering
 - [x] Text rendering system
 - [x] Improve asset loading and texture buffering
 - [x] Change callback-based loading system to use Promises
