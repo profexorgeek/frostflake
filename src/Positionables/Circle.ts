@@ -3,9 +3,17 @@ import Rectangle from './Rectangle';
 import RepositionType from './RepositionType';
 
 export default class Circle extends Shape {
-    radius;
+    private _radius: number;
 
-    constructor(radius = 16) {
+    set radius(size: number) {
+        this._radius = size;
+    }
+
+    get radius(): number {
+        return this._radius;
+    }
+
+    constructor(radius: number = 16) {
         super();
         this.radius = radius;
     }
