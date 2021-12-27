@@ -2,7 +2,7 @@ import FrostFlake from '../FrostFlake';
 import Data from '../Data/Data';
 
 export default class Audio {
-    context;
+    private context: AudioContext;
     private _cache = {};
 
     constructor() {
@@ -16,6 +16,12 @@ export default class Audio {
     }
 
     playSound(src) {
+        // try to resume context if suspended
+        if(this.context.state == 'suspended') {
+            this.enable();
+        }
+
+
         if(src in this._cache == false || this._cache[src] == null) {
             const msg = `Tried to play sound that hasn't been loaded: ${src}`;
             FrostFlake.Log.error(msg);
@@ -41,8 +47,8 @@ export default class Audio {
             return this._cache[src];
         }
 
-        if(this.context.state !== 'running') {
-            const msg = `Couldn't load ${src} because AudioContext is not running.`;
+        if(this.context.state === 'closed') {
+            const msg = `Couldn't load ${src} because AudioContext has been closed.`;
             FrostFlake.Log.error(msg);
             throw Error(msg);
         }
@@ -53,6 +59,7 @@ export default class Audio {
             FrostFlake.Log.error(msg);
             throw Error(msg);
         }
+
         const promise = new Promise((resolve, reject) => {
             this.context.decodeAudioData(buffer, (decoded) => {
                 this._cache[src] = decoded;
