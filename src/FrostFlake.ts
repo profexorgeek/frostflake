@@ -28,6 +28,10 @@ export default class FrostFlake {
     defaultLoadingSprite;
 
     set view(newView) {
+        if(this._view != null) {
+            this._view.destroy();
+        }
+        
         newView.start();
         this._view = newView;
     }
