@@ -1,5 +1,5 @@
 import ILog from "./ILog";
-import { LogLevel } from "./LogLevel";
+import LogLevel from "./LogLevel";
 
 export default class ConsoleLog implements ILog {
     level:LogLevel = LogLevel.Trace;

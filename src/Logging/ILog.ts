@@ -1,4 +1,4 @@
-import { LogLevel } from "./LogLevel";
+import LogLevel from "./LogLevel";
 
 export default interface ILog {
     level: LogLevel;
