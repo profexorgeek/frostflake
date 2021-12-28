@@ -3,6 +3,7 @@ import Shape from './Shape';
 import Rectangle from './Rectangle';
 import RepositionType from './RepositionType';
 import FrostFlake from '../FrostFlake';
+import Position from './Position';
 
 export default class Circle extends Shape {
     private _radius: number;
@@ -26,6 +27,7 @@ export default class Circle extends Shape {
         targetWeight: number = 0,
         repoForce: number = 1
         ): boolean {
+
         if (shape instanceof Circle) {
             return Shape.collideCircleVsCircle(this, shape, repoType, thisWeight, targetWeight, repoForce);
         }
@@ -35,8 +37,9 @@ export default class Circle extends Shape {
     }
 
     isPointInside(x: number, y: number): boolean {
-        let abs = this.absolutePosition;
-        let delta = MathUtil.length(x - abs.x, y - abs.y);
+        const abs: Position = this.absolutePosition;
+        const delta: number = MathUtil.length(x - abs.x, y - abs.y);
+        
         if (delta < this.radius) {
             return true;
         }

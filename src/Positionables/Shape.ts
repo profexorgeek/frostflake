@@ -9,25 +9,6 @@ export default class Shape extends Positionable {
         super();
     }
 
-    get absolutePosition() {
-        let absPos = {x: 0, y: 0, rotation: 0};
-
-        if(this.parent != null) {
-            let parentAbsPos = this.parent.absolutePosition;
-            let magnitude = MathUtil.vectorLength(this);
-            absPos.x = Math.cos(parentAbsPos.rotation) * magnitude + parentAbsPos.x;
-            absPos.y = Math.sin(parentAbsPos.rotation) * magnitude + parentAbsPos.y;
-            absPos.rotation = parentAbsPos.rotation + this.rotation;
-        }
-        else {
-            absPos.x = this.x;
-            absPos.y = this.y;
-            absPos.rotation = this.rotation;
-        }
-
-        return absPos;
-    }
-
     static collideCircleVsCircle(circle1, circle2, repositionType = RepositionType.None, circle1Weight = 1, circle2Weight = 0, forceScale = 1) {
         // figure out if we're overlapping by calculating
         // if the distance apart is less than the sum of the radii
