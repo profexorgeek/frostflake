@@ -1,6 +1,7 @@
 import RepositionType from './RepositionType';
 import Positionable from './Positionable';
 import MathUtil from '../Utility/MathUtil';
+import FrostFlake from '../FrostFlake';
 
 export default class Shape extends Positionable {
 
@@ -32,7 +33,7 @@ export default class Shape extends Positionable {
         // if the distance apart is less than the sum of the radii
         let delta = MathUtil.vectorSubtract(circle2.absolutePosition, circle1.absolutePosition);
         let distApart = MathUtil.vectorLength(delta);
-        let collideDist = circle1.radius + circle2.radius;
+        let collideDist = Math.abs(circle1.radius) + Math.abs(circle2.radius);
         let overlap = collideDist - distApart;
         let didCollide = overlap > 0;
 
@@ -73,11 +74,11 @@ export default class Shape extends Positionable {
         // figure out if we're overlapping on each axis by
         // calculating if the distance apart is larger than
         // the sum of half of the widths
-        let xCollisionDist = circle.radius + (rect.width / 2);
+        let xCollisionDist = Math.abs(circle.radius) + (Math.abs(rect.width) / 2);
         let xDist = circle.absolutePosition.x - rect.absolutePosition.x;
         let xOverlap = xCollisionDist - Math.abs(xDist);
 
-        let yCollisionDist = circle.radius + (rect.height / 2);
+        let yCollisionDist = Math.abs(circle.radius) + (Math.abs(rect.height) / 2);
         let yDist = circle.absolutePosition.y - rect.absolutePosition.y;
         let yOverlap = yCollisionDist - Math.abs(yDist);
 
