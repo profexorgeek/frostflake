@@ -19,10 +19,13 @@ export default class Input {
         window.addEventListener("keyup", (e) => this.onKeyUp(e));
         window.addEventListener("mousemove", (e) => this.onMouseMove(e));
         window.addEventListener("mousedown", (e) => this.onMouseDown(e));
-        window.addEventListener("mouseup", (e) => this.onMouseUp(e));
+        window.addEventListener("mouseup", (e) => this.onMouseUp(e));        
 
         FrostFlake.Game.canvas.addEventListener("mouseenter", (e) => this.onEnterCanvas(e));
         FrostFlake.Game.canvas.addEventListener("mouseleave", (e) => this.onExitCanvas(e));
+
+        // disable context menu on the canvas so we can use right click
+        FrostFlake.Game.canvas.addEventListener("contextmenu", (e) => e.preventDefault());
     }
 
     update() {
@@ -79,7 +82,6 @@ export default class Input {
     onExitCanvas(e) {
         this.cursor.isInFrame = false;
     }
-
 
     onMouseMove(e) {
         this.cursor.setHardwarePosition(e.offsetX, e.offsetY);
