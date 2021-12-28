@@ -52,8 +52,7 @@ export default class FrostFlake {
         this.audio = new Audio();
         this.camera = new Camera(this.canvas.width, this.canvas.height);
         this.camera.background = background;
-        this.renderer = new CanvasRenderer(this.canvas, background);
-
+        this.renderer = new CanvasRenderer(this.canvas);
 
         FrostFlake.Log.info("FrostFlake instance created...");
     }

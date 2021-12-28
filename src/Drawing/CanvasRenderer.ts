@@ -10,37 +10,42 @@ import MathUtil from '../Utility/MathUtil';
 import Data from '../Data/Data';
 
 export default class CanvasRenderer {
-    context;
-    background;
 
-    constructor(canvas, background) {
+    context: CanvasRenderingContext2D;
+
+    constructor(canvas: HTMLCanvasElement) {
         this.context = canvas.getContext("2d");
-        this.background = background;
     }
 
-    async renderCustomImage(imageName, positionables, width, height, background = "rgba(0,0,0,0)") {
-        // cache context
-        let contextCache = this.context;
+    // renders an image to a new canvas and returns the image name, which can be used as the source for a texture
+    // this allows drawing to a render target to create custom sprite textures
+    async renderCustomImage(customImageName: string, positionables: Array<Positionable>, width: number, height: number): Promise<string> {
 
-        let camera = new Camera(width, height);
-        // camera.background = background;
-        let cvs = document.createElement('canvas');
+        const defaultContext: CanvasRenderingContext2D = this.context;
+        const camera: Camera = new Camera(width, height);
+        const cvs: HTMLCanvasElement = document.createElement('canvas');
+
         cvs.height = height;
         cvs.width = width;
         this.context = cvs.getContext('2d');
-        this.background = background;
+
         this.draw(positionables, camera);
 
-        // restore context
-        this.context = contextCache;
+        // restore default context
+        this.context = defaultContext;
 
-        await Data.loadImage(cvs.toDataURL(), imageName);
+        // get the base64 encoded image data and load into the data cache
+        // with the provided key name as if it were a normal texture
+        await Data.loadImage(cvs.toDataURL(), customImageName);
+
+        return customImageName;
     }
     
-    draw(positionables, camera) {
-        let scale = 1 / camera.resolution;
-        let transX = MathUtil.invert(camera.x) + (this.context.canvas.width / 2) * camera.resolution;
-        let transY = camera.y + (this.context.canvas.height / 2) * camera.resolution;
+    // root draw call, sets canvas state and starts recursive drawing process
+    draw(positionables: Array<Positionable>, camera: Camera): void {
+        const scale: number         = 1 / camera.resolution;
+        const transX: number        = MathUtil.invert(camera.x) + (this.context.canvas.width / 2) * camera.resolution;
+        const transY: number        = camera.y + (this.context.canvas.height / 2) * camera.resolution;
 
         this.context.save();
         this.context.imageSmoothingEnabled = camera.antialias;
@@ -55,7 +60,8 @@ export default class CanvasRenderer {
         this.context.restore();
     }
 
-    drawPositionable(positionable) {
+    // draws a positionable object based on its type and visibility
+    drawPositionable(positionable: Positionable): void {
         if(positionable instanceof Positionable && positionable.visible) {
             if(positionable instanceof Sprite) {
                 this.drawSprite(positionable);
@@ -75,10 +81,14 @@ export default class CanvasRenderer {
         }
     }
 
-    drawText(text) {
+    // draws a text string
+    drawText(text: Text): void {
+        const transX: number = text.x;
+        const transY: number = MathUtil.invert(text.y);
         this.context.save();
-        this.context.translate(text.x, MathUtil.invert(text.y));
+        this.context.translate(transX, transY);
 
+        // text can ignore parent rotation so its always readable
         if(text.ignoreRotation) {
             this.context.rotate(text.absolutePosition.rotation);
         }
@@ -95,12 +105,14 @@ export default class CanvasRenderer {
         this.context.direction = text.textDirection;
         this.context.fillText(text.content, 0, 0);
         this.context.strokeText(text.content, 0, 0);
+
         this.context.restore();
     }
 
-    drawCircle(circle) {
-        let transX = circle.x;
-        let transY = MathUtil.invert(circle.y);
+    // draws a circle
+    drawCircle(circle: Circle): void {
+        const transX: number = circle.x;
+        const transY: number = MathUtil.invert(circle.y);
         this.context.save();
         this.context.translate(transX, transY);
 
@@ -114,17 +126,19 @@ export default class CanvasRenderer {
                     Math.PI * 2
                 );
                 this.context.stroke();
+
         this.context.restore();
     }
 
-    drawRect(rect, axisAligned = true) {
-        let transX = rect.x;
-        let transY = MathUtil.invert(rect.y);
-
+    // draws a rectangle, defaults to Axis Aligned (un-rotateable) rectangles
+    drawRect(rect: Rectangle, axisAligned: boolean = true): void {
+        const transX = rect.x;
+        const transY = MathUtil.invert(rect.y);
         this.context.save();
         this.context.translate(transX, transY);
 
-        if(axisAligned) {
+        // axis aligned rectangles reverse translation rotation
+        if(axisAligned === true) {
             this.context.rotate(rect.absolutePosition.rotation);
         }
 
@@ -138,19 +152,21 @@ export default class CanvasRenderer {
         this.context.restore();
     }
 
-    drawSprite(sprite) {
-        let transX = sprite.x;
-        let transY = MathUtil.invert(sprite.y);
-        let transRot = -sprite.rotation;
-        let alpha = sprite.alpha;
+    // draws a sprite object, will draw additional debug shapes if
+    // game has showDebug turned on
+    drawSprite(sprite: Sprite): void {
+        const transX: number    = sprite.x;
+        const transY: number      = MathUtil.invert(sprite.y);
+        const transRot: number    = -sprite.rotation;
+        const alpha: number       = sprite.alpha;
 
         this.context.save();
         this.context.translate(transX, transY);
         this.context.rotate(transRot);
         this.context.globalAlpha = alpha;
 
-        let tex = Data.getItem(sprite.texture);
-        if(tex == null) {
+        let texture: HTMLCanvasElement = Data.getItem(sprite.texture);
+        if(texture == null) {
             const msg = `Tried to render bad texture: ${sprite.texture}. ` +
                 `Sprite wasn't given a texture or texture wasn't preloaded`;
             FrostFlake.Log.error(msg);
@@ -160,12 +176,12 @@ export default class CanvasRenderer {
         // if null frame, force sprite to have a frame matching its width
         if(sprite.frame == null) {
             sprite.frame = new Frame();
-            sprite.frame.width = tex.width;
-            sprite.frame.height = tex.height;
+            sprite.frame.width = texture.width;
+            sprite.frame.height = texture.height;
         }
 
         this.context.drawImage(
-            tex,
+            texture,
             sprite.frame.left,
             sprite.frame.top,
             sprite.frame.width,
