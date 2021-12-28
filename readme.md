@@ -1,5 +1,7 @@
 # FrostFlake
 
+For full documentation, see [FrostFlake Docs](/docs/index.md)!
+
 I originally started FrostFlake in 2014 as a way to have fun while learning the deeper aspects of JavaScript. I wanted to build a game engine with a lean, but functional, feature set and few dependencies so I wrote it in ES5. I rewrote the original engine in TypeScript in 2017 but then converted it to ES6 because I hoped to have zero dependencies. ES6 support was a mess and creating a build system that worked required tons of dependencies. So, we converted the engine _back_ to TypeScript as a community effort.
 
 This iteration of the engine has no dependencies outside of TypeScript itself. It uses a canvas renderer, not WebGL. The goal was to make it as simple as possible for a beginner to start playing with the engine.
