@@ -1,23 +1,26 @@
-import Positionable from './Positionable';
+import Animation from '../Drawing/Animation';
 import Circle from './Circle';
+import Frame from '../Drawing/Frame';
 import FrostFlake from '../FrostFlake';
-import { length } from '../Utility/MathUtil';
+import Positionable from './Positionable';
+import Shape from './Shape';
+import Camera from './Camera';
 
 export default class Sprite extends Positionable{
 
-    alpha = 1;
-    frame = null;
-    texture = null;
-    animation = null;
-    scale = 1;
-    private _collisionShape = null;
-    parallax = 1;
+    alpha: number                       = 1;
+    frame: Frame                        = null;
+    texture: string                     = null;
+    animation: Animation                = null;
+    scale: number                       = 1;
+    parallax: number                    = 1;
+    private _collisionShape: Shape      = null;
 
-    get collision() {
+    get collision(): Shape {
         return this._collisionShape;
     }
 
-    set collision(shape) {
+    set collision(shape: Shape) {
         if(this._collisionShape) {
             this._collisionShape.parent = null;
         }
@@ -26,7 +29,7 @@ export default class Sprite extends Positionable{
         this._collisionShape.parent = this;
     }
 
-    constructor(texture = null) {
+    constructor(texture: string = null) {
         super();
         this.texture = texture;
         this.collision = new Circle();
@@ -35,26 +38,7 @@ export default class Sprite extends Positionable{
         this.color = "rgba(255, 255, 255, 0.2)";
     }
 
-    getAbsolutePosition() {
-        let absPos = {x: 0, y: 0, rotation: 0};
-
-        if(this.parent != null) {
-            let parentAbsPos = this.parent.absolutePosition;
-            let magnitude = length(this.x, this.y);
-            absPos.x = Math.cos(parentAbsPos.rotation) * magnitude + parentAbsPos.x;
-            absPos.y = Math.sin(parentAbsPos.rotation) * magnitude + parentAbsPos.y;
-            absPos.rotation = parentAbsPos.rotation + this.rotation;
-        }
-        else {
-            absPos.x = this.x;
-            absPos.y = this.y;
-            absPos.rotation = this.rotation;
-        }
-
-        return absPos;
-    }
-
-    update() {
+    update(): void {
         super.update();
 
         // play animation
@@ -65,8 +49,8 @@ export default class Sprite extends Positionable{
         }
 
         // do parallax
-        let cam = FrostFlake.Game.camera;
-        let movePercent = 1 - this.parallax;
+        const cam: Camera = FrostFlake.Game.camera;
+        const movePercent: number = 1 - this.parallax;
         this.x += movePercent * (cam.position.x - cam.lastPosition.x);
         this.y += movePercent * (cam.position.y - cam.lastPosition.y);
     }
