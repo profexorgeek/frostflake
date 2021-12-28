@@ -6,6 +6,8 @@
   "types": "./dist/frostflake.d.ts",
   "scripts": {
     "build": "tsc",
+    "lint": "npx eslint src/** --ext .ts",
+    "lint:fix": "npx eslint src/** --ext .ts --fix",
     "prepare": "npm run build"
   },
   "repository": {
@@ -21,7 +23,19 @@
   },
   "homepage": "https://github.com/profexorgeek/frostflake#readme",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.8.1",
+    "@typescript-eslint/parser": "^5.8.1",
+    "eslint": "^7.32.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "husky": "^7.0.4",
     "ts-loader": "^9.2.6",
     "typescript": "^4.5.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
   }
 }
