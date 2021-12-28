@@ -11,6 +11,18 @@ export default class Shape extends Positionable {
         super();
     }
 
+    collideWith(
+        shape: Shape,
+        repoType: RepositionType = RepositionType.None,
+        thisWeight: number = 1,
+        targetWeight: number = 0,
+        repoForce = 1
+        ): boolean {
+            
+        // intentionally empty, child types must implement
+        return false;
+    }
+
     static collideCircleVsCircle(
         circle1: Circle,
         circle2: Circle,
