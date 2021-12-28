@@ -3,7 +3,7 @@ import { length, normalizeAngle } from '../Utility/MathUtil';
 
 export default class Positionable {
 
-    color = "red";
+    color = "rgba(255,0,0,0.25)";
 
     position = {x: 0, y: 0, rotation: 0}
     velocity = {x: 0, y: 0, rotation: 0}
