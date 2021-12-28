@@ -24,7 +24,7 @@ export default class Data {
 
         const promise = new Promise<HTMLImageElement>((resolve, reject) => {
             const promiseImage = new Image();
-            promiseImage.addEventListener('load', () => resolve(img));
+            promiseImage.addEventListener('load', () => resolve(promiseImage));
             promiseImage.addEventListener('error', (err) => {
                 FrostFlake.Log.error(`Error loading ${src}...`);
                 reject(err)
