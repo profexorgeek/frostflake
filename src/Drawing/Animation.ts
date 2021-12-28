@@ -1,38 +1,41 @@
 import FrostFlake from '../FrostFlake';
+import Frame from './Frame';
 
 export default class Animation {
-    name = '';
-    frames = [];
-    texture = '';
-    playing = true;
-    looping = true;
 
-    frameIndex = -1;
-    private _secondsLeftInFrame = 0;
+    name: string                = '';
+    frames: Array<Frame>        = [];
+    texture: string             = '';
+    playing: boolean            = true;
+    looping: boolean            = true;
+    frameIndex: number          = -1;
 
-    get currentFrame() {
+    private _secondsLeftInFrame: number = 0;
+
+    get currentFrame(): Frame {
         return this.frames[this.frameIndex];
     }
 
-    start() {
+    start(): void {
         if(this.frameIndex < 0) {
             this.restart();
         }
         this.playing = true;
     }
 
-    stop() {
+    stop(): void {
         this.playing = false;
     }
 
-    restart() {
+    restart(): void {
         this.frameIndex = 0;
         this._secondsLeftInFrame = this.currentFrame.seconds;
         this.playing = true;
     }
 
-    update() {
-        let delta = FrostFlake.Game.time.frameSeconds;
+    update(): void {
+        const delta: number = FrostFlake.Game.time.frameSeconds;
+
         if(this.playing && this.frames && this.frames.length > 1) {
             this._secondsLeftInFrame -= delta;
 
