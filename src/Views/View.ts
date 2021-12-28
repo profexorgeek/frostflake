@@ -1,3 +1,5 @@
+import FrostFlake from "../FrostFlake";
+
 export default class View {
     children = [];
     sortNeeded = false;
@@ -5,9 +7,12 @@ export default class View {
 
     constructor() {
         this.initialized = false;
+        FrostFlake.Log.trace(`View ${this.constructor.name} created.`);
+
     }
 
     async initialize() {
+        FrostFlake.Log.trace(`View ${this.constructor.name} initializing...`);
     }
 
     start() {
@@ -15,6 +20,7 @@ export default class View {
             await this.initialize();
             this.initialized = true;
         })();
+        FrostFlake.Log.trace(`View ${this.constructor.name} initialized.`);
     }
 
     update() {
@@ -70,5 +76,6 @@ export default class View {
         }
 
         // TODO: clear texture cache?
+        FrostFlake.Log.trace(`View ${this.constructor.name} destroyed.`);
     }
 }

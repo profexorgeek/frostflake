@@ -3,22 +3,22 @@ import Circle from './Circle';
 import RepositionType from './RepositionType';
 
 export default class Rectangle extends Shape {
-    width;
-    height;
+    width: number;
+    height: number;
 
-    get left() {
+    get left(): number {
         return this.absolutePosition.x - this.width / 2;
     }
 
-    get right() {
+    get right(): number {
         return this.absolutePosition.x + this.width / 2;
     }
 
-    get top() {
+    get top(): number {
         return this.absolutePosition.y + this.height / 2;
     }
 
-    get bottom() {
+    get bottom(): number {
         return this.absolutePosition.y - this.height / 2;
     }
 
@@ -28,7 +28,14 @@ export default class Rectangle extends Shape {
         this.height = height;
     }
 
-    collideWith(shape, repoType = RepositionType.None, thisWeight = 1, targetWeight = 0, repoForce = 1) {
+    collideWith(
+        shape: Shape,
+        repoType: RepositionType = RepositionType.None,
+        thisWeight: number = 1,
+        targetWeight: number = 0,
+        repoForce = 1
+        ): boolean {
+
         if(shape instanceof Circle) {
             return Shape.collideCircleVsRect(shape, this, repoType, targetWeight, thisWeight, repoForce);
         }

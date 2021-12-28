@@ -1,47 +1,48 @@
 import FrostFlake from '../FrostFlake';
+import Position from './Position';
 import { length, normalizeAngle } from '../Utility/MathUtil';
 
 export default class Positionable {
 
-    color = "rgba(255,0,0,0.25)";
-
-    position = {x: 0, y: 0, rotation: 0}
-    velocity = {x: 0, y: 0, rotation: 0}
-    acceleration = {x: 0, y: 0, rotation: 0}
-    visible = true;
-    drag = 0;
-    layer = 0;
-    parent: Positionable = null;
-    children = [];
-    destroyed = false;
-    applyRotationAccelerationAndDrag = false;
+    color: string                               = "rgba(255,0,0,0.25)";
+    position: Position                          = new Position();
+    velocity: Position                          = new Position();
+    acceleration: Position                      = new Position();
+    visible: boolean                            = true;
+    drag: number                                = 0;
+    layer: number                               = 0;
+    parent: Positionable                        = null;
+    children: Array<Positionable>               = [];
+    destroyed: boolean                          = false;
+    applyRotationAccelerationAndDrag: boolean   = false;
     
-    get x() {
+    get x(): number {
         return this.position.x;
     }
-
-    set x(val) {
+    set x(val: number) {
         this.position.x = val;
     }
 
-    get y() {
+    get y(): number {
         return this.position.y;
     }
-
-    set y(val) {
+    set y(val: number) {
         this.position.y = val;
     }
 
-    get rotation() {
+    get rotation(): number {
         return this.position.rotation;
     }
-
     set rotation(val) {
         this.position.rotation = val;
     }
 
-    get absolutePosition() {
-        let absPos = {x: 0, y: 0, rotation: 0};
+    constructor() {
+        // intentionally empty
+    }
+
+    get absolutePosition(): Position {
+        let absPos = new Position();
 
         if(this.parent != null) {
             let parentAbsPos = this.parent.absolutePosition;
@@ -59,7 +60,7 @@ export default class Positionable {
         return absPos;
     }
 
-    get root() {
+    get root(): Positionable {
         let obj: Positionable = this;
         while(obj.parent instanceof Positionable) {
             obj = obj.parent;
@@ -67,11 +68,9 @@ export default class Positionable {
         return obj;
     }
 
-    constructor(x = 0, y = 0) {
-        
-    }
+    
 
-    addChild(positionable) {
+    addChild(positionable: Positionable): void {
         positionable.parent = this;
         this.children.push(positionable);
 
@@ -81,45 +80,48 @@ export default class Positionable {
         });
     }
 
-    removeChild(positionable) {
-        let i = this.children.indexOf(positionable);
+    removeChild(positionable: Positionable): void {
+        const i: number = this.children.indexOf(positionable);
+        
         if(i > -1) {
             this.children.splice(i, 1);
         }
         positionable.parent = null;
     }
 
-    attach(positionable) {
+    attach(positionable: Positionable): void {
         positionable.addChild(this);
     }
 
-    detach() {
+    detach(): void {
         if(this.parent instanceof Positionable) {
             this.parent.removeChild(this);
         }
     }
 
-    moveRootX(amt) {
+    moveRootX(amt: number): void {
         let obj: Positionable = this;
+
         while(obj.parent instanceof Positionable) {
             obj = obj.parent;
         }
         obj.position.x += amt;
     }
 
-    moveRootY(amt) {
+    moveRootY(amt: number): void {
         let obj: Positionable = this;
+
         while(obj.parent instanceof Positionable) {
             obj = obj.parent;
         }
         obj.position.y += amt;
     }
 
-    update() {
+    update(): void {
         this.preUpdate();
 
-        let delta = FrostFlake.Game.time.frameSeconds;
-        let deltaSquaredHalved = delta * delta / 2;
+        const delta = FrostFlake.Game.time.frameSeconds;
+        const deltaSquaredHalved = delta * delta / 2;
 
         this.position.x += (this.velocity.x * delta) + (this.acceleration.x * deltaSquaredHalved);
         this.position.y += (this.velocity.y * delta) + (this.acceleration.y * deltaSquaredHalved);
@@ -141,9 +143,9 @@ export default class Positionable {
     }
 
     // this method is intentionally empty so devs can inject custom logic into the update cycle
-    preUpdate() {}
+    preUpdate(): void {}
 
-    destroy() {
+    destroy(): void {
         this.detach();
 
         // cascade destroy to children
