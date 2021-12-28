@@ -1,11 +1,11 @@
 export default class Frame {
-    top = 0;
-    left = 0;
-    width = 0;
-    height = 0;
-    seconds = 0;
+    top: number         = 0;
+    left: number        = 0;
+    width: number       = 0;
+    height: number      = 0;
+    seconds: number     = 0;
 
-    constructor(left = 0, top = 0, width = 0, height = 0, seconds = 0) {
+    constructor(left: number = 0, top: number = 0, width: number = 0, height: number = 0, seconds: number = 0) {
         this.left = left;
         this.top = top;
         this.width = width;
