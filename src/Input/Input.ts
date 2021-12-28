@@ -90,14 +90,12 @@ export default class Input {
     }
 
     private onMouseDown(e: MouseEvent): void {
-        FrostFlake.Log.trace(`Mouse down: ${e.button}`);
         let btnName = Mouse["button" + e.button];
         this._buttonsDown[btnName] = true;
         this.stopPropagation(e);
     }
 
     private onMouseUp(e: MouseEvent) {
-        FrostFlake.Log.trace(`Mouse up: ${e.button}`);
         let btnName = Mouse["button" + e.button];
         this._buttonsDown[btnName] = false;
         this._buttonsPushed[btnName] = true;
@@ -108,7 +106,6 @@ export default class Input {
         // NOTE: official MDN docs recommend against using "which"
         // but none of the other properties return the same thing
         // and have less reliable support! 
-        FrostFlake.Log.trace(`Key down: ${e.which}`);
         let keyName = Keys["char" + e.which];
         this._keysDown[keyName] = true;
         this.stopPropagation(e);
@@ -118,7 +115,6 @@ export default class Input {
         // NOTE: official MDN docs recommend against using "which"
         // but none of the other properties return the same thing
         // and have less reliable support!
-        FrostFlake.Log.trace(`Key up: ${e.which}`);
         let keyName = Keys["char" + e.which];
         this._keysDown[keyName] = false;
         this._keysPushed[keyName] = true;

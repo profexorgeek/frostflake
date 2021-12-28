@@ -4,6 +4,7 @@ import Rectangle from './Rectangle';
 import RepositionType from './RepositionType';
 import Positionable from './Positionable';
 import Position from './Position';
+import FrostFlake from '../FrostFlake';
 
 export default class Shape extends Positionable {
 
@@ -18,9 +19,11 @@ export default class Shape extends Positionable {
         targetWeight: number = 0,
         repoForce = 1
         ): boolean {
-            
+
         // intentionally empty, child types must implement
-        return false;
+        let msg = "Not implemented: Attempted to collide generic shape object.";
+        FrostFlake.Log.error(msg);
+        throw msg;
     }
 
     static collideCircleVsCircle(
