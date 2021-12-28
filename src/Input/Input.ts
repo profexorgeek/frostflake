@@ -5,12 +5,12 @@ import Keys from './Keys';
 
 export default class Input {
 
-    cursor;
+    cursor: Cursor;
 
-    private _keysDown = {};
-    private _keysPushed = {};
-    private _buttonsDown = {};
-    private _buttonsPushed = {};
+    private _keysDown: Map<string, boolean>         = new Map<string, boolean>();
+    private _keysPushed: Map<string, boolean>       = new Map<string, boolean>();
+    private _buttonsDown: Map<string, boolean>      = new Map<string, boolean>();
+    private _buttonsPushed: Map<string, boolean>    = new Map<string, boolean>();
 
     constructor() {
         this.cursor = new Cursor();
@@ -28,7 +28,7 @@ export default class Input {
         FrostFlake.Game.canvas.addEventListener("contextmenu", (e) => e.preventDefault());
     }
 
-    update() {
+    update(): void {
         this.cursor.update();
 
         // clear pushed keys
@@ -42,27 +42,29 @@ export default class Input {
         }
     }
 
-    keyDown(charCode) {
+    keyDown(charCode: number): boolean {
         let keyName = Keys["char" + charCode];
         return this._keysDown[keyName] === true;
     }
 
-    keyPushed(charCode) {
+    keyPushed(charCode: number): boolean {
         let keyName = Keys["char" + charCode];
         return this._keysPushed[keyName] === true;
     }
 
-    buttonDown(btnCode) {
+    buttonDown(btnCode: number): boolean {
         let btnName = Mouse["button" + btnCode];
         return this._buttonsDown[btnName] === true;
     }
 
-    buttonPushed(btnCode) {
+    buttonPushed(btnCode: number): boolean {
         let btnName = Mouse["button" + btnCode];
         return this._buttonsPushed[btnName] === true;
     }
 
-    stopPropagation(e) {
+
+
+    private stopPropagation(e: Event): void {
         // HACK: browsers require a user interaction
         // before they can play audio. When we stop
         // event propagation, we also make sure audio
@@ -75,40 +77,40 @@ export default class Input {
     }
 
     // EVENT HANDLERS
-    onEnterCanvas(e) {
+    private onEnterCanvas(e: MouseEvent): void {
         this.cursor.isInFrame = true;
     }
 
-    onExitCanvas(e) {
+    private onExitCanvas(e: MouseEvent): void {
         this.cursor.isInFrame = false;
     }
 
-    onMouseMove(e) {
+    private onMouseMove(e: MouseEvent): void {
         this.cursor.setHardwarePosition(e.offsetX, e.offsetY);
     }
 
-    onMouseDown(e) {
-        let btnName = Mouse["button" + e.which];
+    private onMouseDown(e: MouseEvent): void {
+        let btnName = Mouse["button" + e.button];
         this._buttonsDown[btnName] = true;
         this.stopPropagation(e);
     }
 
-    onMouseUp(e) {
-        let btnName = Mouse["button" + e.which];
+    private onMouseUp(e: MouseEvent) {
+        let btnName = Mouse["button" + e.button];
         this._buttonsDown[btnName] = false;
         this._buttonsPushed[btnName] = true;
         this.stopPropagation(e);
     }
 
 
-    onKeyDown(e) {
-        let keyName = Keys["char" + e.keyCode];
+    private onKeyDown(e: KeyboardEvent): void {
+        let keyName = Keys["char" + e.code];
         this._keysDown[keyName] = true;
         this.stopPropagation(e);
     }
 
-    onKeyUp(e) {
-        let keyName = Keys["char" + e.keyCode];
+    private onKeyUp(e: KeyboardEvent): void {
+        let keyName = Keys["char" + e.code];
         this._keysDown[keyName] = false;
         this._keysPushed[keyName] = true;
         this.stopPropagation(e);
