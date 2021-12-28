@@ -1,6 +1,8 @@
+import MathUtil from '../Utility/MathUtil';
 import Shape from './Shape';
 import Rectangle from './Rectangle';
 import RepositionType from './RepositionType';
+import FrostFlake from '../FrostFlake';
 
 export default class Circle extends Shape {
     private _radius: number;
@@ -8,7 +10,6 @@ export default class Circle extends Shape {
     set radius(size: number) {
         this._radius = size;
     }
-
     get radius(): number {
         return this._radius;
     }
@@ -18,12 +19,27 @@ export default class Circle extends Shape {
         this.radius = radius;
     }
 
-    collideWith(shape, repoType = RepositionType.None, thisWeight = 1, targetWeight = 0, repoForce = 1) {
-        if(shape instanceof Circle) {
+    collideWith(
+        shape: Shape,
+        repoType: RepositionType = RepositionType.None,
+        thisWeight: number = 1,
+        targetWeight: number = 0,
+        repoForce: number = 1
+        ): boolean {
+        if (shape instanceof Circle) {
             return Shape.collideCircleVsCircle(this, shape, repoType, thisWeight, targetWeight, repoForce);
         }
-        else if(shape instanceof Rectangle) {
+        else if (shape instanceof Rectangle) {
             return Shape.collideCircleVsRect(this, shape, repoType, thisWeight, targetWeight, repoForce);
         }
+    }
+
+    isPointInside(x: number, y: number): boolean {
+        let abs = this.absolutePosition;
+        let delta = MathUtil.length(x - abs.x, y - abs.y);
+        if (delta < this.radius) {
+            return true;
+        }
+        return false;
     }
 }
