@@ -55,7 +55,7 @@ export default class View {
     }
 
     tryRemoveItem(item, list) {
-        let i = list.indexOf(item);
+        const i = list.indexOf(item);
         if (i > -1) {
             list.splice(i, 1);
         }

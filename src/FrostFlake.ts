@@ -25,7 +25,7 @@ export default class FrostFlake {
     background: string;
     input: Input;
     audio: Audio;
-    showDebug: boolean = false;
+    showDebug = false;
     defaultLoadingSprite: Sprite;
 
     set view(newView: View) {
@@ -65,7 +65,7 @@ export default class FrostFlake {
             this.defaultLoadingSprite = new Sprite("loadImage");
 
             this.time = new GameTime();
-            let me = this;
+            const me = this;
             this._timer = window.setInterval( function () {
                 me.update();
             }, 1000 / this.fps);

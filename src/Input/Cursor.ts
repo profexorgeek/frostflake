@@ -7,7 +7,7 @@ export default class Cursor {
     private _position: Position         = new Position();
     private _change:Position            = new Position();
     private _world: Position            = new Position();
-    isInFrame: boolean                  = false;
+    isInFrame                  = false;
 
     get worldX(): number {
         return this._world.x;

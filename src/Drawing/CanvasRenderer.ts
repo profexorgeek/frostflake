@@ -131,7 +131,7 @@ export default class CanvasRenderer {
     }
 
     // draws a rectangle, defaults to Axis Aligned (un-rotateable) rectangles
-    drawRect(rect: Rectangle, axisAligned: boolean = true): void {
+    drawRect(rect: Rectangle, axisAligned = true): void {
         const transX = rect.x;
         const transY = MathUtil.invert(rect.y);
         this.context.save();
@@ -165,7 +165,7 @@ export default class CanvasRenderer {
         this.context.rotate(transRot);
         this.context.globalAlpha = alpha;
 
-        let texture: HTMLCanvasElement = Data.getItem(sprite.texture);
+        const texture: HTMLCanvasElement = Data.getItem(sprite.texture);
         if(texture == null) {
             const msg = `Tried to render bad texture: ${sprite.texture}. ` +
                 `Sprite wasn't given a texture or texture wasn't preloaded`;

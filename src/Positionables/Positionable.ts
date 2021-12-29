@@ -3,17 +3,17 @@ import Position from './Position';
 
 export default class Positionable {
 
-    color: string                               = "rgba(255,0,0,0.25)";
+    color                               = "rgba(255,0,0,0.25)";
     position: Position                          = new Position();
     velocity: Position                          = new Position();
     acceleration: Position                      = new Position();
-    visible: boolean                            = true;
-    drag: number                                = 0;
-    layer: number                               = 0;
+    visible                            = true;
+    drag                                = 0;
+    layer                               = 0;
     parent: Positionable                        = null;
     children: Array<Positionable>               = [];
-    destroyed: boolean                          = false;
-    applyRotationAccelerationAndDrag: boolean   = false;
+    destroyed                          = false;
+    applyRotationAccelerationAndDrag   = false;
     
     get x(): number {
         return this.position.x;
@@ -41,11 +41,11 @@ export default class Positionable {
     }
 
     get absolutePosition(): Position {
-        let absPos = new Position();
+        const absPos = new Position();
 
         if(this.parent != null) {
-            let parentAbsPos = this.parent.absolutePosition;
-            let magnitude = this.position.length;
+            const parentAbsPos = this.parent.absolutePosition;
+            const magnitude = this.position.length;
             absPos.x = Math.cos(parentAbsPos.rotation) * magnitude + parentAbsPos.x;
             absPos.y = Math.sin(parentAbsPos.rotation) * magnitude + parentAbsPos.y;
             absPos.rotation = parentAbsPos.rotation + this.rotation;
@@ -61,7 +61,7 @@ export default class Positionable {
 
     get root(): Positionable {
         let obj: Positionable = this;
-        while(obj.parent instanceof Positionable) {
+        while(this.parent instanceof Positionable) {
             obj = obj.parent;
         }
         return obj;
@@ -142,7 +142,9 @@ export default class Positionable {
     }
 
     // this method is intentionally empty so devs can inject custom logic into the update cycle
+    /* eslint-disable @typescript-eslint/no-empty-function */
     preUpdate(): void {}
+    /* eslint-enable @typescript-eslint/no-empty-function */
 
     destroy(): void {
         this.detach();

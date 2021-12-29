@@ -2,7 +2,6 @@ import MathUtil from '../Utility/MathUtil';
 import Shape from './Shape';
 import Rectangle from './Rectangle';
 import RepositionType from './RepositionType';
-import FrostFlake from '../FrostFlake';
 import Position from './Position';
 
 export default class Circle extends Shape {
@@ -15,7 +14,7 @@ export default class Circle extends Shape {
         return this._radius;
     }
 
-    constructor(radius: number = 16) {
+    constructor(radius = 16) {
         super();
         this.radius = radius;
     }
@@ -23,9 +22,9 @@ export default class Circle extends Shape {
     collideWith(
         shape: Shape,
         repoType: RepositionType = RepositionType.None,
-        thisWeight: number = 1,
-        targetWeight: number = 0,
-        repoForce: number = 1
+        thisWeight = 1,
+        targetWeight = 0,
+        repoForce = 1
         ): boolean {
 
         if (shape instanceof Circle) {
