@@ -11,24 +11,24 @@ import EmbeddedImages from './Drawing/EmbeddedImages';
 import ILog from './Logging/ILog';
 
 export default class FrostFlake {
-    static Game;
+    static Game: FrostFlake;
     static Log: ILog;
 
-    private _timer;
-    private _view;
+    private _timer: number;
+    private _view: View;
 
-    time;
-    fps;
-    camera;
-    canvas;
-    renderer;
-    background;
-    input;
-    audio;
-    showDebug = false;
-    defaultLoadingSprite;
+    time: GameTime;
+    fps: number;
+    camera: Camera;
+    canvas: HTMLCanvasElement;
+    renderer: CanvasRenderer;
+    background: string;
+    input: Input;
+    audio: Audio;
+    showDebug: boolean = false;
+    defaultLoadingSprite: Sprite;
 
-    set view(newView) {
+    set view(newView: View) {
         if(this._view != null) {
             this._view.destroy();
         }
@@ -37,7 +37,7 @@ export default class FrostFlake {
         this._view = newView;
     }
 
-    get view() {
+    get view(): View {
         return this._view;
     }
 
@@ -57,7 +57,7 @@ export default class FrostFlake {
         FrostFlake.Log.trace("FrostFlake instance created...");
     }
 
-    start() {
+    start(): void {
         FrostFlake.Log.trace("Starting FrostFlake...");
 
         (async () => {
@@ -72,7 +72,7 @@ export default class FrostFlake {
         })();
     }
 
-    update() {
+    update(): void {
         this.time.update();
         this.camera.update();
 
@@ -90,10 +90,10 @@ export default class FrostFlake {
         this.input.update();
 
         if(this.view != null && this.view.initialized) {
-            this.renderer.draw(this.view.children, this.camera, this.canvas, this.background);
+            this.renderer.draw(this.view.children, this.camera);
         }
         else {
-            this.renderer.draw([this.defaultLoadingSprite], this.camera, this.canvas, this.background);
+            this.renderer.draw([this.defaultLoadingSprite], this.camera);
         }
     }
 }
