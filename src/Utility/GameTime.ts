@@ -4,29 +4,25 @@ export default class GameTime {
     // frames before the GameTime will reset the delta
     // to zero. Prevents runaway game behavior if major
     // hiccups happen
-    static MAX_FRAME_DELTA = 500;
-    static FPS_SAMPLES = 120;
+    static readonly MAX_FRAME_DELTA: number = 500;
+    static readonly FPS_SAMPLES: number = 120;
 
-    startTime;
-    lastFrameTime;
-    frameSeconds;
-    gameTimeSeconds;
-    recentFrames = [];
+    startTime: Date                 = new Date();
+    lastFrameTime: Date             = new Date();
+    frameSeconds: number            = 0;
+    gameTimeSeconds: number         = 0;
+    recentFrames: Array<number>     = [];
 
     constructor() {
-        this.startTime = new Date();
-        this.lastFrameTime = new Date();
-        this.frameSeconds = 0;
-        this.gameTimeSeconds = 0;
+
     }
 
-    update() {
-        let lastFrame = this.lastFrameTime.getTime();
-        let currentFrame = new Date();
-        let frameDelta = currentFrame.getTime() - lastFrame;
+    update(): void {
+        const lastFrame = this.lastFrameTime.getTime();
+        const currentFrame = new Date();
+        const frameDelta = currentFrame.getTime() - lastFrame;
 
         if(frameDelta < GameTime.MAX_FRAME_DELTA) {
-
             // convert delta (milliseconds) into seconds
             this.frameSeconds = frameDelta / 1000;
         }
@@ -43,8 +39,8 @@ export default class GameTime {
         }
     }
 
-    aveFps() {
-        let ave = 0;
+    aveFps(): number {
+        let ave: number = 0;
         for(let i = 0; i < this.recentFrames.length; i++) {
             ave += this.recentFrames[i];
         }
