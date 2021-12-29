@@ -1,3 +1,5 @@
+import FrostFlake from "../FrostFlake";
+
 export default class Position {
     private _x: number         = 0;
     private _y: number         = 0;
@@ -22,7 +24,7 @@ export default class Position {
         return this._rotation;
     }
     set rotation(newValue: number) {
-        this._rotation = Position.normalizeAngle(newValue);
+        this._rotation = newValue;
     }
 
     get length(): number {
@@ -97,8 +99,9 @@ export default class Position {
         return (this.x * pos.x) + (this.y * pos.y);
     }
 
-    static normalizeAngle(angle: number): number {
+    static normalizeAngle(incomingAngle: number): number {
         const twoPi = Math.PI * 2;
+        let angle = incomingAngle;
 
         while(angle < 0) {
             angle += twoPi;
