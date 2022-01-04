@@ -26,7 +26,7 @@ export default class Data {
             const promiseImage = new Image();
             promiseImage.addEventListener('load', () => resolve(promiseImage));
             promiseImage.addEventListener('error', (err) => {
-                FrostFlake.Log.error(`Error loading ${src}...`);
+                FrostFlake.Log.error(`Error loading ${src}...\n${err}`);
                 reject(err)
             });
             promiseImage.src = src;
@@ -86,5 +86,14 @@ export default class Data {
             FrostFlake.Log.warn(`Bad key requested from cache: ${key}`);
             return null;
         }
+    }
+
+    static clone(obj: any): any {
+        // converting to and from JSON is a simple
+        // way to fully clone an object as a new
+        // reference
+        let json = JSON.stringify(obj);
+        let copy = JSON.parse(json);
+        return copy;
     }
 }
