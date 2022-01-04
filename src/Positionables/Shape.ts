@@ -12,6 +12,12 @@ export default class Shape extends Positionable {
         super();
     }
 
+    isPointInside(x: number, y:number): boolean {
+        // This method should be overridden in child shapes...
+        // if it is not, throw a not implemented exception.
+        throw "This is not implemented on this shape yet!";
+    }
+
     collideWith(
         shape: Shape,
         repoType: RepositionType = RepositionType.None,
