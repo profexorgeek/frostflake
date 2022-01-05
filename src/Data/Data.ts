@@ -87,13 +87,4 @@ export default class Data {
             return null;
         }
     }
-
-    static clone(obj: any): any {
-        // converting to and from JSON is a simple
-        // way to fully clone an object as a new
-        // reference
-        let json = JSON.stringify(obj);
-        let copy = JSON.parse(json);
-        return copy;
-    }
 }
