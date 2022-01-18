@@ -98,7 +98,7 @@ You should always use the `addChild` method and never directly modify the `child
 
 ### async initialize(): Promise<void>
 
-The asynchronous `initialize` method is where asset loading and potentially game object construction should happen. This method is automatically called by the engine and it will wait for all promises to resolve before 
+The asynchronous `initialize` method is where asset loading and potentially game object construction should happen. This method is automatically called by the engine and it will wait for all promises to resolve before beginning the `update` cycle.
 
 ### clearChildren(): void
 
