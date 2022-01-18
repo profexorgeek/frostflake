@@ -122,7 +122,7 @@ The `removeChild` method removes a child from the `children` collection and sets
 
 The `start` method is used by the engine to kick off the initialization process.
 
-This method should generally **not** be overwritten.
+This method should generally **not** be overridden.
 
 ### tryRemoveItem(item: any, list: Array<any>): boolean
 
@@ -132,7 +132,7 @@ The `tryRemoveItem` method is called by `removeChild` and should generally not b
 
 The `update`method is called by the engine every tick. The `update` method should be overridden to do frame-based game logic in your custom `View`.
 
-The time delta is often needed for calculations in the update cycle. Frame time in FrostFlake is expressed in seconds. This is available on the `GameTime` object available on the static game instance as follows:
+The time delta is often needed for calculations in the update cycle. Frame time in FrostFlake is expressed in seconds. This is stored in the `GameTime` object available on the static game instance as follows:
 
 `FrostFlake.Game.time.frameSeconds`
 
