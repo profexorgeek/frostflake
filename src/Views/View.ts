@@ -53,7 +53,9 @@ export default class View {
     }
 
     removeChild(positionable: Positionable): void {
-        this.tryRemoveItem(positionable, this.children);
+        if(this.tryRemoveItem(positionable, this.children)) {
+            positionable.parent = null;
+        }
     }
 
     tryRemoveItem(item: any, list: Array<any>): boolean {
@@ -69,12 +71,14 @@ export default class View {
     }
 
     destroyChild(positionable: Positionable): void {
-        positionable.destroy();
         this.removeChild(positionable);
+        positionable.destroy();
     }
 
     clearChildren(): void {
-        this.children = [];
+        for(let i = this.children.length - 1; i >= 0; i--) {
+            this.removeChild(this.children[i]);
+        }
     }
 
     destroy(): void {
