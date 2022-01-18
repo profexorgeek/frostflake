@@ -84,6 +84,8 @@ export default class CustomView extends View {
 
  ## View Methods
 
+**Note:** It is critical to make sure you call the parent method for any method you override in your custom view. Failing to call things like `super.update();` will result in many hard-to-diagnose bugs in your views!
+
  ### constructor
 
  The base constructor sets an `initialized` flag to false. The constructor for custom views should generally be empty.
@@ -135,5 +137,3 @@ The `update`method is called by the engine every tick. The `update` method shoul
 The time delta is often needed for calculations in the update cycle. Frame time in FrostFlake is expressed in seconds. This is stored in the `GameTime` object available on the static game instance as follows:
 
 `FrostFlake.Game.time.frameSeconds`
-
-**Note:** It is critical to make sure you call the base `update` method on your custom view. if you forget to call the base `update` method via `super.update()`, your game objects will not be sorted or updated properly!
