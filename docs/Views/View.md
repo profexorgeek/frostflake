@@ -1,6 +1,6 @@
  # View
 
- The [`View`](../../src/Views/View.ts) class is a container that represents an area of the game. Things such as the title screen, settings screen, levels, and similar things should be a `View`.
+ The [`View`](/src/Views/View.ts) class is a container that represents an area of the game. Things such as the title screen, settings screen, levels, and similar things should be a `View`.
 
  By default, FrostFlake manages a single `View` at a time, which is the root node of the scene graph. Views contain a collection of children `Positionable` objects and the tree of view children is crawled recursively for both the update and the drawing cycle. The current view is available on the static game instance as follows:
 

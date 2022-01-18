@@ -1,6 +1,6 @@
 # Audio
 
-The FrostFlake Audio class is used to play audio in your game. It creates an instance of [AudioContext](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext) and uses the context to decode audio data and play sounds.
+The FrostFlake [Audio](/src/Audio/Audio.ts) class is used to play audio in your game. It creates an instance of [AudioContext](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext) and uses the context to decode audio data and play sounds.
 
 By default, an instance of the `Audio` class is available on the static game instance object and can be called like this:
 
