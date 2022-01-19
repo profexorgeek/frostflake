@@ -30,7 +30,7 @@ For more information about the methods called during a view's lifecycle, see the
 
 ## Create a Custom View
 
-You will usually extend the `View` class to add screens, menus, or levels to your game. Here is an example of a custom view
+You will usually extend the `View` class to add screens, menus, or levels to your game. Here is an example of a custom view:
 
 ```typescript
 // imports go here
