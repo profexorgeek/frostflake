@@ -2,7 +2,7 @@ import FrostFlake from '../FrostFlake';
 
 export default class Data {
 
-    private static _cache: any = {};
+    private static _cache: object = {};
 
     static async loadResponse(src: string): Promise<Response> {
         const response = await fetch(src);
@@ -15,7 +15,7 @@ export default class Data {
     }
 
 
-    static async loadImage(src: string, key: string = null, skipCache: boolean = false): Promise<HTMLImageElement> {
+    static async loadImage(src: string, key: string = null, skipCache = false): Promise<HTMLImageElement> {
 
         // EARLY OUT: return from cache
         if(src in this._cache && !skipCache) {
@@ -32,24 +32,24 @@ export default class Data {
             promiseImage.src = src;
         });
 
-        let img = await promise;
+        const img = await promise;
 
         if(!skipCache) {
-            let keyName = key == null ? src : key;
+            const keyName = key == null ? src : key;
             Data.addItem(keyName, img);
         }
 
         return img;
     }
 
-    static async loadJson(src: string): Promise<any> {
+    static async loadJson(src: string): Promise<unknown> {
         const response = await Data.loadResponse(src);
         return await response.json();
     }
 
     static async loadAudio(src: string): Promise<ArrayBuffer> {
         const response = await Data.loadResponse(src);
-        let buffer = response.arrayBuffer();
+        const buffer = response.arrayBuffer();
         return buffer;
     }
     
@@ -65,7 +65,7 @@ export default class Data {
         return false;
     }
 
-    static addItem(key: string, item: any): void {
+    static addItem(key: string, item: unknown): void {
         if(Data.itemExists(key)) {
             FrostFlake.Log.warn(`Item already exists for ${key}, overwriting.`);
         }
@@ -78,7 +78,7 @@ export default class Data {
         }
     }
 
-    static getItem(key: string): any {
+    static getItem(key: string): unknown {
         if(Data.itemExists(key)) {
             return Data._cache[key];
         }

@@ -3,14 +3,14 @@ import Frame from './Frame';
 
 export default class Animation {
 
-    name: string                = '';
+    name                = '';
     frames: Array<Frame>        = [];
-    texture: string             = '';
-    playing: boolean            = true;
-    looping: boolean            = true;
-    frameIndex: number          = -1;
+    texture             = '';
+    playing            = true;
+    looping            = true;
+    frameIndex          = -1;
 
-    private _secondsLeftInFrame: number = 0;
+    private _secondsLeftInFrame = 0;
 
     get currentFrame(): Frame {
         return this.frames[this.frameIndex];

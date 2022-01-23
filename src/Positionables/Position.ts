@@ -1,9 +1,7 @@
-import FrostFlake from "../FrostFlake";
-
 export default class Position {
-    private _x: number         = 0;
-    private _y: number         = 0;
-    private _rotation: number  = 0;
+    private _x         = 0;
+    private _y         = 0;
+    private _rotation  = 0;
 
 
     get x(): number {
@@ -28,11 +26,11 @@ export default class Position {
     }
 
     get length(): number {
-        let len = Math.pow(this.x, 2) + Math.pow(this.y, 2);
+        const len = Math.pow(this.x, 2) + Math.pow(this.y, 2);
         return Math.abs(Math.sqrt(len));
     }
 
-    constructor(x: number = 0, y:number = 0, rotation:number = 0) {
+    constructor(x = 0, y = 0, rotation = 0) {
         this.x = x;
         this.y = y;
         this.rotation = rotation;

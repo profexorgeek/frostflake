@@ -1,5 +1,4 @@
 import Circle from './Circle';
-import MathUtil from '../Utility/MathUtil';
 import Rectangle from './Rectangle';
 import RepositionType from './RepositionType';
 import Positionable from './Positionable';
@@ -21,13 +20,13 @@ export default class Shape extends Positionable {
     collideWith(
         shape: Shape,
         repoType: RepositionType = RepositionType.None,
-        thisWeight: number = 1,
-        targetWeight: number = 0,
+        thisWeight = 1,
+        targetWeight = 0,
         repoForce = 1
         ): boolean {
 
         // intentionally empty, child types must implement
-        let msg = "Not implemented: Attempted to collide generic shape object.";
+        const msg = "Not implemented: Attempted to collide generic shape object.";
         FrostFlake.Log.error(msg);
         throw msg;
     }
@@ -36,9 +35,9 @@ export default class Shape extends Positionable {
         circle1: Circle,
         circle2: Circle,
         repositionType: RepositionType = RepositionType.None,
-        circle1Weight: number = 1,
-        circle2Weight: number = 0,
-        forceScale: number = 1
+        circle1Weight = 1,
+        circle2Weight = 0,
+        forceScale = 1
         ): boolean {
 
         // figure out if we're overlapping by calculating
@@ -86,9 +85,9 @@ export default class Shape extends Positionable {
         circle: Circle,
         rect: Rectangle,
         repositionType: RepositionType = RepositionType.None,
-        circleWeight: number = 1,
-        rectWeight: number = 0,
-        forceScale: number = 1
+        circleWeight = 1,
+        rectWeight = 0,
+        forceScale = 1
         ): boolean {
 
         // figure out if we're overlapping on each axis by
@@ -108,7 +107,7 @@ export default class Shape extends Positionable {
 
             // TODO: handle corners!
 
-            let normalDelta = new Position(
+            const normalDelta = new Position(
                 (xOverlap <= yOverlap ? 1 : 0) * Math.sign(xDist),
                 (xOverlap >= yOverlap ? 1 : 0) * Math.sign(yDist));
 
@@ -146,9 +145,9 @@ export default class Shape extends Positionable {
         rect1: Rectangle,
         rect2: Rectangle,
         repositionType: RepositionType = RepositionType.None,
-        rect1Weight: number = 1,
-        rect2Weight: number = 0,
-        forceScale: number = 1
+        rect1Weight = 1,
+        rect2Weight = 0,
+        forceScale = 1
         ): boolean {
 
         // figure out if we're overlapping on each axis by
@@ -166,7 +165,7 @@ export default class Shape extends Positionable {
 
         if(didCollide && repositionType != RepositionType.None) {
 
-            let normalDelta = new Position(
+            const normalDelta = new Position(
                 (xOverlap <= yOverlap ? 1 : 0) * Math.sign(xDist),
                 (xOverlap <= yOverlap ? 0 : 1) * Math.sign(yDist));
 

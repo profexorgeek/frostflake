@@ -22,7 +22,7 @@ export default class TilemapView extends View {
 
     constructor(tilesetUrl, tilemapUrl) {
         super();
-        let me = this;
+        const me = this;
         
         (async () => {
             //TODO: introduce some error handling here - JMH
@@ -35,7 +35,7 @@ export default class TilemapView extends View {
             me.tilemapJsonLoaded = true;
         })()
 
-        let pathElements = tilesetUrl.split('/');
+        const pathElements = tilesetUrl.split('/');
         pathElements.pop();
         this.rootPath = pathElements.join('/');
     }
@@ -81,7 +81,7 @@ export default class TilemapView extends View {
         // NOTE: tiles with a "collides = true" property go in a special collision array
         // build array of collideable tiles for faster finding in the deeper loop below.
         // TODO: this needs to be rethought into a more efficient system
-        let collideableTiles = []
+        const collideableTiles = []
         for(let i = 0; i < set.tiles.length; i++) {
             for(let j = 0; j < set.tiles[i].properties.length; j++) {
                 if(set.tiles[i].properties[j].name == "collides" && set.tiles[i].properties[j].value == true) {
@@ -102,7 +102,7 @@ export default class TilemapView extends View {
             if(layer.type == 'tilelayer') {
                 
                 // container to hold layer sprites to be rendered to a single image
-                let sprites = [];
+                const sprites = [];
 
                 for(let j = 0; j < layer.data.length; j++) {
                     
@@ -118,7 +118,7 @@ export default class TilemapView extends View {
                     // TODO: spacing, margin, offsets, rotation, and many other features are not
                     // yet supported
                     
-                    let sprite = new Sprite(spritePath);
+                    const sprite = new Sprite(spritePath);
                     sprite.frame = new Frame(
                         frameX * set.tilewidth,
                         frameY * set.tileheight,
@@ -145,8 +145,8 @@ export default class TilemapView extends View {
                 }
 
                 // now render all of the sprites to a single layer sprite and add that sprite
-                let layerTexture = FrostFlake.Game.renderer.renderToTexture(sprites, map.width * set.tilewidth, map.height * set.tileheight);
-                let layerSprite = new Sprite(layerTexture);
+                const layerTexture = FrostFlake.Game.renderer.renderToTexture(sprites, map.width * set.tilewidth, map.height * set.tileheight);
+                const layerSprite = new Sprite(layerTexture);
                 layerSprite.layer = i;
                 this.addChild(layerSprite);
             }
