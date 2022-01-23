@@ -1,9 +1,10 @@
 import FrostFlake from "../FrostFlake";
+import Positionable from "../Positionables/Positionable";
 
 export default class View {
-    children = [];
-    sortNeeded = false;
-    initialized = false;
+    children: Array<Positionable>       = [];
+    sortNeeded: boolean                 = false;
+    initialized: boolean                = false;
 
     constructor() {
         this.initialized = false;
@@ -11,11 +12,11 @@ export default class View {
 
     }
 
-    async initialize() {
+    async initialize(): Promise<void> {
         FrostFlake.Log.trace(`View ${this.constructor.name} initializing...`);
     }
 
-    start() {
+    start(): void {
         (async () => {
             await this.initialize();
             this.initialized = true;
@@ -23,7 +24,7 @@ export default class View {
         FrostFlake.Log.trace(`View ${this.constructor.name} initialized.`);
     }
 
-    update() {
+    update(): void {
         if(this.sortNeeded) {
             this.children.sort((a, b) => {
                 return a.layer - b.layer;
@@ -37,11 +38,12 @@ export default class View {
         }
     }
 
-    addChild(positionable) {
+    addChild(positionable: Positionable): void {
         if (this.children.indexOf(positionable) > -1) {
             throw "positionable has already been added to view."
         }
 
+        positionable.parent = this;
         this.children.push(positionable);
 
         // We can't sort the list here because we could be
@@ -50,27 +52,36 @@ export default class View {
         this.sortNeeded = true;
     }
 
-    removeChild(positionable) {
-        this.tryRemoveItem(positionable, this.children);
-    }
-
-    tryRemoveItem(item, list) {
-        let i = list.indexOf(item);
-        if (i > -1) {
-            list.splice(i, 1);
+    removeChild(positionable: Positionable): void {
+        if(this.tryRemoveItem(positionable, this.children)) {
+            positionable.parent = null;
         }
     }
 
-    destroyChild(positionable) {
-        positionable.destroy();
+    tryRemoveItem(item: any, list: Array<any>): boolean {
+        let i = list.indexOf(item);
+        if (i > -1) {
+            list.splice(i, 1);
+            return true;
+        }
+        else {
+            FrostFlake.Log.warn("Tried to remove item that wasn't found in collection.");
+            return false;
+        }
+    }
+
+    destroyChild(positionable: Positionable): void {
         this.removeChild(positionable);
+        positionable.destroy();
     }
 
-    clearChildren() {
-        this.children = [];
+    clearChildren(): void {
+        for(let i = this.children.length - 1; i >= 0; i--) {
+            this.removeChild(this.children[i]);
+        }
     }
 
-    destroy() {
+    destroy(): void {
         for (let i = this.children.length - 1; i > -1; i--) {
             this.destroyChild(this.children[i]);
         }

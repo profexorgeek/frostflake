@@ -11,24 +11,23 @@ import EmbeddedImages from './Drawing/EmbeddedImages';
 import ILog from './Logging/ILog';
 
 export default class FrostFlake {
-    static Game;
+    static Game: FrostFlake;
     static Log: ILog;
 
-    private _timer;
-    private _view;
+    private _timer: number;
+    private _view: View;
 
-    time;
-    fps;
-    camera;
-    canvas;
-    renderer;
-    background;
-    input;
-    audio;
-    showDebug = false;
-    defaultLoadingSprite;
+    audio: Audio;
+    camera: Camera;
+    canvas: HTMLCanvasElement;
+    defaultLoadingSprite: Sprite;
+    fps: number;
+    input: Input;
+    renderer: CanvasRenderer;
+    showDebug: boolean = false;
+    time: GameTime;
 
-    set view(newView) {
+    set view(newView: View) {
         if(this._view != null) {
             this._view.destroy();
         }
@@ -37,17 +36,16 @@ export default class FrostFlake {
         this._view = newView;
     }
 
-    get view() {
+    get view(): View {
         return this._view;
     }
 
-    constructor(canvas, fps = 30, background = "rgb(0,0,0)") {
+    constructor(canvas: HTMLCanvasElement, fps: number = 30, background: string = "rgb(0,0,0)") {
         FrostFlake.Game = this;
         FrostFlake.Log = new Log();
 
         this.canvas = canvas;
         this.fps = fps;
-        this.background = background;
         this.input = new Input();
         this.audio = new Audio();
         this.camera = new Camera(this.canvas.width, this.canvas.height);
@@ -57,7 +55,7 @@ export default class FrostFlake {
         FrostFlake.Log.trace("FrostFlake instance created...");
     }
 
-    start() {
+    start(): void {
         FrostFlake.Log.trace("Starting FrostFlake...");
 
         (async () => {
@@ -72,7 +70,7 @@ export default class FrostFlake {
         })();
     }
 
-    update() {
+    update(): void {
         this.time.update();
         this.camera.update();
 
@@ -90,10 +88,10 @@ export default class FrostFlake {
         this.input.update();
 
         if(this.view != null && this.view.initialized) {
-            this.renderer.draw(this.view.children, this.camera, this.canvas, this.background);
+            this.renderer.draw(this.view.children, this.camera);
         }
         else {
-            this.renderer.draw([this.defaultLoadingSprite], this.camera, this.canvas, this.background);
+            this.renderer.draw([this.defaultLoadingSprite], this.camera);
         }
     }
 }

@@ -1,6 +1,6 @@
 import FrostFlake from '../FrostFlake';
+import View from '../Views/View';
 import Position from './Position';
-import { length, normalizeAngle } from '../Utility/MathUtil';
 
 export default class Positionable {
 
@@ -11,7 +11,7 @@ export default class Positionable {
     visible: boolean                            = true;
     drag: number                                = 0;
     layer: number                               = 0;
-    parent: Positionable                        = null;
+    parent: Positionable | View                 = null;
     children: Array<Positionable>               = [];
     destroyed: boolean                          = false;
     applyRotationAccelerationAndDrag: boolean   = false;
@@ -44,9 +44,9 @@ export default class Positionable {
     get absolutePosition(): Position {
         let absPos = new Position();
 
-        if(this.parent != null) {
+        if(this.parent != null && this.parent instanceof Positionable) {
             let parentAbsPos = this.parent.absolutePosition;
-            let magnitude = length(this.x, this.y);
+            let magnitude = this.position.length;
             absPos.x = Math.cos(parentAbsPos.rotation) * magnitude + parentAbsPos.x;
             absPos.y = Math.sin(parentAbsPos.rotation) * magnitude + parentAbsPos.y;
             absPos.rotation = parentAbsPos.rotation + this.rotation;
@@ -82,9 +82,11 @@ export default class Positionable {
 
     removeChild(positionable: Positionable): void {
         const i: number = this.children.indexOf(positionable);
-        
         if(i > -1) {
             this.children.splice(i, 1);
+        }
+        else {
+            FrostFlake.Log.warn("Tried to call removeChild but positionable wasn't found in children collecion.");
         }
         positionable.parent = null;
     }
@@ -96,6 +98,20 @@ export default class Positionable {
     detach(): void {
         if(this.parent instanceof Positionable) {
             this.parent.removeChild(this);
+        }
+
+        else if(this.parent instanceof View) {
+            this.parent.removeChild(this);
+        }
+
+        else {
+            if(this.parent != null) {
+                throw `Attempted to deatch ${this.constructor.name} but parent is not a View or Positionable!`;
+            }
+            else {
+                throw `Attempted to deatch ${this.constructor.name} but parent is null!`;
+            }
+            
         }
     }
 
@@ -134,7 +150,7 @@ export default class Positionable {
             this.velocity.rotation += (this.acceleration.rotation * delta) - (this.drag * this.velocity.rotation * delta);
         }
 
-        this.position.rotation = normalizeAngle(this.position.rotation);
+        this.position.rotation = Position.normalizeAngle(this.position.rotation);
 
         // update children
         for(let i = 0; i < this.children.length; i++) {
@@ -146,6 +162,13 @@ export default class Positionable {
     preUpdate(): void {}
 
     destroy(): void {
+
+        // EARLY OUT: already destroyed, this can happen when destroy is
+        // called multiple times in a frame.
+        if(this.destroyed === true) {
+            return;
+        }
+
         this.detach();
 
         // cascade destroy to children

@@ -2,6 +2,8 @@
 
 For full documentation, see [FrostFlake Docs](/docs/index.md)!
 
+For a crude demo, check out my tiny [example game called AtmosphereZero](https://justindjohnson.com/atmosphereZero/), with [full sourcecode available on GitHub](https://github.com/profexorgeek/atmosphereZero).
+
 I originally started FrostFlake in 2014 as a way to have fun while learning the deeper aspects of JavaScript. I wanted to build a game engine with a lean, but functional, feature set and few dependencies so I wrote it in ES5. I rewrote the original engine in TypeScript in 2017 but then converted it to ES6 because I hoped to have zero dependencies. ES6 support was a mess and creating a build system that worked required tons of dependencies. So, we converted the engine _back_ to TypeScript as a community effort.
 
 This iteration of the engine has no dependencies outside of TypeScript itself. It uses a canvas renderer, not WebGL. The goal was to make it as simple as possible for a beginner to start playing with the engine.
@@ -47,14 +49,14 @@ We are in the process of refacotring and testing this engine. Once that is compl
 
 ## Todo list
 
-Here are features I'd like to add. This is a good place to start if you want to contribute. Keep in mind that the point of this engine is simplicity for beginners so please reach out if you plan to PR a new feature!
+Here are high-level features I'd like to add. When a feature is actually started, it will be an Issue. If you want to contribute, the Issues list is a great place to start.
 
-- [ ] Define docs pattern, docs should be in a `docs` folder and should be GitHub markdown
-- [ ] Complete TypeScript conversion: annotate variables and method arguments with Types
 - [ ] Improve [TMX Tilemap](https://mapeditor.org) map support
 - [ ] Implement [LDtk](https://ldtk.io/) map support
 - [ ] Test building with Electron and document
 - [ ] Touch input system (currently only Mouse and Keyboard are supported)
+- [x] Define docs pattern, docs should be in a `docs` folder and should be GitHub markdown
+- [x] Complete TypeScript conversion: annotate variables and method arguments with Types
 - [x] Text rendering system
 - [x] Improve asset loading and texture buffering
 - [x] Change callback-based loading system to use Promises

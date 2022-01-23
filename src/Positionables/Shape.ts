@@ -12,6 +12,12 @@ export default class Shape extends Positionable {
         super();
     }
 
+    isPointInside(x: number, y:number): boolean {
+        // This method should be overridden in child shapes...
+        // if it is not, throw a not implemented exception.
+        throw "This is not implemented on this shape yet!";
+    }
+
     collideWith(
         shape: Shape,
         repoType: RepositionType = RepositionType.None,
@@ -37,17 +43,17 @@ export default class Shape extends Positionable {
 
         // figure out if we're overlapping by calculating
         // if the distance apart is less than the sum of the radii
-        const delta = MathUtil.vectorSubtract(circle2.absolutePosition, circle1.absolutePosition);
-        const distApart = MathUtil.vectorLength(delta);
+        const delta = circle2.absolutePosition.subtract(circle1.absolutePosition);
+        const distApart = delta.length;
         const collideDist = Math.abs(circle1.radius) + Math.abs(circle2.radius);
         const overlap = collideDist - distApart;
         const didCollide = overlap > 0;
 
         if(didCollide && repositionType != RepositionType.None) {
-            const normalDelta = MathUtil.vectorNormalize(delta);
+            const normalDelta = delta.normalize();
 
             // just pick a default direction in case of perfect overlap
-            if(MathUtil.vectorLength(normalDelta) == 0) {
+            if(normalDelta.length == 0) {
                 normalDelta.y = 1;
             }
             
@@ -61,13 +67,13 @@ export default class Shape extends Positionable {
             circle2.root.position.y += normalDelta.y * (overlap * circle2Factor);
 
             if(repositionType == RepositionType.Bounce) {
-                const velocityLength = MathUtil.vectorDot(MathUtil.vectorSubtract(circle1.root.velocity, circle2.root.velocity), normalDelta) * forceScale;
+                const velocityLength = circle1.root.velocity.subtract(circle2.root.velocity).dot(normalDelta) * forceScale;
                 
-                const circle1VelocityAdjust = MathUtil.vectorMultiply(normalDelta, velocityLength * circle1Factor);
+                const circle1VelocityAdjust = normalDelta.multiplySingle(velocityLength * circle1Factor);
                 circle1.root.velocity.x -= circle1VelocityAdjust.x * 2;
                 circle1.root.velocity.y -= circle1VelocityAdjust.y * 2;
 
-                const circle2VelocityAdjust = MathUtil.vectorMultiply(normalDelta, velocityLength * circle2Factor);
+                const circle2VelocityAdjust = normalDelta.multiplySingle(velocityLength * circle2Factor);
                 circle2.root.velocity.x += circle2VelocityAdjust.x * 2;
                 circle2.root.velocity.y += circle2VelocityAdjust.y * 2;
             }
@@ -107,7 +113,7 @@ export default class Shape extends Positionable {
                 (xOverlap >= yOverlap ? 1 : 0) * Math.sign(yDist));
 
             // just pick a default direction in case of perfect overlap
-            if(MathUtil.vectorLength(normalDelta) == 0) {
+            if(normalDelta.length == 0) {
                 normalDelta.y = 1;
             }
 
@@ -121,13 +127,13 @@ export default class Shape extends Positionable {
             rect.root.position.y -= normalDelta.y * yOverlap * rectFactor;
 
             if(repositionType == RepositionType.Bounce) {
-                const velocityLength = MathUtil.vectorDot(MathUtil.vectorSubtract(circle.root.velocity, rect.root.velocity), normalDelta) * forceScale;
+                const velocityLength = circle.root.velocity.subtract(rect.root.velocity).dot(normalDelta) * forceScale;
                 
-                const circleVelocityAdjust = MathUtil.vectorMultiply(normalDelta, velocityLength * circleFactor);
+                const circleVelocityAdjust = normalDelta.multiplySingle(velocityLength * circleFactor);
                 circle.root.velocity.x -= circleVelocityAdjust.x * 2;
                 circle.root.velocity.y -= circleVelocityAdjust.y * 2;
 
-                const rectVelocityAdjust = MathUtil.vectorMultiply(normalDelta, velocityLength * rectFactor);
+                const rectVelocityAdjust = normalDelta.multiplySingle(velocityLength * rectFactor);
                 rect.root.velocity.x += rectVelocityAdjust.x * 2;
                 rect.root.velocity.y += rectVelocityAdjust.y * 2;
             }
@@ -165,7 +171,7 @@ export default class Shape extends Positionable {
                 (xOverlap <= yOverlap ? 0 : 1) * Math.sign(yDist));
 
             // just pick a default direction in case of perfect overlap
-            if(MathUtil.vectorLength(normalDelta) == 0) {
+            if(normalDelta.length == 0) {
                 normalDelta.y = 1;
             }
 
@@ -179,13 +185,13 @@ export default class Shape extends Positionable {
             rect2.root.position.y -= normalDelta.y * yOverlap * rect2Factor;
 
             if(repositionType == RepositionType.Bounce) {
-                const velocityLength = MathUtil.vectorDot(MathUtil.vectorSubtract(rect1.root.velocity, rect2.root.velocity), normalDelta) * forceScale;
+                const velocityLength = rect1.root.velocity.subtract(rect2.root.velocity).dot(normalDelta) * forceScale;
                 
-                const r1VelocityAdjust = MathUtil.vectorMultiply(normalDelta, velocityLength * rect1Factor);
+                const r1VelocityAdjust = normalDelta.multiplySingle(velocityLength * rect1Factor);
                 rect1.root.velocity.x -= r1VelocityAdjust.x * 2;
                 rect1.root.velocity.y -= r1VelocityAdjust.y * 2;
 
-                const r2VelocityAdjust = MathUtil.vectorMultiply(normalDelta, velocityLength * rect2Factor);
+                const r2VelocityAdjust = normalDelta.multiplySingle(velocityLength * rect2Factor);
                 rect2.root.velocity.x += r2VelocityAdjust.x * 2;
                 rect2.root.velocity.y += r2VelocityAdjust.y * 2;
             }
