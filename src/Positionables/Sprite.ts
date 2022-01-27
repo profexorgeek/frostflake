@@ -8,12 +8,12 @@ import Camera from './Camera';
 
 export default class Sprite extends Positionable{
 
-    alpha: number                       = 1;
+    alpha                       = 1;
     frame: Frame                        = null;
     texture: string                     = null;
     animation: Animation                = null;
-    scale: number                       = 1;
-    parallax: number                    = 1;
+    scale                       = 1;
+    parallax                    = 1;
     private _collisionShape: Shape      = null;
 
     get collision(): Shape {

@@ -6,7 +6,8 @@
   "types": "./dist/frostflake.d.ts",
   "scripts": {
     "build": "tsc",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "lint": "eslint --ignore-path .eslintignore --ext .js,.ts ."
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,9 @@
   },
   "homepage": "https://github.com/profexorgeek/frostflake#readme",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.0",
+    "eslint": "^8.7.0",
     "ts-loader": "^9.2.6",
     "typescript": "^4.5.4"
   }

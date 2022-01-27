@@ -3,8 +3,8 @@ import Positionable from "../Positionables/Positionable";
 
 export default class View {
     children: Array<Positionable>       = [];
-    sortNeeded: boolean                 = false;
-    initialized: boolean                = false;
+    sortNeeded                 = false;
+    initialized                = false;
 
     constructor() {
         this.initialized = false;
@@ -58,8 +58,8 @@ export default class View {
         }
     }
 
-    tryRemoveItem(item: any, list: Array<any>): boolean {
-        let i = list.indexOf(item);
+    tryRemoveItem(item: unknown, list: Array<unknown>): boolean {
+        const i = list.indexOf(item);
         if (i > -1) {
             list.splice(i, 1);
             return true;

@@ -1,5 +1,3 @@
-import Position from "../Positionables/Position";
-
 export function invert(num: number): number {
     return 0 - num;
 }
@@ -15,7 +13,7 @@ export function randomIntInRange(min: number, max: number): number {
 }
 
 export function length(x, y) {
-    let len = Math.pow(x, 2) + Math.pow(y, 2);
+    const len = Math.pow(x, 2) + Math.pow(y, 2);
     return Math.abs(Math.sqrt(len));
 }
 

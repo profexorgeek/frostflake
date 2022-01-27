@@ -31,8 +31,8 @@ export default class Rectangle extends Shape {
     collideWith(
         shape: Shape,
         repoType: RepositionType = RepositionType.None,
-        thisWeight: number = 1,
-        targetWeight: number = 0,
+        thisWeight = 1,
+        targetWeight = 0,
         repoForce = 1
         ): boolean {
 
