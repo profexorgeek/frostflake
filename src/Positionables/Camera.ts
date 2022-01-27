@@ -3,10 +3,10 @@ import Position from './Position';
 import Rectangle from './Rectangle';
 
 export default class Camera extends Rectangle{
-    resolution: number      = 1;
-    antialias: boolean      = false;
+    resolution      = 1;
+    antialias      = false;
     lastPosition: Position  = new Position();
-    background: string      = "rgba(0,0,0,1)";
+    background      = "rgba(0,0,0,1)";
 
     get randomPositionInView(): Position {
         return new Position(

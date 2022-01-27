@@ -23,8 +23,8 @@ export default class FrostFlake {
     defaultLoadingSprite: Sprite;
     fps: number;
     input: Input;
+    showDebug = false;
     renderer: CanvasRenderer;
-    showDebug: boolean = false;
     time: GameTime;
 
     set view(newView: View) {
@@ -40,7 +40,7 @@ export default class FrostFlake {
         return this._view;
     }
 
-    constructor(canvas: HTMLCanvasElement, fps: number = 30, background: string = "rgb(0,0,0)") {
+    constructor(canvas: HTMLCanvasElement, fps = 30, background = "rgb(0,0,0)") {
         FrostFlake.Game = this;
         FrostFlake.Log = new Log();
 
@@ -63,7 +63,7 @@ export default class FrostFlake {
             this.defaultLoadingSprite = new Sprite("loadImage");
 
             this.time = new GameTime();
-            let me = this;
+            const me = this;
             this._timer = window.setInterval( function () {
                 me.update();
             }, 1000 / this.fps);

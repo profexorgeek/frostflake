@@ -3,7 +3,7 @@ import Data from '../Data/Data';
 
 export default class Audio {
     private context: AudioContext;
-    private _cache: any = {};
+    private _cache: object = {};
 
     constructor() {
         this.context = new AudioContext();
@@ -34,7 +34,7 @@ export default class Audio {
             return null;
         }
         
-        let sound = this.context.createBufferSource();
+        const sound = this.context.createBufferSource();
         sound.buffer = this._cache[src];
         sound.connect(this.context.destination);
         sound.start(0);
@@ -53,7 +53,7 @@ export default class Audio {
             throw Error(msg);
         }
 
-        let buffer = await Data.loadAudio(src);
+        const buffer = await Data.loadAudio(src);
         if(buffer instanceof ArrayBuffer !== true) {
             const msg = `Audio source ${src} was not a valid audio buffer`;
             FrostFlake.Log.error(msg);
@@ -70,7 +70,7 @@ export default class Audio {
             });
         });
 
-        let sound = await promise;
+        const sound = await promise;
         return sound;
     }
 }

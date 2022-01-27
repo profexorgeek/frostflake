@@ -27,7 +27,7 @@ export default class ConsoleLog implements ILog {
     private write(level: LogLevel, msg: string): void {
         
         if(level >= this.level) {
-            let now = (new Date()).toISOString()
+            const now = (new Date()).toISOString()
             console.log(`${now} [${LogLevel[level]}]: ${msg}`);
         }
     }

@@ -21,8 +21,8 @@ export default class Input {
         window.addEventListener("mousedown", (e) => this.onMouseDown(e));
         window.addEventListener("mouseup", (e) => this.onMouseUp(e));        
 
-        FrostFlake.Game.canvas.addEventListener("mouseenter", (e) => this.onEnterCanvas(e));
-        FrostFlake.Game.canvas.addEventListener("mouseleave", (e) => this.onExitCanvas(e));
+        FrostFlake.Game.canvas.addEventListener("mouseenter", () => this.onEnterCanvas());
+        FrostFlake.Game.canvas.addEventListener("mouseleave", () => this.onExitCanvas());
 
         // disable context menu on the canvas so we can use right click
         FrostFlake.Game.canvas.addEventListener("contextmenu", (e) => e.preventDefault());
@@ -32,33 +32,33 @@ export default class Input {
         this.cursor.update();
 
         // clear pushed keys
-        for(let key in this._keysPushed) {
+        for(const key in this._keysPushed) {
             this._keysPushed[key] = false;
         }
 
         // clear buttons pushed array
-        for(let btn in this._buttonsPushed) {
+        for(const btn in this._buttonsPushed) {
             this._buttonsPushed[btn] = false;
         }
     }
 
     keyDown(charCode: number): boolean {
-        let keyName = Keys["char" + charCode];
+        const keyName = Keys["char" + charCode];
         return this._keysDown[keyName] === true;
     }
 
     keyPushed(charCode: number): boolean {
-        let keyName = Keys["char" + charCode];
+        const keyName = Keys["char" + charCode];
         return this._keysPushed[keyName] === true;
     }
 
     buttonDown(btnCode: number): boolean {
-        let btnName = Mouse["button" + btnCode];
+        const btnName = Mouse["button" + btnCode];
         return this._buttonsDown[btnName] === true;
     }
 
     buttonPushed(btnCode: number): boolean {
-        let btnName = Mouse["button" + btnCode];
+        const btnName = Mouse["button" + btnCode];
         return this._buttonsPushed[btnName] === true;
     }
 
@@ -77,11 +77,11 @@ export default class Input {
     }
 
     // EVENT HANDLERS
-    private onEnterCanvas(e: MouseEvent): void {
+    private onEnterCanvas(): void {
         this.cursor.isInFrame = true;
     }
 
-    private onExitCanvas(e: MouseEvent): void {
+    private onExitCanvas(): void {
         this.cursor.isInFrame = false;
     }
 
@@ -90,13 +90,13 @@ export default class Input {
     }
 
     private onMouseDown(e: MouseEvent): void {
-        let btnName = Mouse["button" + e.button];
+        const btnName = Mouse["button" + e.button];
         this._buttonsDown[btnName] = true;
         this.stopPropagation(e);
     }
 
     private onMouseUp(e: MouseEvent) {
-        let btnName = Mouse["button" + e.button];
+        const btnName = Mouse["button" + e.button];
         this._buttonsDown[btnName] = false;
         this._buttonsPushed[btnName] = true;
         this.stopPropagation(e);
@@ -106,7 +106,7 @@ export default class Input {
         // NOTE: official MDN docs recommend against using "which"
         // but none of the other properties return the same thing
         // and have less reliable support! 
-        let keyName = Keys["char" + e.which];
+        const keyName = Keys["char" + e.which];
         this._keysDown[keyName] = true;
         this.stopPropagation(e);
     }
@@ -115,7 +115,7 @@ export default class Input {
         // NOTE: official MDN docs recommend against using "which"
         // but none of the other properties return the same thing
         // and have less reliable support!
-        let keyName = Keys["char" + e.which];
+        const keyName = Keys["char" + e.which];
         this._keysDown[keyName] = false;
         this._keysPushed[keyName] = true;
         this.stopPropagation(e);

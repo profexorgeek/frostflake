@@ -9,13 +9,9 @@ export default class GameTime {
 
     startTime: Date                 = new Date();
     lastFrameTime: Date             = new Date();
-    frameSeconds: number            = 0;
-    gameTimeSeconds: number         = 0;
+    frameSeconds            = 0;
+    gameTimeSeconds         = 0;
     recentFrames: Array<number>     = [];
-
-    constructor() {
-
-    }
 
     update(): void {
         const lastFrame = this.lastFrameTime.getTime();
@@ -40,7 +36,7 @@ export default class GameTime {
     }
 
     aveFps(): number {
-        let ave: number = 0;
+        let ave = 0;
         for(let i = 0; i < this.recentFrames.length; i++) {
             ave += this.recentFrames[i];
         }
