@@ -1,5 +1,3 @@
-import Position from "../Positionables/Position";
-
 export function invert(num: number): number {
     return 0 - num;
 }

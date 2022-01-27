@@ -4,17 +4,17 @@ import Position from './Position';
 
 export default class Positionable {
 
-    color                               = "rgba(255,0,0,0.25)";
-    position: Position                  = new Position();
-    velocity: Position                  = new Position();
-    acceleration: Position              = new Position();
-    visible                             = true;
-    drag                                = 0;
-    layer                               = 0;
-    parent: Positionable | View         = null;
-    children: Array<Positionable>       = [];
-    destroyed                           = false;
-    applyRotationAccelerationAndDrag    = false;
+    color                              = "rgba(255,0,0,0.25)";
+    position: Position                 = new Position();
+    velocity: Position                 = new Position();
+    acceleration: Position             = new Position();
+    visible                            = true;
+    drag                               = 0;
+    layer                              = 0;
+    parent: Positionable | View        = null;
+    children: Array<Positionable>      = [];
+    destroyed                          = false;
+    applyRotationAccelerationAndDrag   = false;
     
     get x(): number {
         return this.position.x;

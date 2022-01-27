@@ -3,7 +3,7 @@ import Data from '../Data/Data';
 
 export default class Audio {
     private context: AudioContext;
-    private _cache: unknown = {};
+    private _cache: object = {};
 
     constructor() {
         this.context = new AudioContext();
