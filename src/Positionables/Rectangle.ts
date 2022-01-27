@@ -1,6 +1,8 @@
 import Shape from './Shape';
 import Circle from './Circle';
 import RepositionType from './RepositionType';
+import Position from './Position';
+import Positionable from './Positionable';
 
 export default class Rectangle extends Shape {
     width: number;
@@ -42,5 +44,17 @@ export default class Rectangle extends Shape {
         else if(shape instanceof Rectangle) {
             return Shape.collideRectVsRect(this, shape, repoType, thisWeight, targetWeight, repoForce);
         }
+    }
+
+    isPointInside(x: number, y: number): boolean {
+        const test = new Position(x, y, 0);
+        const abs:Position = this.absolutePosition;
+        const delta = test.subtract(abs);
+
+        if(delta.x < this.width / 2 && delta.y < this.height / 2) {
+            return true;
+        }
+
+        return false;
     }
 }
