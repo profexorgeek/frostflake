@@ -1,36 +1,24 @@
 import Circle from './Circle';
-import MathUtil from '../Utility/MathUtil';
 import Rectangle from './Rectangle';
 import RepositionType from './RepositionType';
 import Positionable from './Positionable';
 import Position from './Position';
-import FrostFlake from '../FrostFlake';
 
-export default class Shape extends Positionable {
+export default abstract class Shape extends Positionable {
 
     constructor() {
         super();
     }
 
-    isPointInside(x: number, y:number): boolean {
-        // This method should be overridden in child shapes...
-        // if it is not, throw a not implemented exception.
-        throw "This is not implemented on this shape yet!";
-    }
+    abstract isPointInside(x: number, y:number): boolean;
 
-    collideWith(
+    abstract collideWith(
         shape: Shape,
-        repoType: RepositionType = RepositionType.None,
-        thisWeight: number = 1,
-        targetWeight: number = 0,
-        repoForce = 1
-        ): boolean {
-
-        // intentionally empty, child types must implement
-        let msg = "Not implemented: Attempted to collide generic shape object.";
-        FrostFlake.Log.error(msg);
-        throw msg;
-    }
+        repoType: RepositionType,
+        thisWeight: number,
+        targetWeight: number,
+        repoForce: number
+        ): boolean;
 
     static collideCircleVsCircle(
         circle1: Circle,
