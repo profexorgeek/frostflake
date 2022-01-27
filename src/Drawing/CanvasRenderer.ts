@@ -165,7 +165,7 @@ export default class CanvasRenderer {
         this.context.rotate(transRot);
         this.context.globalAlpha = alpha;
 
-        const texture: HTMLCanvasElement = Data.getItem(sprite.texture);
+        const texture: HTMLCanvasElement = <HTMLCanvasElement>Data.getItem(sprite.texture);
         if(texture == null) {
             const msg = `Tried to render bad texture: ${sprite.texture}. ` +
                 `Sprite wasn't given a texture or texture wasn't preloaded`;
