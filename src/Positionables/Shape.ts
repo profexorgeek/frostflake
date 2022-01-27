@@ -3,35 +3,22 @@ import Rectangle from './Rectangle';
 import RepositionType from './RepositionType';
 import Positionable from './Positionable';
 import Position from './Position';
-import FrostFlake from '../FrostFlake';
 
-export default class Shape extends Positionable {
+export default abstract class Shape extends Positionable {
 
     constructor() {
         super();
     }
 
-    /* eslint-disable @typescript-eslint/no-unused-vars */
-    isPointInside(x: number, y:number): boolean {
-        // This method should be overridden in child shapes...
-        // if it is not, throw a not implemented exception.
-        throw "This is not implemented on this shape yet!";
-    }
+    abstract isPointInside(x: number, y:number): boolean;
 
-    collideWith(
+    abstract collideWith(
         shape: Shape,
-        repoType: RepositionType = RepositionType.None,
-        thisWeight = 1,
-        targetWeight = 0,
-        repoForce = 1
-        ): boolean {
-
-        // intentionally empty, child types must implement
-        const msg = "Not implemented: Attempted to collide generic shape object.";
-        FrostFlake.Log.error(msg);
-        throw msg;
-    }
-    /* eslint-enable @typescript-eslint/no-unused-vars */
+        repoType: RepositionType,
+        thisWeight: number,
+        targetWeight: number,
+        repoForce: number
+        ): boolean;
 
     static collideCircleVsCircle(
         circle1: Circle,
