@@ -1,19 +1,20 @@
 import FrostFlake from '../FrostFlake';
+import View from '../Views/View';
 import Position from './Position';
 
 export default class Positionable {
 
     color                               = "rgba(255,0,0,0.25)";
-    position: Position                          = new Position();
-    velocity: Position                          = new Position();
-    acceleration: Position                      = new Position();
-    visible                            = true;
+    position: Position                  = new Position();
+    velocity: Position                  = new Position();
+    acceleration: Position              = new Position();
+    visible                             = true;
     drag                                = 0;
     layer                               = 0;
-    parent: Positionable                        = null;
-    children: Array<Positionable>               = [];
-    destroyed                          = false;
-    applyRotationAccelerationAndDrag   = false;
+    parent: Positionable | View         = null;
+    children: Array<Positionable>       = [];
+    destroyed                           = false;
+    applyRotationAccelerationAndDrag    = false;
     
     get x(): number {
         return this.position.x;
@@ -43,7 +44,7 @@ export default class Positionable {
     get absolutePosition(): Position {
         const absPos = new Position();
 
-        if(this.parent != null) {
+        if(this.parent != null && this.parent instanceof Positionable) {
             const parentAbsPos = this.parent.absolutePosition;
             const magnitude = this.position.length;
             absPos.x = Math.cos(parentAbsPos.rotation) * magnitude + parentAbsPos.x;
@@ -61,7 +62,7 @@ export default class Positionable {
 
     get root(): Positionable {
         let obj: Positionable = this;
-        while(this.parent instanceof Positionable) {
+        while(obj.parent instanceof Positionable) {
             obj = obj.parent;
         }
         return obj;
@@ -81,9 +82,11 @@ export default class Positionable {
 
     removeChild(positionable: Positionable): void {
         const i: number = this.children.indexOf(positionable);
-        
         if(i > -1) {
             this.children.splice(i, 1);
+        }
+        else {
+            FrostFlake.Log.warn("Tried to call removeChild but positionable wasn't found in children collecion.");
         }
         positionable.parent = null;
     }
@@ -95,6 +98,20 @@ export default class Positionable {
     detach(): void {
         if(this.parent instanceof Positionable) {
             this.parent.removeChild(this);
+        }
+
+        else if(this.parent instanceof View) {
+            this.parent.removeChild(this);
+        }
+
+        else {
+            if(this.parent != null) {
+                throw `Attempted to deatch ${this.constructor.name} but parent is not a View or Positionable!`;
+            }
+            else {
+                throw `Attempted to deatch ${this.constructor.name} but parent is null!`;
+            }
+            
         }
     }
 
@@ -147,6 +164,13 @@ export default class Positionable {
     /* eslint-enable @typescript-eslint/no-empty-function */
 
     destroy(): void {
+
+        // EARLY OUT: already destroyed, this can happen when destroy is
+        // called multiple times in a frame.
+        if(this.destroyed === true) {
+            return;
+        }
+
         this.detach();
 
         // cascade destroy to children

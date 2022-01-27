@@ -42,6 +42,10 @@ export default class Position {
         this.rotation = 0;
     }
 
+    clone(): Position {
+        return new Position(this.x, this.y, this.rotation);
+    }
+
     distanceTo(target: Position): number {
         const delta = target.subtract(this);
         return delta.length;

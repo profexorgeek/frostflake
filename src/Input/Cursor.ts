@@ -41,8 +41,8 @@ export default class Cursor {
     setHardwarePosition(x: number, y: number): void {
         const cursorX: number = x - (FrostFlake.Game.canvas.width / 2);
         const cursorY: number = MathUtil.invert(y) + (FrostFlake.Game.canvas.height / 2);
-        this._change.x = this.x - cursorX;
-        this._change.y = this.y - cursorY;
+        this._change.x = cursorX - this._position.x;
+        this._change.y = cursorY - this._position.y;
         this._position.x = cursorX;
         this._position.y = cursorY;
     }

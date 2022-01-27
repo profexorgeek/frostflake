@@ -17,16 +17,15 @@ export default class FrostFlake {
     private _timer: number;
     private _view: View;
 
-    time: GameTime;
-    fps: number;
+    audio: Audio;
     camera: Camera;
     canvas: HTMLCanvasElement;
-    renderer: CanvasRenderer;
-    background: string;
-    input: Input;
-    audio: Audio;
-    showDebug = false;
     defaultLoadingSprite: Sprite;
+    fps: number;
+    input: Input;
+    showDebug = false;
+    renderer: CanvasRenderer;
+    time: GameTime;
 
     set view(newView: View) {
         if(this._view != null) {
@@ -41,13 +40,12 @@ export default class FrostFlake {
         return this._view;
     }
 
-    constructor(canvas, fps = 30, background = "rgb(0,0,0)") {
+    constructor(canvas: HTMLCanvasElement, fps: number = 30, background: string = "rgb(0,0,0)") {
         FrostFlake.Game = this;
         FrostFlake.Log = new Log();
 
         this.canvas = canvas;
         this.fps = fps;
-        this.background = background;
         this.input = new Input();
         this.audio = new Audio();
         this.camera = new Camera(this.canvas.width, this.canvas.height);
