@@ -2,8 +2,8 @@
   "compilerOptions": {
     "outFile": "dist/frostflake.js",
     "target": "es2020",
-    "declaration": true,
-    "module": "AMD"
+    "inlineSourceMap": true,
+    "inlineSources": true
   },
   "include": ["./src/**/*"],
   "exclude": ["node_modules"]
