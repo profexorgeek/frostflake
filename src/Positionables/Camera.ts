@@ -16,7 +16,7 @@ export default class Camera extends Rectangle{
         );
     }
 
-    constructor(width, height) {
+    constructor(width: number, height: number) {
         super(width, height);
     }
 

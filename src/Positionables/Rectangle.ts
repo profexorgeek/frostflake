@@ -24,7 +24,7 @@ export default class Rectangle extends Shape {
         return this.absolutePosition.y - this.height / 2;
     }
 
-    constructor(width, height) {
+    constructor(width: number, height: number) {
         super();
         this.width = width;
         this.height = height;

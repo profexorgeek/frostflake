@@ -3,7 +3,7 @@
   "version": "0.9.3",
   "description": "FrostFlake is a 2D game engine written in TypeScript with a simple canvas renderer.",
   "module": "./dist/frostflake.esm.js",
-  "main": "./dist/frostflake.js",
+  "main": "./dist/frostflake.min.js",
   "types": "./dist/frostflake.d.ts",
   "scripts": {
     "build": "node build.js prod",

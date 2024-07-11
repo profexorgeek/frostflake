@@ -3,7 +3,10 @@ import Data from '../Data/Data';
 
 export default class Audio {
     private context: AudioContext;
-    private _cache: object = {};
+
+    // make our cache a special type of object where
+    // the key is constrained to being a string
+    private _cache: {[key:string]: any} = {};
 
     constructor() {
         this.context = new AudioContext();
@@ -28,10 +31,11 @@ export default class Audio {
             throw Error(msg);
         }
 
-        // EARLY OUT: can't play audio because the context isn't running
+        // EXCEPTION: can't play audio because the context isn't running
         if(this.context.state !== 'running') {
-            FrostFlake.Log.warn('Cannot play sounds: audio context is not running');
-            return null;
+            const msg = 'Cannot play sounds: audio context is not running';
+            FrostFlake.Log.error(msg);
+            throw Error(msg);
         }
         
         const sound = this.context.createBufferSource();

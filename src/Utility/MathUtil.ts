@@ -12,12 +12,12 @@ export function randomIntInRange(min: number, max: number): number {
     return Math.floor(randomInRange(min, max));
 }
 
-export function length(x, y) {
+export function length(x: number, y: number) {
     const len = Math.pow(x, 2) + Math.pow(y, 2);
     return Math.abs(Math.sqrt(len));
 }
 
-export function clamp(val, min, max) {
+export function clamp(val: number, min: number, max: number) {
     val = Math.min(max, val);
     val = Math.max(min, val);
     return val;

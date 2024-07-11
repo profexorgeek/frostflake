@@ -2,7 +2,9 @@ import FrostFlake from '../FrostFlake';
 
 export default class Data {
 
-    private static _cache: object = {};
+    // make our cache a special type of object where
+    // the key is constrained to being a string
+    private static _cache: {[key:string]: any} = {};
 
     static async loadResponse(src: string): Promise<Response> {
         const response = await fetch(src);
