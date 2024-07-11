@@ -144,13 +144,13 @@ export default class Input {
         this.cursor.update();
 
         // clear pushed keys
-        for(const key in this._keysPushed) {
+        for(const [key, value] of this._keysPushed) {
             this._keysPushed.set(key, false);
         }
 
         // clear buttons pushed array
-        for(const btn in this._buttonsPushed) {
-            this._buttonsPushed.set(btn,false);
+        for(const [key, value] of this._buttonsPushed) {
+            this._buttonsPushed.set(key, false);
         }
     }
 
