@@ -28,13 +28,9 @@ export default class FrostFlake {
     time: GameTime;
 
     set view(newView: View) {
-        // NOTE 07/2024 - The engine used to automatically destroy a view when
-        // unloading but I don't remember why. This breaks the demo template because
-        // those views are expected to be reused over and over. Reusing views should
-        // be an expected pattern and auto-destruction isn't a good idea.
-        // if(this._view != null) {
-        //     this._view.destroy();
-        // }
+        if(this._view != null) {
+            this._view.destroy();
+        }
         
         newView.start();
         this._view = newView;
