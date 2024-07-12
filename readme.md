@@ -10,12 +10,6 @@ This iteration of the engine has no dependencies outside of TypeScript itself. I
 
 If you use this, I'd love to know how you're using it and what you think.
 
-## Repository Pattern
-
-The `master` branch is currently where all new work happens. PRs should target the `master` branch.
-
-A "release" for FrostFlake means a new package uploaded to NPM. Releases should branch from main and be tagged with semantic versioning.
-
 ## Features
 
 - **FrostFlake**: the core engine provides a game loop with a `GameTime` object tracking the time elapsed between game updates and the total time elapsed.
