@@ -105,11 +105,14 @@ export default class Positionable {
         }
 
         else {
+            // NOTE 07/2024: these used to throw errors but detach should be safe to call in any context because its
+            // called every time destroy is called which means that many Positionable subtypes may not be attached
+            // to anything when destroy->detach is called.
             if(this.parent != null) {
-                throw `Attempted to deatch ${this.constructor.name} but parent is not a View or Positionable!`;
+                //throw `Attempted to deatch ${this.constructor.name} but parent is not a View or Positionable!`;
             }
             else {
-                throw `Attempted to deatch ${this.constructor.name} but parent is null!`;
+                //throw `Attempted to deatch ${this.constructor.name} but parent is null!`;
             }
             
         }
