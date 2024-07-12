@@ -1,30 +1,35 @@
  # View
 
- The [`View`](/src/Views/View.ts) class is a container that represents an area of the game. Things such as the title screen, settings screen, levels, and similar things should be a `View`.
+The [`View`](/src/Views/View.ts) class is a container that represents an area of the game. Things such as the title screen, settings screen, levels, and similar things should be a `View`.
 
- By default, FrostFlake manages a single `View` at a time, which is the root node of the scene graph. Views contain a collection of children `Positionable` objects and the tree of view children is crawled recursively for both the update and the drawing cycle. The current view is available on the static game instance as follows:
+By default, FrostFlake manages a single `View` at a time, which is the root node of the scene graph. Views contain a collection of children `Positionable` objects and the tree of view children is crawled recursively for both the update and the drawing cycle.
 
- `FrostFlake.Game.view`
+The current view is available on the static game instance as follows:
 
- To start a custom view, you create a custom class that extends the `View` class and set the current view instance to your new class as follows:
+`FrostFlake.Game.view`
 
- `FrostFlake.Game.view = new Level1View();`
+To start a custom view, you create a custom class that extends the `View` class and set the current view instance to your new class as follows:
 
- This will kick off the view Lifecycle.
+`FrostFlake.Game.view = new Level1View();`
 
- ## Lifecycle
+> **NOTE:**
+> `View`s are intended to load the content they need, render and update their content during the gameplay loop, and unload completely when they are no longer active. **Views are automatically destroyed** by the engine when the active view is changed. Therefore, it is strongly recommended that you do not hold onto and recyle views!
 
-The `View` lifecycle starts when the active view is set on FrostFlake like this:
+Setting the `view` property on your frostflake instance will kick off the view Lifecycle.
+
+## Lifecycle
+
+The `View` lifecycle starts when the active view is set on the FrostFlake instance like this:
 
 `FrostFlake.Game.view = new CustomView();`
 
 This action kicks off the following lifecycle:
 
-1. **constructor**: Avoid performing any logic in your view constructor, they should generally not be implemented at all. The constructor creates a new instance of the custom view.
-1. **start**: The `start` method is called automatically by the engine and kicks off the initialization process, which is asynchronous. The engine will wait for initialization to complete before beginning the update cycle.
+1. **constructor**: The constructor creates a new instance of the custom view. Avoid performing any logic in your view constructor, in most cases they should not be overridden.
+1. **start**: The `start` method is called automatically by the engine and kicks off the initialization process, which is asynchronous. The engine will wait for initialization to complete before beginning the update cycle. In most cases, you should not need to override this method.
 1. **initialize**: The asynchronous `initialize` method is where all asset loading and similar work should take place before the update cycle begins. Any assets used by game objects during the view's lifetime should be preloaded here. This guarantees that assets are available before they are needed in the gameloop.
 1. **update**: The `update` method is called every tick. This is where all frame-based logic should take place. The update cycle will not be called until the `initialize` method has completed it's work and all promises are resolved
-1. **destroy**: The `destroy` method is automatically called on the existing view by the engine when a new active view is set. This method should generally execute quickly and unload any assets no longer needed by the game. 
+1. **destroy**: The `destroy` method is automatically called on the existing view when a new active view is set. This method should generally execute quickly and unload any assets no longer needed by the game. 
 
 For more information about the methods called during a view's lifecycle, see the View Methods section.
 
@@ -82,15 +87,15 @@ export default class CustomView extends View {
 }
 ```
 
- ## View Methods
+ ## Important View Methods
 
 **Note:** It is critical to make sure you call the parent method for any method you override in your custom view. Failing to call things like `super.update();` will result in many hard-to-diagnose bugs in your views!
 
- ### constructor
+### constructor
 
- The base constructor sets an `initialized` flag to false. The constructor for custom views should generally be empty.
+The base constructor sets an `initialized` flag to false. The constructor for custom views should generally be empty.
 
- ### addChild(positionable: Positionable): void
+### addChild(positionable: Positionable): void
 
 The `addChild` method adds a `Positionable` to the `children` collection, sets the `parent` property on the added child, and marks the collection as needing to be sorted for rendering order.
 
