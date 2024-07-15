@@ -6,14 +6,13 @@ import Positionable from './Positionable';
 import Shape from './Shape';
 import Camera from './Camera';
 
-export default class Sprite extends Positionable{
+export default class Sprite extends Positionable {
 
-    alpha                       = 1;
     frame: Frame                        = null;
     texture: string                     = null;
     animation: Animation                = null;
-    scale                       = 1;
-    parallax                    = 1;
+    scale                               = 1;
+    parallax                            = 1;
     private _collisionShape: Shape      = null;
 
     get collision(): Shape {
@@ -35,7 +34,7 @@ export default class Sprite extends Positionable{
         this.collision = new Circle();
 
         // set sprite outlines to faint color
-        this.color = "rgba(255, 255, 255, 0.2)";
+        this.color = "cyan";
     }
 
     update(): void {
