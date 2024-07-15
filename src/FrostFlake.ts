@@ -40,7 +40,7 @@ export default class FrostFlake {
         return this._view;
     }
 
-    constructor(canvas: HTMLCanvasElement, fps = 30, background = "rgb(0,0,0)") {
+    constructor(canvas: HTMLCanvasElement, fps: number = 30, background: string = "rgb(0,0,0)") {
         FrostFlake.Game = this;
         FrostFlake.Log = new Log();
 
