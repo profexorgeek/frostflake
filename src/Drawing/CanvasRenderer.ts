@@ -4,6 +4,7 @@ import Sprite from '../Positionables/Sprite';
 import Positionable from '../Positionables/Positionable';
 import Circle from '../Positionables/Circle';
 import Rectangle from '../Positionables/Rectangle';
+import Line from '../Positionables/Line';
 import Camera from '../Positionables/Camera';
 import Frame from './Frame'
 import MathUtil from '../Utility/MathUtil';
@@ -60,42 +61,61 @@ export default class CanvasRenderer {
         this.context.restore();
     }
 
-    // draws a positionable object based on its type and visibility
-    drawPositionable(positionable: Positionable): void {
-        if(positionable instanceof Positionable && positionable.visible) {
-            if(positionable instanceof Sprite) {
-                this.drawSprite(positionable);
-            }
+    drawPositionable(positionable: Positionable, isCollision: boolean = false): void {
 
-            else if(positionable instanceof Circle) {
-                this.drawCircle(positionable);
-            }
+        // EARLY OUT: not visible or null
+        if(positionable === null || positionable.visible === false)
+        {
+            return;
+        }
 
-            else if(positionable instanceof Rectangle) {
-                this.drawRect(positionable);
-            }
+        const xTranslation: number      = positionable.x;
+        const yTranslation: number      = MathUtil.invert(positionable.y);
+        const rotTranslation: number    = -positionable.rotation;
+        
+        this.context.save();
+        this.context.translate(xTranslation, yTranslation);
 
-            else if(positionable instanceof Text) {
-                this.drawText(positionable);
+        if(positionable.ignoreParentRotation === false)
+        {
+            this.context.rotate(rotTranslation);
+        }
+        
+        // set alpha
+        this.context.globalAlpha = positionable.alpha;
+
+        // custom drawing by type
+        if(positionable instanceof Sprite) {
+            this.drawSprite(positionable);
+        }
+        else if(positionable instanceof Circle) {
+            this.drawCircle(positionable);
+        }
+        else if(positionable instanceof Rectangle) {
+            this.drawRect(positionable, isCollision);
+        }
+        else if(positionable instanceof Line) {
+            this.drawLine(positionable);
+        }
+        else if(positionable instanceof Text) {
+            this.drawText(positionable);
+        }
+
+        // restore alpha before drawing children
+        this.context.globalAlpha = 1;
+
+        // recurse into children
+        if(positionable.children.length > 0) {
+            for(let i = 0; i < positionable.children.length; i++) {
+                this.drawPositionable(positionable.children[i]);
             }
         }
+
+        this.context.restore();
     }
 
     // draws a text string
-    drawText(text: Text): void {
-        const transX: number = text.x;
-        const transY: number = MathUtil.invert(text.y);
-        this.context.save();
-        this.context.translate(transX, transY);
-
-        // text can ignore parent rotation so its always readable
-        if(text.ignoreRotation) {
-            this.context.rotate(text.absolutePosition.rotation);
-        }
-        else {
-            this.context.rotate(-text.rotation);
-        }
-        
+    drawText(text: Text): void {        
         this.context.font = text.font;
         this.context.fillStyle = text.fillStyle;
         this.context.strokeStyle = text.strokeStyle;
@@ -105,17 +125,9 @@ export default class CanvasRenderer {
         this.context.direction = text.textDirection;
         this.context.fillText(text.content, 0, 0);
         this.context.strokeText(text.content, 0, 0);
-
-        this.context.restore();
     }
 
-    // draws a circle
     drawCircle(circle: Circle): void {
-        const transX: number = circle.x;
-        const transY: number = MathUtil.invert(circle.y);
-        this.context.save();
-        this.context.translate(transX, transY);
-
         this.context.strokeStyle = circle.color;
         this.context.beginPath();
                 this.context.arc(
@@ -125,23 +137,14 @@ export default class CanvasRenderer {
                     0,
                     Math.PI * 2
                 );
-                this.context.stroke();
-
-        this.context.restore();
+        this.context.stroke();
     }
 
-    // draws a rectangle, defaults to Axis Aligned (un-rotateable) rectangles
-    drawRect(rect: Rectangle, axisAligned = true): void {
-        const transX = rect.x;
-        const transY = MathUtil.invert(rect.y);
-        this.context.save();
-        this.context.translate(transX, transY);
-
-        // axis aligned rectangles reverse translation rotation
-        if(axisAligned === true) {
+    drawRect(rect: Rectangle, isCollision: boolean = false): void {
+        // collision rectangles cannot rotate reverse translation rotation
+        if(isCollision === true) {
             this.context.rotate(rect.absolutePosition.rotation);
         }
-
         this.context.strokeStyle = rect.color;
         this.context.strokeRect(
             -rect.width / 2,
@@ -149,22 +152,24 @@ export default class CanvasRenderer {
             rect.width,
             rect.height);
 
-        this.context.restore();
+        if(isCollision === true)
+        {
+            this.context.restore();
+        }
+    }
+
+    drawLine(line: Line) : void{
+        this.context.strokeStyle = line.color;
+        this.context.lineWidth = line.thickness;
+        this.context.beginPath();
+        this.context.moveTo(-(line.length / 2), 0);
+        this.context.lineTo(line.length / 2, 0);
+        this.context.stroke();
     }
 
     // draws a sprite object, will draw additional debug shapes if
     // game has showDebug turned on
     drawSprite(sprite: Sprite): void {
-        const transX: number    = sprite.x;
-        const transY: number      = MathUtil.invert(sprite.y);
-        const transRot: number    = -sprite.rotation;
-        const alpha: number       = sprite.alpha;
-
-        this.context.save();
-        this.context.translate(transX, transY);
-        this.context.rotate(transRot);
-        this.context.globalAlpha = alpha;
-
         const texture: HTMLCanvasElement = <HTMLCanvasElement>Data.getItem(sprite.texture);
         if(texture == null) {
             const msg = `Tried to render bad texture: ${sprite.texture}. ` +
@@ -203,22 +208,9 @@ export default class CanvasRenderer {
                 sprite.frame.height * sprite.scale);
         }
 
-        // reset alpha
-        this.context.globalAlpha = 1;
-
         // draw collision shapes
-        if(FrostFlake.Game.showDebug) {
-            this.drawPositionable(sprite.collision);
+        if(FrostFlake.Game.showDebug && sprite.collision != null) {
+            this.drawPositionable(sprite.collision, true);
         }
-
-        // recurse on children
-        if(sprite.children.length > 0) {
-            for(let i = 0; i < sprite.children.length; i++) {
-                this.drawPositionable(sprite.children[i]);
-            }
-        }
-
-        // restore context
-        this.context.restore();
     }
 }
