@@ -17,6 +17,14 @@ export function length(x: number, y: number) {
     return Math.abs(Math.sqrt(len));
 }
 
+export function toRadians(degrees: number): number {
+    return degrees * (Math.PI / 180);
+}
+
+export function toDegrees(radians: number): number {
+    return radians * (180 / Math.PI);
+}
+
 export function clamp(val: number, min: number, max: number) {
     val = Math.min(max, val);
     val = Math.max(min, val);
@@ -29,4 +37,6 @@ export default {
     randomIntInRange,
     length,
     clamp,
+    toRadians,
+    toDegrees
 }
