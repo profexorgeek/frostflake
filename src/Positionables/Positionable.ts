@@ -4,18 +4,42 @@ import Position from './Position';
 
 export default class Positionable {
 
-    color                              = "rgba(255,0,0,0.25)";
-    position: Position                 = new Position();
-    velocity: Position                 = new Position();
-    acceleration: Position             = new Position();
-    visible                            = true;
-    drag                               = 0;
-    layer                              = 0;
-    parent: Positionable | View        = null;
-    children: Array<Positionable>      = [];
-    destroyed                          = false;
-    applyRotationAccelerationAndDrag   = false;
+    protected _color: string = "white";
+    protected _alpha: number = 1;
+    protected _ignoreParentRotation: boolean = false;
+
+    position: Position                  = new Position();
+    velocity: Position                  = new Position();
+    acceleration: Position              = new Position();
+    visible                             = true;
+    drag                                = 0;
+    layer                               = 0;
+    parent: Positionable | View         = null;
+    children: Array<Positionable>       = [];
+    destroyed                           = false;
+    applyRotationAccelerationAndDrag    = false;
     
+    get color(): string{
+        return this._color;
+    }
+    set color(c: string) {
+        this._color = c;
+    }
+
+    get alpha(): number {
+        return this._alpha;
+    }
+    set alpha(a: number) {
+        this._alpha = a;
+    }
+
+    get ignoreParentRotation(): boolean {
+        return this._ignoreParentRotation;
+    }
+    set ignoreParentRotation(ignore: boolean) {
+        this._ignoreParentRotation = ignore;
+    }
+
     get x(): number {
         return this.position.x;
     }
@@ -36,6 +60,8 @@ export default class Positionable {
     set rotation(val) {
         this.position.rotation = val;
     }
+
+    
 
     constructor() {
         // intentionally empty
@@ -89,6 +115,14 @@ export default class Positionable {
             FrostFlake.Log.warn("Tried to call removeChild but positionable wasn't found in children collecion.");
         }
         positionable.parent = null;
+    }
+
+    removeAllChildren()
+    {
+        for(let i = this.children.length - 1; i > -1; i--)
+        {
+            this.removeChild(this.children[i]);
+        }
     }
 
     attach(positionable: Positionable): void {
