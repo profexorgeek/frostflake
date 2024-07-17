@@ -14,6 +14,7 @@ export default class Sprite extends Positionable {
     scale                               = 1;
     parallax                            = 1;
     private _collisionShape: Shape      = null;
+    blendMode:GlobalCompositeOperation  = "source-over";
 
     get collision(): Shape {
         return this._collisionShape;

@@ -185,6 +185,8 @@ export default class CanvasRenderer {
             sprite.frame.height = texture.height;
         }
 
+        // set blend mode
+        this.context.globalCompositeOperation = sprite.blendMode;
         this.context.drawImage(
             texture,
             sprite.frame.left,
@@ -196,6 +198,8 @@ export default class CanvasRenderer {
             sprite.frame.width * sprite.scale,
             sprite.frame.height * sprite.scale
         );
+        // restore default blend mode
+        this.context.globalCompositeOperation = "source-over";
 
         // draw debug visualizations
         if(FrostFlake.Game.showDebug) {
