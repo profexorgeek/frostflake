@@ -5,6 +5,7 @@ import MathUtil from '../Utility/MathUtil';
 export default class Cursor {
 
     private _position: Position         = new Position();
+    private _lastPosition: Position     = new Position();
     private _change:Position            = new Position();
     private _world: Position            = new Position();
     isInFrame                  = false;
@@ -36,14 +37,15 @@ export default class Cursor {
     update(): void {
         this._world.x = FrostFlake.Game.camera.x + this.x;
         this._world.y = FrostFlake.Game.camera.y + this.y;
+
+        this._change.x = this._position.x - this._lastPosition.x;
+        this._change.y = this._position.y - this._lastPosition.y;
+        this._lastPosition.x = this._position.x;
+        this._lastPosition.y = this._position.y;
     }
 
     setHardwarePosition(x: number, y: number): void {
-        const cursorX: number = x - (FrostFlake.Game.canvas.width / 2);
-        const cursorY: number = MathUtil.invert(y) + (FrostFlake.Game.canvas.height / 2);
-        this._change.x = cursorX - this._position.x;
-        this._change.y = cursorY - this._position.y;
-        this._position.x = cursorX;
-        this._position.y = cursorY;
+        this._position.x = x - (FrostFlake.Game.canvas.width / 2);;
+        this._position.y = MathUtil.invert(y) + (FrostFlake.Game.canvas.height / 2);;
     }
 }
