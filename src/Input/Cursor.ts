@@ -26,6 +26,10 @@ export default class Cursor {
         return this._change.y;
     }
 
+    get changeScroll(): number {
+        return this._change.rotation;
+    }
+
     get x(): number {
         return this._position.x;
     }
@@ -42,10 +46,16 @@ export default class Cursor {
         this._change.y = this._position.y - this._lastPosition.y;
         this._lastPosition.x = this._position.x;
         this._lastPosition.y = this._position.y;
+
+        this._change.rotation = 0;
     }
 
     setHardwarePosition(x: number, y: number): void {
         this._position.x = x - (FrostFlake.Game.canvas.width / 2);;
         this._position.y = MathUtil.invert(y) + (FrostFlake.Game.canvas.height / 2);;
+    }
+
+    notifyWheelChange(amount: number) {
+        this._change.rotation = amount;
     }
 }

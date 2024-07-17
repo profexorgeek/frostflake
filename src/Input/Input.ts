@@ -131,7 +131,8 @@ export default class Input {
         window.addEventListener("keyup", (e) => this.onKeyUp(e));
         window.addEventListener("mousemove", (e) => this.onMouseMove(e));
         window.addEventListener("mousedown", (e) => this.onMouseDown(e));
-        window.addEventListener("mouseup", (e) => this.onMouseUp(e));        
+        window.addEventListener("mouseup", (e) => this.onMouseUp(e));     
+        window.addEventListener("wheel", (e) => this.onWheelChange(e));   
 
         FrostFlake.Game.canvas.addEventListener("mouseenter", () => this.onEnterCanvas());
         FrostFlake.Game.canvas.addEventListener("mouseleave", () => this.onExitCanvas());
@@ -232,6 +233,10 @@ export default class Input {
         this._buttonsDown.set(btnName, false);
         this._buttonsPushed.set(btnName, true);
         this.stopPropagation(e);
+    }
+
+    private onWheelChange(e: WheelEvent) {
+        this.cursor.notifyWheelChange(e.deltaY);
     }
 
     private onKeyDown(e: KeyboardEvent): void {
